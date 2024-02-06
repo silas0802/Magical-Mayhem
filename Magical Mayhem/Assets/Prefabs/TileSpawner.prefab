@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1914425947713852312
+--- !u!1 &6255414637465635822
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8829263596944070313}
-  - component: {fileID: 6188276895862976187}
+  - component: {fileID: 134145644111359509}
+  - component: {fileID: 151808687943158500}
   m_Layer: 0
-  m_Name: Scene Manager
+  m_Name: TileSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8829263596944070313
+--- !u!4 &134145644111359509
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1914425947713852312}
+  m_GameObject: {fileID: 6255414637465635822}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,15 +32,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6188276895862976187
+--- !u!114 &151808687943158500
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1914425947713852312}
+  m_GameObject: {fileID: 6255414637465635822}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb657d09449d02f41a4256c8d25f2247, type: 3}
+  m_Script: {fileID: 11500000, guid: cbb0999d47d3a9848b1c11f24b0eeacf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dimensions: {x: 0, y: 0}
+  tile: {fileID: 0}
+  player: {fileID: 0}
