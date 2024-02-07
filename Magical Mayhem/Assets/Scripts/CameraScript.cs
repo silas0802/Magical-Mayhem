@@ -7,13 +7,13 @@ public class CameraScript : MonoBehaviour
     [SerializeField]Transform player;
     Vector3 offset;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         offset = transform.position-player.position;
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void LateUpdate()
     {
         transform.position = offset+player.position;
     }
