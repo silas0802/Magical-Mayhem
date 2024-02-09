@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitMoveState : MonoBehaviour
+public class UnitMoveState : UnitState
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void EnterState(UnitController controller)
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void StateUpdate(UnitController controller)
     {
-        
+        controller.unitMover.Move();
     }
 }

@@ -2,17 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class UnitMover : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private float moveSpeed = 5;
+    private Vector3 targetPosition;
+    private Rigidbody rb;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Awake(){
+        rb = GetComponent<Rigidbody>();
+    }
+    
+
+    public void Move(){
+        Debug.Log((targetPosition-transform.position).normalized*moveSpeed);
+        rb.velocity = (targetPosition-transform.position).normalized*moveSpeed;
+    }
+    public void SetTargetPosition(Vector3 targetPosition){
+        this.targetPosition = targetPosition;
     }
 }
