@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 public class JoinButton : MonoBehaviour
 {
     const string LOCALHOST = "127.0.0.1"; 
-    const string IP = "192.168.3.71";
+    const string IP = "192.168.3.107";
     public void JoinGame(){
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
             IP,  // The IP address is a string
