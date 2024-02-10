@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(UnitCaster),typeof(UnitMover))]
+[RequireComponent(typeof(UnitCaster), typeof(UnitMover))]
 public class UnitController : NetworkBehaviour
 {
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
@@ -16,42 +16,44 @@ public class UnitController : NetworkBehaviour
     [HideInInspector]
     public UnitCaster unitCaster;
 
-    [HideInInspector] 
+    [HideInInspector]
     public UnitMover unitMover;
 
     private UnitState state;
 
-    void Awake(){
+    void Awake() {
         unitCaster = GetComponent<UnitCaster>();
         unitMover = GetComponent<UnitMover>();
     }
-    void Start(){
+    void Start() {
         ChangeState(new UnitMoveState());
     }
-    
-    void Update(){
+
+    void Update() {
         brain?.HandleActions(this);
         state.StateUpdate(this);
     }
 
-    void OnRightClick(){
+    void OnRightClick() {
         if (!IsLocalPlayer) return;
         bool validClickPosition;
         Vector3 target = HelperClass.GetMousePosInWorld(out validClickPosition); //gets mouse pos
-        if (validClickPosition){
-            target = new Vector3(target.x,0,target.z);
+        if (validClickPosition) {
+            target = new Vector3(target.x, 0, target.z);
             Debug.Log(target);
             unitMover.SetTargetPositionServerRPC(target); //sets target pos to mouse pos
         }
     }
-
-    void OnLeftClick(){
+    
+    void OnLeftClick() {
 
     }
     void OnStop()
     {
 
     }
+
+    #region Spell Inputs
     void OnSpell1()
     {
         CastSpell(0);
@@ -76,9 +78,24 @@ public class UnitController : NetworkBehaviour
     {
         CastSpell(5);
     }
+    #endregion 
+
     void CastSpell(int index)
     {
-        Debug.Log("Casting spell: "+ index);
+        bool validTarget;
+        Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
+        if (validTarget)
+        {
+            if (IsServer && IsLocalPlayer)
+            {
+                unitCaster.CastSpell(index, pos);
+            }
+            else if (IsClient && IsLocalPlayer)
+            {
+                unitCaster.CastSpellServerRPC(index, pos);
+            }
+        }
+        
     }
 
 

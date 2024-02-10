@@ -18,6 +18,7 @@ public class ProjectileSpell : Spell
 
     public override void Activate(UnitController owner, Vector3 target)
     {
-        throw new System.NotImplementedException();
+        ProjectileInstance clone = Instantiate(Projectile, target, Quaternion.identity);
+        clone.Initialize();
     }
 }
