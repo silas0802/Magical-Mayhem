@@ -27,6 +27,7 @@ public class UnitController : NetworkBehaviour
     }
 
     void OnRightClick(){
+        if (!IsLocalPlayer) return;
         bool validClickPosition;
         Vector3 target = HelperClass.GetMousePosInWorld(out validClickPosition); //gets mouse pos
         if (validClickPosition){

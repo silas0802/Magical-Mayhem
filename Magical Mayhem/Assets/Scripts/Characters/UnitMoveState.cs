@@ -11,6 +11,13 @@ public class UnitMoveState : UnitState
 
     public override void StateUpdate(UnitController controller)
     {
-        controller.unitMover.Move();
+        if (controller.IsServer && controller.IsLocalPlayer)
+        {
+            controller.unitMover.Move();
+        }
+        else if (controller.IsClient && controller.IsLocalPlayer)
+        {
+            controller.unitMover.MoveServerRPC();
+        }
     }
 }
