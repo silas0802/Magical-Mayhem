@@ -6,7 +6,7 @@ public class UnitMoveState : UnitState
 {
     public override void EnterState(UnitController controller)
     {
-        throw new System.NotImplementedException();
+
     }
 
     public override void StateUpdate(UnitController controller)

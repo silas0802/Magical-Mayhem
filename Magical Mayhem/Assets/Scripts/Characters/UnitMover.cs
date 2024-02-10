@@ -6,7 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class UnitMover : NetworkBehaviour
 {
-    [SerializeField] private float moveSpeed = 5;
+    [SerializeField, Tooltip("A value made for testing. Should be removed")] 
+    private float moveSpeed = 5;       //Made for testing and should be removed when movement gets converted to use acceleration and friction
+
+    
+
     private Vector3 targetPosition;
     private Rigidbody rb;
 

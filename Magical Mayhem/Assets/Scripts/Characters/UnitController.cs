@@ -8,9 +8,17 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(UnitCaster),typeof(UnitMover))]
 public class UnitController : NetworkBehaviour
 {
-    [SerializeField] Brain brain;
-    [HideInInspector] public UnitCaster unitCaster;
-    [HideInInspector] public UnitMover unitMover;
+    [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
+    private Brain brain;
+    [SerializeField]
+    private UnitClass unitClass;
+
+    [HideInInspector]
+    public UnitCaster unitCaster;
+
+    [HideInInspector] 
+    public UnitMover unitMover;
+
     private UnitState state;
 
     void Awake(){
@@ -40,15 +48,49 @@ public class UnitController : NetworkBehaviour
     void OnLeftClick(){
 
     }
+    void OnStop()
+    {
+
+    }
+    void OnSpell1()
+    {
+        CastSpell(0);
+    }
+    void OnSpell2()
+    {
+        CastSpell(1);
+    }
+    void OnSpell3()
+    {
+        CastSpell(2);
+    }
+    void OnSpell4()
+    {
+        CastSpell(3);
+    }
+    void OnSpell5()
+    {
+        CastSpell(4);
+    }
+    void OnSpell6()
+    {
+        CastSpell(5);
+    }
+    void CastSpell(int index)
+    {
+        Debug.Log("Casting spell: "+ index);
+    }
+
 
     /// <summary>
     /// Changes the State of the UnitController and calls the EnterState function of state
     /// </summary>
     /// <param name="state"></param>
-    public void ChangeState(UnitState state){
+    public void ChangeState(UnitState state)
+    {
         this.state = state;
         state.EnterState(this);
     }
 
-    
+
 }

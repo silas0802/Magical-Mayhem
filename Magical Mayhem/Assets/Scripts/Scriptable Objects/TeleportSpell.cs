@@ -6,8 +6,11 @@ using UnityEngine;
 
 public class TeleportSpell : Spell
 {
-    [Range(0,30)] public float Range = 10f;
-    public GameObject TeleportVFX;
+    [SerializeField,Range(0,30)] private float Range = 10f;
+    [SerializeField] private GameObject TeleportVFX;
+
+    public float range => this.Range;
+    public GameObject teleportVFX => this.TeleportVFX;
     public override void Activate(UnitController owner, Vector3 target)
     {
         throw new System.NotImplementedException();
