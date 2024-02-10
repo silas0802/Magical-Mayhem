@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d693f25e0e9244191cf94698b69698, type: 3}
   m_Name: Default
   m_EditorClassIdentifier: 
-  acceleration: 2.5
-  friction: 2
-  maxSpeed: 5
+  AllowedSpells: 000000000000000001000000010000000200000003000000
+  Acceleration: 2.5
+  Friction: 2
+  MaxSpeed: 5
