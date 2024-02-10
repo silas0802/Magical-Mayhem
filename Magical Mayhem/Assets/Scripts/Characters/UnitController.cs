@@ -32,7 +32,8 @@ public class UnitController : NetworkBehaviour
         Vector3 target = HelperClass.GetMousePosInWorld(out validClickPosition); //gets mouse pos
         if (validClickPosition){
             target = new Vector3(target.x,0,target.z);
-            unitMover.SetTargetPosition(target); //sets target pos to mouse pos
+            Debug.Log(target);
+            unitMover.SetTargetPositionServerRPC(target); //sets target pos to mouse pos
         }
     }
 

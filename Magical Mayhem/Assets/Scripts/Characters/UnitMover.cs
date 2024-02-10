@@ -26,6 +26,11 @@ public class UnitMover : NetworkBehaviour
     {
         Move();
     }
+    [ServerRpc]
+    public void SetTargetPositionServerRPC(Vector3 targetPosition)
+    {
+        SetTargetPosition(targetPosition);
+    }
     public void SetTargetPosition(Vector3 targetPosition){
         this.targetPosition = targetPosition;
     }
