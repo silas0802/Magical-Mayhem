@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -13,6 +14,7 @@ public class UnitMover : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
     
+
 
     public void Move(){
         Debug.Log((targetPosition-transform.position).normalized*moveSpeed);

@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(UnitCaster),typeof(UnitMover))]
-public class UnitController : MonoBehaviour
+public class UnitController : NetworkBehaviour
 {
     [SerializeField] Brain brain;
     [HideInInspector] public UnitCaster unitCaster;
@@ -27,11 +28,10 @@ public class UnitController : MonoBehaviour
 
     void OnRightClick(){
         bool validClickPosition;
-        Vector3 target = HelperClass.GetMousePosInWorld(out validClickPosition);
+        Vector3 target = HelperClass.GetMousePosInWorld(out validClickPosition); //gets mouse pos
         if (validClickPosition){
             target = new Vector3(target.x,0,target.z);
-            Debug.Log(target);
-            unitMover.SetTargetPosition(target);
+            unitMover.SetTargetPosition(target); //sets target pos to mouse pos
         }
     }
 
