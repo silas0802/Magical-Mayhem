@@ -6,7 +6,7 @@ using UnityEngine;
 public class UnitClass : ScriptableObject
 {
     [Header("Combat Statistics")]
-    [SerializeField] private SpellType[] AllowedSpells = new SpellType[6];
+    [SerializeField, Tooltip("These are the spell types that the class may equip")] private SpellType[] AllowedSpells = new SpellType[6];
 
     [Header("Movement Statistics")]
 
