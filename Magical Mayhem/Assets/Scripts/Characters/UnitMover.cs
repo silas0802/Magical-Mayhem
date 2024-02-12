@@ -23,7 +23,7 @@ public class UnitMover : NetworkBehaviour
     /// Sets the velocity of the rigidbody based on the current position and target position. Can only be called from server.
     /// </summary>
     public void Move(){
-        Debug.Log((targetPosition-transform.position).normalized*moveSpeed);
+        //Debug.Log((targetPosition-transform.position).normalized*moveSpeed);
         rb.velocity = (targetPosition-transform.position).normalized*moveSpeed;
     }
 
