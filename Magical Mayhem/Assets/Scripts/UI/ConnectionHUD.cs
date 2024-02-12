@@ -24,7 +24,6 @@ public class ConnectionHUD : MonoBehaviour
         string input = inputField.text;
         if (input == null || input == "")
         {
-            print("Lockal");
             input = LOCALHOST;
         }
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
