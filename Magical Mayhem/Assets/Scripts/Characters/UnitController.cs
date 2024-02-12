@@ -17,6 +17,9 @@ public class UnitController : NetworkBehaviour
     public UnitCaster unitCaster;
 
     [HideInInspector]
+    public Animator animator;
+
+    [HideInInspector]
     public UnitMover unitMover;
 
     private UnitState state;
@@ -24,6 +27,7 @@ public class UnitController : NetworkBehaviour
     void Awake() {
         unitCaster = GetComponent<UnitCaster>();
         unitMover = GetComponent<UnitMover>();
+        animator = GetComponentInChildren<Animator>();
     }
     void Start() {
         ChangeState(new UnitMoveState());
