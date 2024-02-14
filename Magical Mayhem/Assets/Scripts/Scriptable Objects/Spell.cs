@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Spell : ScriptableObject
 {
+    public Sprite Icon;
     [TextArea(5,10)] public string Description = "This is a spell";
 
     public SpellType Type;
