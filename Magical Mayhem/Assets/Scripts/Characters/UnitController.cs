@@ -30,6 +30,7 @@ public class UnitController : NetworkBehaviour
         unitCaster = GetComponent<UnitCaster>();
         unitMover = GetComponent<UnitMover>();
         animator = GetComponentInChildren<Animator>();
+        
     }
     void Start() {
         ChangeState(new UnitMoveState());
