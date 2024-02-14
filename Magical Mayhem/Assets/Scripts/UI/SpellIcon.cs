@@ -9,7 +9,7 @@ public class SpellIcon : MonoBehaviour
     public Image image;
     
     public void Initialize(Spell spell){
-        image.sprite = spell.Icon;
+        image.sprite = spell.icon;
     }
     public void Initialize(Item item){
 
