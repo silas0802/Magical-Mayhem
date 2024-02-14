@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-
+/// <summary>
+/// Controls the movement of unit. - Silas Thule
+/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class UnitMover : NetworkBehaviour
 {

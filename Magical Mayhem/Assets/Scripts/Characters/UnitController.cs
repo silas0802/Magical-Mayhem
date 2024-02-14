@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+/// <summary>
+/// Controls all the behaviour of a unit
+/// </summary>
 [RequireComponent(typeof(UnitCaster), typeof(UnitMover))]
 public class UnitController : NetworkBehaviour
 {
@@ -38,6 +40,9 @@ public class UnitController : NetworkBehaviour
         state.StateUpdate(this);
     }
 
+    /// <summary>
+    /// What happens when right clicking. Sets units target position. - Silas Thule
+    /// </summary>
     void OnRightClick() {
         if (!IsLocalPlayer) return;
         bool validClickPosition;
@@ -84,8 +89,12 @@ public class UnitController : NetworkBehaviour
     }
     #endregion 
 
+    /// <summary>
+    /// Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule
+    /// </summary>
+    /// <param name="index"></param>
     void CastSpell(int index)
-    {
+    {   
         bool validTarget;
         Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
         if (validTarget)
