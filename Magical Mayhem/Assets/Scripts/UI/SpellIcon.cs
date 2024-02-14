@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,5 +10,8 @@ public class SpellIcon : MonoBehaviour
     
     public void Initialize(Spell spell){
         image.sprite = spell.Icon;
+    }
+    public void Initialize(Item item){
+
     }
 }
