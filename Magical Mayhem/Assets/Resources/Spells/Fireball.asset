@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: Fireball
   m_EditorClassIdentifier: 
   Description: This is a spell
-  Type: 0
+  Icon: {fileID: 0}
   Price: 10
+  isComponentSpell: 0
+  Type: 0
+  Speed: 10
   Range: 10
   TriggerRadius: 0.5
   Projectile: {fileID: 3257114547246139475, guid: f17561f759f361a4e999a2fb2a24ab81,
     type: 3}
-  EndEffect: {fileID: 0}
+  EndEffect: {fileID: 11400000, guid: 7861af9072e7cc048b109828d9681462, type: 2}
