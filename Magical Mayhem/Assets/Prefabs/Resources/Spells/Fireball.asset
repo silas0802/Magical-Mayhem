@@ -12,7 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32bc9b83314621f41a21c6be28f98c92, type: 3}
   m_Name: Fireball
   m_EditorClassIdentifier: 
-  Description: This is a spell
+  Description: 'Made from the element of fire. The fire ball is one of the most basic
+    of spell known to wizards and is always the first spell young wizards are taught.
+
+
+    Damage: 
+    50
+
+    Range:  100
+
+    Type: Fire'
   Icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   Price: 10
   isComponentSpell: 0
