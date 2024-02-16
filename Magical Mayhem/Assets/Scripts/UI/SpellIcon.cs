@@ -8,10 +8,8 @@ public class SpellIcon : MonoBehaviour
 {
     public Image image;
     
-    public void Initialize(Spell spell){
-        image.sprite = spell.icon;
+    public void Initialize(Buyable buyable){
+        image.sprite = buyable.icon;
     }
-    public void Initialize(Item item){
-
-    }
+    
 }

@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: Super Nova
   m_EditorClassIdentifier: 
   Description: This is a spell
-  Type: 0
+  Icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
   Price: 10
+  isComponentSpell: 0
+  Type: 0
+  Delay: 0
+  LifeTime: 1
   Radius: 0.5
+  ExplodeAtTarget: 1
   Explosion: {fileID: 0}
