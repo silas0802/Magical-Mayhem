@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-
+/// <summary>
+///  - Silas Thule
+/// </summary>
 public class ProjectileInstance : NetworkBehaviour
 {
     UnitController owner;

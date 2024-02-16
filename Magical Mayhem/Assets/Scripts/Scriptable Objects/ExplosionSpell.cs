@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+///  - Silas Thule
+/// </summary>
 [CreateAssetMenu(fileName = "New Explosion Spell", menuName = "Game/Spells/Explosion Spell")]
 public class ExplosionSpell : Spell
 {
