@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-
+[RequireComponent(typeof(UnitController))]
 public class UnitCaster : NetworkBehaviour
 {
     [SerializeField] private Spell[] spells = new Spell[6];

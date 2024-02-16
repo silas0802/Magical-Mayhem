@@ -13,7 +13,7 @@ public class UnitController : NetworkBehaviour
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
     private Brain brain;
     [SerializeField]
-    private UnitClass unitClass;
+    public UnitClass unitClass;
 
     [HideInInspector]
     public UnitCaster unitCaster;
