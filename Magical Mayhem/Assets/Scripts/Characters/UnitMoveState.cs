@@ -14,6 +14,9 @@ public class UnitMoveState : UnitState
         if (controller.IsServer && controller.IsLocalPlayer)
         {
             controller.unitMover.Move();
+            // if ((controller.unitMover.targetPosition-controller.transform.position).magnitude<controller.unitClass.acceptingDistance){
+            //     controller.ChangeState(new UnitIdleState());
+            // }
         }
         else if (controller.IsClient && controller.IsLocalPlayer)
         {
