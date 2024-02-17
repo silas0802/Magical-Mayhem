@@ -5,9 +5,10 @@ using UnityEngine;
 public abstract class Spell : Buyable
 {
 
-    [SerializeField, Tooltip("Set to true if this is a compnent of another spell.")] private bool isComponentSpell = false;
     [SerializeField] private SpellType Type;
 
+    [SerializeField, Tooltip("Set to true if this is a compnent of another spell.")] 
+    private bool isComponentSpell = false;
 
     [Range(0,20), Tooltip("The duration you have to wait before, you can use the spell again")] 
     private float Cooldown = 3;

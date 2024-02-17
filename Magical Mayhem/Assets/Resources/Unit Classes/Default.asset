@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   AllowedSpells: 000000000000000001000000010000000200000003000000
-  Acceleration: 2.5
-  Friction: 2
-  MaxSpeed: 5
+  MaxHealth: 100

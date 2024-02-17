@@ -9,9 +9,25 @@ using UnityEngine;
 [RequireComponent(typeof(UnitController),typeof(Rigidbody))]
 public class UnitMover : NetworkBehaviour
 {
-    [SerializeField, Tooltip("A value made for testing. Should be removed when movement system has been converted to use acceleration and friction")] 
+    [Header("Movement Statistics")]
+
+    [SerializeField, Range(0, 2f), Tooltip("A higher value will make the unit get up to maxSpeed quicker.")]
+    private float acceleration = 1f;
+
+    [SerializeField, Range(0, 5f), Tooltip("A higher value will slow down the unit quicker.")]
+    private float friction = 2f;
+
+    [SerializeField, Range(0, 10f), Tooltip("The max speed the unit can go by walking. This can be exceeded through knockbacks.")]
+    private float maxSpeed = 5f;
+
+    [SerializeField, Range(0, 1f), Tooltip("The distance from target position that the unit accepts as close enough")]
+    private float acceptingDistance = 0.1f;
+    [SerializeField, Range(0, 30f), Tooltip("A higher value makes the unit stop quicker when within acceptingDistance")]
+    private float slowDownMult = 10f;
+
 
     
+
 
     public Vector3 targetPosition {get; private set;}
     private Rigidbody rb;
@@ -24,31 +40,31 @@ public class UnitMover : NetworkBehaviour
     
 
     /// <summary>
-    /// Sets the velocity of the rigidbody based on the current position and target position. Can only be called from server.
+    /// Sets the velocity of the rigidbody based on the current velocity, position and target position. Can only be called from server.
     /// </summary>
     public void Move(){
         //Debug.Log((targetPosition-transform.position).normalized*moveSpeed);
-        if ((targetPosition-transform.position).magnitude<controller.unitClass.acceptingDistance){
-            if (rb.velocity.magnitude<controller.unitClass.maxSpeed+0.1f)
+        if ((targetPosition-transform.position).magnitude<acceptingDistance){
+            if (rb.velocity.magnitude<maxSpeed +0.1f)
             {
-                rb.velocity*=1-Time.deltaTime*10;   
+                rb.velocity*=1-Time.deltaTime*slowDownMult;   
             }
         }
         else{
-            Vector3 inputtedVel = (targetPosition-transform.position).normalized*controller.unitClass.acceleration;
+            Vector3 inputtedVel = (targetPosition-transform.position).normalized*acceleration;
             Vector3 givenVel = rb.velocity+inputtedVel;
             if (givenVel.magnitude<rb.velocity.magnitude){
                 rb.velocity = givenVel;
             }
-            else if (rb.velocity.magnitude<controller.unitClass.maxSpeed){
-                rb.velocity = givenVel.magnitude > controller.unitClass.maxSpeed ? givenVel.normalized*controller.unitClass.maxSpeed : givenVel;
+            else if (rb.velocity.magnitude<maxSpeed){
+                rb.velocity = givenVel.magnitude > maxSpeed ? givenVel.normalized*maxSpeed : givenVel;
             }
         }
         
     }
     private void Update(){
         if (IsServer){
-            rb.velocity-=rb.velocity.normalized*controller.unitClass.friction*Time.deltaTime;
+            rb.velocity-=rb.velocity.normalized*friction *Time.deltaTime;
         }
     }
     

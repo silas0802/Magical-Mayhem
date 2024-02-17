@@ -8,8 +8,11 @@ using UnityEngine.InputSystem;
 /// Controls all the behaviour of a unit
 /// </summary>
 [RequireComponent(typeof(UnitCaster), typeof(UnitMover))]
-public class UnitController : NetworkBehaviour
+public class UnitController : NetworkBehaviour, IDamagable
 {
+    #region Fields
+
+    [SerializeField] private int health;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
     private Brain brain;
     [SerializeField]
@@ -25,43 +28,58 @@ public class UnitController : NetworkBehaviour
     public UnitMover unitMover;
 
     private UnitState state;
+    #endregion
 
-    void Awake() {
+
+    #region Awake, Start and Update
+    void Awake()
+    {
         unitCaster = GetComponent<UnitCaster>();
         unitMover = GetComponent<UnitMover>();
         animator = GetComponentInChildren<Animator>();
-        
+        health = unitClass.maxHealth;
+
     }
-    void Start() {
+    void Start()
+    {
         ChangeState(new UnitMoveState());
     }
 
-    void Update() {
+    void Update()
+    {
         brain?.HandleActions(this);
         state.StateUpdate(this);
     }
+    #endregion
 
+
+    #region Movement Inputs
     /// <summary>
     /// What happens when right clicking. Sets units target position. - Silas Thule
     /// </summary>
-    void OnRightClick() {
+    void OnRightClick()
+    {
         if (!IsLocalPlayer) return;
         bool validClickPosition;
         Vector3 target = HelperClass.GetMousePosInWorld(out validClickPosition); //gets mouse pos
-        if (validClickPosition) {
+        if (validClickPosition)
+        {
             target = new Vector3(target.x, 0, target.z);
             //Debug.Log(target);
             unitMover.SetTargetPositionServerRPC(target); //sets target pos to mouse pos
         }
     }
-    
-    void OnLeftClick() {
+
+    void OnLeftClick()
+    {
 
     }
     void OnStop()
     {
 
     }
+    #endregion
+
 
     #region Spell Inputs
     void OnSpell1()
@@ -123,5 +141,19 @@ public class UnitController : NetworkBehaviour
         state.EnterState(this);
     }
 
+    public void ModifyHealth(UnitController dealer,int amount)
+    {
+        health = Mathf.Clamp(health+amount,0,unitClass.maxHealth);
+        if (health == 0)
+        {
+            Death(dealer);
+        }
+    }
 
+    public void Death(UnitController killer)
+    {
+        throw new NotImplementedException();
+    }
+
+    
 }
