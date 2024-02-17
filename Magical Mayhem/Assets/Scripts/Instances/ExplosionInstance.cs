@@ -30,7 +30,7 @@ public class ExplosionInstance : NetworkBehaviour
                 hasTriggered = true;
                 ApplyDamage();
             }
-            else if (timer < -spell.lifeTime){
+            if (timer < -spell.lifeTime){
                 GetComponent<NetworkObject>().Despawn();
                 Destroy(gameObject);
             }
@@ -41,7 +41,7 @@ public class ExplosionInstance : NetworkBehaviour
         Collider[] hits = Physics.OverlapSphere(transform.position, spell.radius);
         foreach (Collider hit in hits)
         {
-            hit.GetComponent<IDamagable>().ModifyHealth(owner,-spell.damage);
+            hit.GetComponent<IDamagable>()?.ModifyHealth(owner,-spell.damage);
         }
 
     }

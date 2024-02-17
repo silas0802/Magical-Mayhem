@@ -15,11 +15,12 @@ MonoBehaviour:
   Description: 
   Icon: {fileID: 0}
   Price: 0
-  isComponentSpell: 1
   Type: 0
-  Delay: 1.09
+  isComponentSpell: 1
+  Damage: 20
+  Delay: 0
   LifeTime: 1
-  Radius: 0.5
+  Radius: 1.17
   ExplodeAtTarget: 1
   Explosion: {fileID: 7396775352713488354, guid: ca4708ed366de8f4a99f94eac270bd09,
     type: 3}
