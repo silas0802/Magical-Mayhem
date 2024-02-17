@@ -19,10 +19,15 @@ public class UnitClass : ScriptableObject
     [SerializeField,Range(0, 10f),Tooltip("The max speed the unit can go by walking. This can be exceeded through knockbacks.")]
     private float MaxSpeed = 5;
 
+    [SerializeField,Range(0, 1f),Tooltip("The max speed the unit can go by walking. This can be exceeded through knockbacks.")]
+    private float AcceptingDistance = 1;
+
+
     public SpellType[] allowedSpells => this.AllowedSpells;
     public float acceleration => this.Acceleration;
     public float friction => this.Friction;
     public float maxSpeed => this.MaxSpeed;
+    public float acceptingDistance => this.AcceptingDistance;
 
 
     //private void OnValidate()

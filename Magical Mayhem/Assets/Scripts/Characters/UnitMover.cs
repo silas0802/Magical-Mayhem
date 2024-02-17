@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -5,19 +6,20 @@ using UnityEngine;
 /// <summary>
 /// Controls the movement of unit. - Silas Thule
 /// </summary>
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(UnitController),typeof(Rigidbody))]
 public class UnitMover : NetworkBehaviour
 {
     [SerializeField, Tooltip("A value made for testing. Should be removed when movement system has been converted to use acceleration and friction")] 
-    private float moveSpeed = 5;       //Made for testing and should be removed when movement gets converted to use acceleration and friction
 
     
 
-    private Vector3 targetPosition;
+    public Vector3 targetPosition {get; private set;}
     private Rigidbody rb;
+    private UnitController controller;
 
     void Awake(){
         rb = GetComponent<Rigidbody>();
+        controller = GetComponent<UnitController>();
     }
     
 
@@ -26,9 +28,30 @@ public class UnitMover : NetworkBehaviour
     /// </summary>
     public void Move(){
         //Debug.Log((targetPosition-transform.position).normalized*moveSpeed);
-        rb.velocity = (targetPosition-transform.position).normalized*moveSpeed;
+        if ((targetPosition-transform.position).magnitude<controller.unitClass.acceptingDistance){
+            if (rb.velocity.magnitude<controller.unitClass.maxSpeed+0.1f)
+            {
+                rb.velocity*=1-Time.deltaTime*10;   
+            }
+        }
+        else{
+            Vector3 inputtedVel = (targetPosition-transform.position).normalized*controller.unitClass.acceleration;
+            Vector3 givenVel = rb.velocity+inputtedVel;
+            if (givenVel.magnitude<rb.velocity.magnitude){
+                rb.velocity = givenVel;
+            }
+            else if (rb.velocity.magnitude<controller.unitClass.maxSpeed){
+                rb.velocity = givenVel.magnitude > controller.unitClass.maxSpeed ? givenVel.normalized*controller.unitClass.maxSpeed : givenVel;
+            }
+        }
+        
     }
-
+    private void Update(){
+        if (IsServer){
+            rb.velocity-=rb.velocity.normalized*controller.unitClass.friction*Time.deltaTime;
+        }
+    }
+    
     [ServerRpc]
     public void MoveServerRPC()
     {

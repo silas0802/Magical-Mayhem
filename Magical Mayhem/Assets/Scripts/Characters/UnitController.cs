@@ -13,7 +13,7 @@ public class UnitController : NetworkBehaviour
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
     private Brain brain;
     [SerializeField]
-    private UnitClass unitClass;
+    public UnitClass unitClass;
 
     [HideInInspector]
     public UnitCaster unitCaster;
@@ -30,6 +30,7 @@ public class UnitController : NetworkBehaviour
         unitCaster = GetComponent<UnitCaster>();
         unitMover = GetComponent<UnitMover>();
         animator = GetComponentInChildren<Animator>();
+        
     }
     void Start() {
         ChangeState(new UnitMoveState());

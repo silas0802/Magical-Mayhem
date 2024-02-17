@@ -10,25 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43c8973c8190a6f40878c0041c0e0b67, type: 3}
-  m_Name: Super Nova
+  m_Name: FireballExplosion
   m_EditorClassIdentifier: 
-  Description: 'As the name implies the Supernova creates an explosion made of the
-    most refined arcane energy. This spell takes years of practice to perfect and
-    shows the skill you as a wizard posses.
-
-
-    Damage: 150
-
-    Range: 50
-
-    Type:
-    Arcane'
-  Icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
-  Price: 10
-  isComponentSpell: 0
+  Description: 
+  Icon: {fileID: 0}
+  Price: 0
+  isComponentSpell: 1
   Type: 0
-  Delay: 0
+  Delay: 1.09
   LifeTime: 1
   Radius: 0.5
   ExplodeAtTarget: 1
-  Explosion: {fileID: 0}
+  Explosion: {fileID: 7396775352713488354, guid: ca4708ed366de8f4a99f94eac270bd09,
+    type: 3}
