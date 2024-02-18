@@ -65,13 +65,14 @@ public class ProjectileInstance : NetworkBehaviour
     private void Homing()
     {
         unitTimer-=Time.deltaTime;
-        if (unitTimer < 0)
+        range -= Time.deltaTime;
+        if (unitTimer < 0)  //scan for nearest enemy
         {
             unitTarget = RoundManager.instance.FindNearestUnit(transform.position,owner);
             unitTimer = 0.25f;
             
         }
-        if (unitTarget != null)
+        if (unitTarget != null) //Math to figure out trajectory
         {
             Vector3 dir = (unitTarget.transform.position - transform.position).normalized * Time.deltaTime * spell.homingForce;
             dir.y = 0;
@@ -82,7 +83,7 @@ public class ProjectileInstance : NetworkBehaviour
             }
             rb.velocity = dir;
         }
-        range -= Time.deltaTime;
+        
         if (range < 0)
         {
             Detonate();
