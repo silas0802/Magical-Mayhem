@@ -10,6 +10,9 @@ public class ExplosionSpell : Spell
     [SerializeField, Range(0, 100)] 
     private int Damage = 20;
 
+    [SerializeField, Range(0, 500)]
+    private float Knockback = 100;
+
     [SerializeField,Range(0,3),Tooltip("The time before the damage effect is applied after spawning the explosion.")] 
     private float Delay = 0f;
 
@@ -25,6 +28,7 @@ public class ExplosionSpell : Spell
     [SerializeField] private ExplosionInstance Explosion;
 
     public int damage => this.Damage;
+    public float knockback => this.Knockback;
     public float delay => this.Delay;
     public float lifeTime => this.LifeTime;
     public float radius => this.Radius;

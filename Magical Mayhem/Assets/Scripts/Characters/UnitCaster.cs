@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+
 [RequireComponent(typeof(UnitController))]
 public class UnitCaster : NetworkBehaviour
 {
     [SerializeField] private Spell[] spells = new Spell[6];
+    [SerializeField] private float[] cooldowns = new float[6];
     private UnitController controller;
 
     private void Awake()
@@ -16,11 +18,27 @@ public class UnitCaster : NetworkBehaviour
 
     void Update()
     {
-        
+        HandleCooldowns();
     }
 
+    public void TryCastSpell(int index, Vector3 target)
+    {
+        if (IsServer && IsLocalPlayer)
+        {
+            CastSpell(index, target);
+        }
+        else if (IsClient && IsLocalPlayer)
+        {
+            if (cooldowns[index] <= 0)
+            {
+                SetCooldown(index, spells[index].cooldown);
+                CastSpellServerRPC(index, target);
+
+            }
+        }
+    }
     [ServerRpc]
-    public void CastSpellServerRPC(int index, Vector3 target)
+    private void CastSpellServerRPC(int index, Vector3 target)
     {
         CastSpell(index,target);
     }
@@ -30,15 +48,24 @@ public class UnitCaster : NetworkBehaviour
     /// </summary>
     /// <param name="index"></param>
     /// <param name="target"></param>
-    public void CastSpell(int index, Vector3 target)
+    private void CastSpell(int index, Vector3 target)
     {
         
         Spell spell = spells[index];
-        if (!spell) return;
-        spell.Activate(controller, target);
+        if (!spell || cooldowns[index]>0) return;
+
+        SetCooldown(index, spells[index].cooldown);
+        StartCoroutine(CastingSpell(spell, target));
         
 
         
+    }
+    IEnumerator CastingSpell(Spell spell, Vector3 target)
+    {
+        controller.unitMover.canMove = false;
+        yield return new WaitForSeconds(spell.castTime);
+        spell.Activate(controller, target);
+        controller.unitMover.canMove = true;
     }
     /// <summary>
     /// Checks if the equipped spells match with the units current class's allowed spells
@@ -47,6 +74,16 @@ public class UnitCaster : NetworkBehaviour
     public bool ValidateSpells(){
         return true;
     }
-
+    private void HandleCooldowns()
+    {
+        for (int i = 0; i < cooldowns.Length; i++)
+        {
+            cooldowns[i] -= Time.deltaTime;
+        }
+    }
+    private void SetCooldown(int index, float value)
+    {
+        cooldowns[index] = value;
+    }
     
 }

@@ -25,6 +25,8 @@ public class UnitMover : NetworkBehaviour
     [SerializeField, Range(0, 30f), Tooltip("A higher value makes the unit stop quicker when within acceptingDistance")]
     private float slowDownMult = 10f;
 
+    [SerializeField]public bool canMove = true;
+
 
     
 
@@ -44,7 +46,7 @@ public class UnitMover : NetworkBehaviour
     /// </summary>
     public void Move(){
         //Debug.Log((targetPosition-transform.position).normalized*moveSpeed);
-        if ((targetPosition-transform.position).magnitude<acceptingDistance){
+        if ((targetPosition-transform.position).magnitude<acceptingDistance||!canMove){
             if (rb.velocity.magnitude<maxSpeed +0.1f)
             {
                 rb.velocity*=1-Time.deltaTime*slowDownMult;   
@@ -63,6 +65,17 @@ public class UnitMover : NetworkBehaviour
         
     }
     private void Update(){
+        if (controller.IsServer && controller.IsLocalPlayer)
+        {
+            controller.unitMover.Move();
+            // if ((controller.unitMover.targetPosition-controller.transform.position).magnitude<controller.unitClass.acceptingDistance){
+            //     controller.ChangeState(new UnitIdleState());
+            // }
+        }
+        else if (controller.IsClient && controller.IsLocalPlayer)
+        {
+            controller.unitMover.MoveServerRPC();
+        }
         if (IsServer){
             rb.velocity-=rb.velocity.normalized*friction *Time.deltaTime;
         }

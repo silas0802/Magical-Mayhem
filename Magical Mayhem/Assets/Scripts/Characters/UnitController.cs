@@ -27,7 +27,6 @@ public class UnitController : NetworkBehaviour, IDamagable
     [HideInInspector]
     public UnitMover unitMover;
 
-    private UnitState state;
     #endregion
 
 
@@ -40,15 +39,11 @@ public class UnitController : NetworkBehaviour, IDamagable
         health = unitClass.maxHealth;
 
     }
-    void Start()
-    {
-        ChangeState(new UnitMoveState());
-    }
+    
 
     void Update()
     {
         brain?.HandleActions(this);
-        state.StateUpdate(this);
     }
     #endregion
 
@@ -118,28 +113,14 @@ public class UnitController : NetworkBehaviour, IDamagable
         Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
         if (validTarget)
         {
-            if (IsServer && IsLocalPlayer)
-            {
-                unitCaster.CastSpell(index, pos);
-            }
-            else if (IsClient && IsLocalPlayer)
-            {
-                unitCaster.CastSpellServerRPC(index, pos);
-            }
+            unitCaster.TryCastSpell(index, pos);
         }
         
     }
+    
 
 
-    /// <summary>
-    /// Changes the State of the UnitController and calls the EnterState function of state
-    /// </summary>
-    /// <param name="state"></param>
-    public void ChangeState(UnitState state)
-    {
-        this.state = state;
-        state.EnterState(this);
-    }
+    
 
     public void ModifyHealth(UnitController dealer,int amount)
     {
