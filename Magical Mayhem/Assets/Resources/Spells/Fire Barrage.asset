@@ -17,10 +17,10 @@ MonoBehaviour:
   Price: 0
   Type: 0
   IsComponentSpell: 0
-  Cooldown: 3
-  CastTime: 0.5
+  Cooldown: 4.3
+  CastTime: 0.32
   CanMoveWhileCasting: 0
-  SpellToCast: {fileID: 0}
-  Amount: 2
-  Spray: 0
-  TimeInterval: 0
+  SpellToCast: {fileID: 11400000, guid: c5d2430883271c840a808ec7e5516c76, type: 2}
+  Amount: 20
+  Spray: 11
+  TimeInterval: 0.075

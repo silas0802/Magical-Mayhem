@@ -27,7 +27,7 @@ MonoBehaviour:
   Type: 0
   IsComponentSpell: 0
   Cooldown: 3
-  CastTime: 0.25
+  CastTime: 0.27
   CanMoveWhileCasting: 0
   Projectile: {fileID: 3257114547246139475, guid: f17561f759f361a4e999a2fb2a24ab81,
     type: 3}
@@ -35,4 +35,4 @@ MonoBehaviour:
   Speed: 10
   Range: 10
   TriggerRadius: 0.5
-  HomingForce: 0.5
+  HomingForce: 0
