@@ -67,7 +67,12 @@ public class UnitCaster : NetworkBehaviour
 
         yield return new WaitForSeconds(spell.castTime);
         spell.Activate(controller, target);
-
+        if (spell is MultiCastSpell)
+        {
+            MultiCastSpell m = spell as MultiCastSpell;
+            float extraDelay = (m.amount - 1) * m.timeInterval;
+            yield return new WaitForSeconds(extraDelay);
+        }
         if (!spell.canMoveWhileCasting) controller.unitMover.canMove = true;
     }
     /// <summary>

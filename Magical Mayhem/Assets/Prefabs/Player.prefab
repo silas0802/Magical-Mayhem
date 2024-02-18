@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2111426720
+  GlobalObjectIdHash: 119731904
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -196,6 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 276fc7ef598338649a8f6a28f546bbb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
   brain: {fileID: 0}
   unitClass: {fileID: 11400000, guid: befbd27881e787e438d181a27256f47a, type: 2}
   unitCaster: {fileID: 0}
@@ -215,11 +216,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spells:
   - {fileID: 11400000, guid: c5d2430883271c840a808ec7e5516c76, type: 2}
+  - {fileID: 11400000, guid: 7987c192795981f40941d41e0469f3a1, type: 2}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
+  cooldowns:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 --- !u!114 &7833537417265256747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,6 +245,7 @@ MonoBehaviour:
   maxSpeed: 5.59
   acceptingDistance: 0.201
   slowDownMult: 21.1
+  canMove: 1
 --- !u!1001 &7198655666575741003
 PrefabInstance:
   m_ObjectHideFlags: 0
