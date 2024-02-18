@@ -62,10 +62,13 @@ public class UnitCaster : NetworkBehaviour
     }
     IEnumerator CastingSpell(Spell spell, Vector3 target)
     {
-        controller.unitMover.canMove = false;
+        
+        if (!spell.canMoveWhileCasting) controller.unitMover.canMove = false;
+
         yield return new WaitForSeconds(spell.castTime);
         spell.Activate(controller, target);
-        controller.unitMover.canMove = true;
+
+        if (!spell.canMoveWhileCasting) controller.unitMover.canMove = true;
     }
     /// <summary>
     /// Checks if the equipped spells match with the units current class's allowed spells
