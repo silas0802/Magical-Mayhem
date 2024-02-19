@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 /// <summary>
-/// Controls all the behaviour of a unit
+/// Controls all the behaviour of a unit. - Silas Thule
 /// </summary>
 [RequireComponent(typeof(UnitCaster), typeof(UnitMover))]
 public class UnitController : NetworkBehaviour, IDamagable
@@ -29,7 +29,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     public UnitMover unitMover;
 
     public static KillEvent OnUnitDeath;
-    private bool isDead;
+    public bool isDead { get; private set; }
     #endregion
 
 
@@ -119,8 +119,12 @@ public class UnitController : NetworkBehaviour, IDamagable
         }
         
     }
-    
 
+    /// <summary>
+    /// Changes the units health and clamps the value between 0 and maxHealth. Calls Death method if health reaches 0. Server Only. - Silas Thule
+    /// </summary>
+    /// <param name="dealer"></param>
+    /// <param name="amount"></param>
     public void ModifyHealth(UnitController dealer,int amount)
     {
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
@@ -130,20 +134,46 @@ public class UnitController : NetworkBehaviour, IDamagable
             Death(dealer);
         }
     }
-
+    /// <summary>
+    /// Is called on Death and sends KillData to RoundManager. Server Only. - Silas Thule
+    /// </summary>
+    /// <param name="killer"></param>
     public void Death(UnitController killer)
     {
         if (isDead) return;
-        isDead = true;
+        SetDead(true);
         KillData kill = new KillData(this, killer);
         OnUnitDeath.Invoke(kill);
     }
-
+    /// <summary>
+    /// Resets health to full and Sets dead to false. Server Only. - Silas Thule
+    /// </summary>
     public void ResetHealth()
     {
         health = unitClass.maxHealth;
-        isDead= false;
+        SetDead(false);
+    }
+    /// <summary>
+    /// Disables Colliders on clients and server.
+    /// </summary>
+    /// <param name="isDead"></param>
+    private void SetDead(bool isDead)
+    {
+        this.isDead = isDead;
+        GetComponent<Collider>().enabled = isDead; //Disables Collider on server
+        SetDeadClientRPC(isDead); //Disables Collider on clients
+    }
+    /// <summary>
+    /// Disables Colliders on clients
+    /// </summary>
+    /// <param name="isDead"></param>
+    [ClientRpc]
+    private void SetDeadClientRPC(bool isDead)
+    {
+        GetComponent<Collider>().enabled = isDead;
     }
 }
+
+
 [Serializable]
 public class KillEvent : UnityEvent<KillData> { }
