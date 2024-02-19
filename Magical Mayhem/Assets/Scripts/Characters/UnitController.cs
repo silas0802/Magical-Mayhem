@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 /// <summary>
 /// Controls all the behaviour of a unit
@@ -27,6 +28,8 @@ public class UnitController : NetworkBehaviour, IDamagable
     [HideInInspector]
     public UnitMover unitMover;
 
+    public static KillEvent OnUnitDeath;
+    private bool isDead;
     #endregion
 
 
@@ -37,7 +40,6 @@ public class UnitController : NetworkBehaviour, IDamagable
         unitMover = GetComponent<UnitMover>();
         animator = GetComponentInChildren<Animator>();
         health = unitClass.maxHealth;
-
     }
     
 
@@ -119,11 +121,9 @@ public class UnitController : NetworkBehaviour, IDamagable
     }
     
 
-
-    
-
     public void ModifyHealth(UnitController dealer,int amount)
     {
+        if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
         health = Mathf.Clamp(health+amount,0,unitClass.maxHealth);
         if (health == 0)
         {
@@ -133,8 +133,17 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     public void Death(UnitController killer)
     {
-        throw new NotImplementedException();
+        if (isDead) return;
+        isDead = true;
+        KillData kill = new KillData(this, killer);
+        OnUnitDeath.Invoke(kill);
     }
 
-    
+    public void ResetHealth()
+    {
+        health = unitClass.maxHealth;
+        isDead= false;
+    }
 }
+[Serializable]
+public class KillEvent : UnityEvent<KillData> { }

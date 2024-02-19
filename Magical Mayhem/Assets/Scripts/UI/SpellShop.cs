@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class SpellShop : MonoBehaviour
 {
+    public static SpellShop instance;
+
     public Spell[] spells;
     public SpellIcon[] ownedSpells =new SpellIcon[6];
     public SpellIcon spellIconTemplate;
@@ -13,7 +15,18 @@ public class SpellShop : MonoBehaviour
     public Transform buyables;
     public Buyable selected;
     public TMP_Text descriptionText;
-    
+    public TMP_Text timerText;
+    private float time;
+
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        gameObject.SetActive(false);
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +43,24 @@ public class SpellShop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        time -= Time.deltaTime;
+        if (time < 0)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            timerText.text = ((int)time).ToString();
+        }
     }
     public void SelectBuyable(SpellIcon spellIcon){
         selected=spellIcon.buyable;
         selectedSpellicon.Initialize(spellIcon.buyable);
         descriptionText.text=selected.description;
+    }
+    public void SetTimer(float time)
+    {
+        this.time = time;
     }
 
 }
