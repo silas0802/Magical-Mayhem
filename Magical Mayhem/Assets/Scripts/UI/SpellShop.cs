@@ -11,11 +11,13 @@ public class SpellShop : MonoBehaviour
     public bool testing = false;
     public Spell[] spells;
     public BuyableIcon[] ownedSpells =new BuyableIcon[6];
+    public BuyableIcon[] ownedItems = new BuyableIcon[6];
     public BuyableIcon spellIconTemplate;
     public BuyableIcon selectedSpellicon;
     public Transform buyables;
     public Buyable selected;
     public Transform spellHolder;
+    public Transform itemHolder;
     public TMP_Text descriptionText;
     public TMP_Text timerText;
     private float time;
@@ -36,7 +38,7 @@ public class SpellShop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-         
+         itemHolder.gameObject.SetActive(false);
         for (int i = 0; i < spells.Length; i++)
         {
             BuyableIcon buyableSpell = Instantiate(spellIconTemplate,buyables);
@@ -44,6 +46,8 @@ public class SpellShop : MonoBehaviour
             buyableSpell.GetComponent<Button>().onClick.AddListener(()=>SelectBuyable(buyableSpell));   
         }  
         LoadSlots();
+        
+        
         
     }
 
@@ -76,13 +80,21 @@ public class SpellShop : MonoBehaviour
     }
     public void ToggleSpellHolder(bool active){
         spellHolder.gameObject.SetActive(active);
+        itemHolder.gameObject.SetActive(!active);
+        
 
     }
 
     public void LoadSlots(){
+        
         foreach (BuyableIcon item in ownedSpells)
         {
             item.Initialize(item.buyable);
         }
+        foreach (BuyableIcon item in ownedItems)
+        {
+            item.Initialize(item.buyable);
+        }
+        
     }
 }
