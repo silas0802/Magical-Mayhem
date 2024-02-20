@@ -160,7 +160,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     private void SetDead(bool isDead)
     {
         this.isDead = isDead;
-        GetComponent<Collider>().enabled = isDead; //Disables Collider on server
+        GetComponent<Collider>().enabled = !isDead; //Disables Collider on server
         SetDeadClientRPC(isDead); //Disables Collider on clients
     }
     /// <summary>
