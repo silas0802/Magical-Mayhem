@@ -4098,7 +4098,8 @@ PrefabInstance:
         type: 3}
       propertyPath: buyable
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11400000, guid: 278677e9470e054498f816a7ff98fd89,
+        type: 2}
     - target: {fileID: 4515588029203655728, guid: 0e59685db848a2a4aa21c203a553f63d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -5530,7 +5531,8 @@ PrefabInstance:
         type: 3}
       propertyPath: buyable
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11400000, guid: 21c7d67c01ae11e449a5831a4d54fa6e,
+        type: 2}
     - target: {fileID: 4515588029203655728, guid: 0e59685db848a2a4aa21c203a553f63d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -5807,7 +5809,7 @@ PrefabInstance:
         type: 3}
       propertyPath: buyable
       value: 
-      objectReference: {fileID: 11400000, guid: c5d2430883271c840a808ec7e5516c76,
+      objectReference: {fileID: 11400000, guid: 2fc02641cfa074c47af39bcbeb22dab4,
         type: 2}
     - target: {fileID: 4515588029203655728, guid: 0e59685db848a2a4aa21c203a553f63d,
         type: 3}
