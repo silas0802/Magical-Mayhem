@@ -34,7 +34,10 @@ public class ProjectileSpell : Spell
 
     public override void Activate(UnitController owner, Vector3 target)
     {
-        ProjectileInstance clone = Instantiate(Projectile, owner.transform.position+Vector3.up, Quaternion.identity);
-        clone.Initialize(this, target+Vector3.up,owner);
+        Vector3 origin = owner.transform.position;
+        origin.y = 1;
+        target.y = 1;
+        ProjectileInstance clone = Instantiate(Projectile, origin, Quaternion.identity);
+        clone.Initialize(this, target,owner);
     }
 }

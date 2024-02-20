@@ -5,7 +5,11 @@ using UnityEngine;
 public abstract class Spell : Buyable
 {
 
-    [SerializeField] private SpellType Type;
+    [SerializeField, Tooltip("What kind of function the spell serves. (e.g: An attack is offensive)")] 
+    private SpellUseType UseType;
+
+    [SerializeField, Tooltip("The element of the spell.")] 
+    private SpellElementType ElementType;
 
     [SerializeField, Tooltip("Set to true if this is a compnent of another spell. (e.g: The explosion for a projectile spell).")] 
     private bool IsComponentSpell = false;
@@ -18,7 +22,8 @@ public abstract class Spell : Buyable
     [SerializeField, Tooltip("If true, the player can walk while casting.")]
     private bool CanMoveWhileCasting = false;
 
-    public SpellType type => this.Type;
+    public SpellUseType useType => this.UseType;
+    public SpellElementType elementType => this.ElementType;
     public bool isComponentSpell => this.IsComponentSpell;
     public float cooldown => this.Cooldown;
     public float castTime => this.CastTime;
@@ -27,10 +32,19 @@ public abstract class Spell : Buyable
     public abstract void Activate(UnitController owner, Vector3 target);
 }
 
-public enum SpellType
+public enum SpellUseType
 {
+    None,
     Offensive,
     Defensive,
     Movement,
     Utility,
+}
+public enum SpellElementType
+{
+    None,
+    Arcane,
+    Fire,
+    Water,
+    Ground,
 }

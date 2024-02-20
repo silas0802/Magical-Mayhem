@@ -21,6 +21,11 @@ public class UnitCaster : NetworkBehaviour
         HandleCooldowns();
     }
 
+    /// <summary>
+    /// Is called locally and determines how to cast depending on user being server or client.
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="target"></param>
     public void TryCastSpell(int index, Vector3 target)
     {
         if (IsServer && IsLocalPlayer)
@@ -37,6 +42,11 @@ public class UnitCaster : NetworkBehaviour
             }
         }
     }
+    /// <summary>
+    /// Requests the server to cast spell for client. Called from client (including host).
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="target"></param>
     [ServerRpc]
     private void CastSpellServerRPC(int index, Vector3 target)
     {
@@ -60,6 +70,12 @@ public class UnitCaster : NetworkBehaviour
 
         
     }
+    /// <summary>
+    /// Casts spell and makes sure that the unit cant move while casting.
+    /// </summary>
+    /// <param name="spell"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
     IEnumerator CastingSpell(Spell spell, Vector3 target)
     {
         
@@ -82,6 +98,9 @@ public class UnitCaster : NetworkBehaviour
     public bool ValidateSpells(){
         return true;
     }
+    /// <summary>
+    /// Decreases all the cooldowns each update
+    /// </summary>
     private void HandleCooldowns()
     {
         for (int i = 0; i < cooldowns.Length; i++)
@@ -89,6 +108,11 @@ public class UnitCaster : NetworkBehaviour
             cooldowns[i] -= Time.deltaTime;
         }
     }
+    /// <summary>
+    /// Set Cooldown of a given spell.
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="value"></param>
     private void SetCooldown(int index, float value)
     {
         cooldowns[index] = value;
