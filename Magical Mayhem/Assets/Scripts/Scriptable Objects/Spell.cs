@@ -5,18 +5,24 @@ using UnityEngine;
 public abstract class Spell : Buyable
 {
 
-    [SerializeField, Tooltip("Set to true if this is a compnent of another spell.")] private bool isComponentSpell = false;
     [SerializeField] private SpellType Type;
 
+    [SerializeField, Tooltip("Set to true if this is a compnent of another spell. (e.g: The explosion for a projectile spell).")] 
+    private bool IsComponentSpell = false;
 
-    [Range(0,20), Tooltip("The duration you have to wait before, you can use the spell again")] 
+    [SerializeField, Range(0,20), Tooltip("The duration you have to wait before, you can use the spell again")] 
     private float Cooldown = 3;
 
-    [Range(0,3), Tooltip("The amount of time in between the use of a spell and the spells effect taking place.")] 
+    [SerializeField, Range(0,3), Tooltip("The amount of time in between the use of a spell and the spells effect taking place.")] 
     private float CastTime = 0.5f;
+    [SerializeField, Tooltip("If true, the player can walk while casting.")]
+    private bool CanMoveWhileCasting = false;
 
+    public SpellType type => this.Type;
+    public bool isComponentSpell => this.IsComponentSpell;
     public float cooldown => this.Cooldown;
     public float castTime => this.CastTime;
+    public bool canMoveWhileCasting => this.CanMoveWhileCasting;
 
     public abstract void Activate(UnitController owner, Vector3 target);
 }

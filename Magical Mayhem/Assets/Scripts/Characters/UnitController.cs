@@ -3,13 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 /// <summary>
-/// Controls all the behaviour of a unit
+/// Controls all the behaviour of a unit. - Silas Thule
 /// </summary>
 [RequireComponent(typeof(UnitCaster), typeof(UnitMover))]
-public class UnitController : NetworkBehaviour
+public class UnitController : NetworkBehaviour, IDamagable
 {
+    #region Fields
+
+    [SerializeField] private int health;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
     private Brain brain;
     [SerializeField]
@@ -24,44 +28,55 @@ public class UnitController : NetworkBehaviour
     [HideInInspector]
     public UnitMover unitMover;
 
-    private UnitState state;
+    public static KillEvent OnUnitDeath;
+    public bool isDead { get; private set; }
+    #endregion
 
-    void Awake() {
+
+    #region Awake, Start and Update
+    void Awake()
+    {
         unitCaster = GetComponent<UnitCaster>();
         unitMover = GetComponent<UnitMover>();
         animator = GetComponentInChildren<Animator>();
-        
+        health = unitClass.maxHealth;
     }
-    void Start() {
-        ChangeState(new UnitMoveState());
-    }
+    
 
-    void Update() {
+    void Update()
+    {
         brain?.HandleActions(this);
-        state.StateUpdate(this);
     }
+    #endregion
 
+
+    #region Movement Inputs
     /// <summary>
     /// What happens when right clicking. Sets units target position. - Silas Thule
     /// </summary>
-    void OnRightClick() {
+    void OnRightClick()
+    {
         if (!IsLocalPlayer) return;
         bool validClickPosition;
         Vector3 target = HelperClass.GetMousePosInWorld(out validClickPosition); //gets mouse pos
-        if (validClickPosition) {
+        if (validClickPosition)
+        {
             target = new Vector3(target.x, 0, target.z);
             //Debug.Log(target);
             unitMover.SetTargetPositionServerRPC(target); //sets target pos to mouse pos
         }
     }
-    
-    void OnLeftClick() {
+
+    void OnLeftClick()
+    {
 
     }
     void OnStop()
     {
 
     }
+    #endregion
+
 
     #region Spell Inputs
     void OnSpell1()
@@ -100,28 +115,65 @@ public class UnitController : NetworkBehaviour
         Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
         if (validTarget)
         {
-            if (IsServer && IsLocalPlayer)
-            {
-                unitCaster.CastSpell(index, pos);
-            }
-            else if (IsClient && IsLocalPlayer)
-            {
-                unitCaster.CastSpellServerRPC(index, pos);
-            }
+            unitCaster.TryCastSpell(index, pos);
         }
         
     }
 
-
     /// <summary>
-    /// Changes the State of the UnitController and calls the EnterState function of state
+    /// Changes the units health and clamps the value between 0 and maxHealth. Calls Death method if health reaches 0. Server Only. - Silas Thule
     /// </summary>
-    /// <param name="state"></param>
-    public void ChangeState(UnitState state)
+    /// <param name="dealer"></param>
+    /// <param name="amount"></param>
+    public void ModifyHealth(UnitController dealer,int amount)
     {
-        this.state = state;
-        state.EnterState(this);
+        if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
+        health = Mathf.Clamp(health+amount,0,unitClass.maxHealth);
+        if (health == 0)
+        {
+            Death(dealer);
+        }
     }
-
-
+    /// <summary>
+    /// Is called on Death and sends KillData to RoundManager. Server Only. - Silas Thule
+    /// </summary>
+    /// <param name="killer"></param>
+    public void Death(UnitController killer)
+    {
+        if (isDead) return;
+        SetDead(true);
+        KillData kill = new KillData(this, killer);
+        OnUnitDeath.Invoke(kill);
+    }
+    /// <summary>
+    /// Resets health to full and Sets dead to false. Server Only. - Silas Thule
+    /// </summary>
+    public void ResetHealth()
+    {
+        health = unitClass.maxHealth;
+        SetDead(false);
+    }
+    /// <summary>
+    /// Disables Colliders on clients and server.
+    /// </summary>
+    /// <param name="isDead"></param>
+    private void SetDead(bool isDead)
+    {
+        this.isDead = isDead;
+        GetComponent<Collider>().enabled = !isDead; //Disables Collider on server
+        SetDeadClientRPC(isDead); //Disables Collider on clients
+    }
+    /// <summary>
+    /// Disables Colliders on clients
+    /// </summary>
+    /// <param name="isDead"></param>
+    [ClientRpc]
+    private void SetDeadClientRPC(bool isDead)
+    {
+        GetComponent<Collider>().enabled = !isDead;
+    }
 }
+
+
+[Serializable]
+public class KillEvent : UnityEvent<KillData> { }
