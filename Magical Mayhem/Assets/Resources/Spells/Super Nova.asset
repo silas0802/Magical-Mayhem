@@ -23,7 +23,7 @@ MonoBehaviour:
 
     Type:
     Arcane'
-  Icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  Icon: {fileID: 21300000, guid: bfd472219b231094ba01cdd3406137ee, type: 3}
   Price: 10
   isComponentSpell: 0
   Type: 0
