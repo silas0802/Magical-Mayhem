@@ -170,7 +170,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     [ClientRpc]
     private void SetDeadClientRPC(bool isDead)
     {
-        GetComponent<Collider>().enabled = isDead;
+        GetComponent<Collider>().enabled = !isDead;
     }
 }
 
