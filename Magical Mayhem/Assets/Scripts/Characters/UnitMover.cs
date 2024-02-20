@@ -65,14 +65,7 @@ public class UnitMover : NetworkBehaviour
         
     }
     private void Update(){
-        if (controller.IsServer && controller.IsLocalPlayer)
-        {
-            controller.unitMover.Move();
-            // if ((controller.unitMover.targetPosition-controller.transform.position).magnitude<controller.unitClass.acceptingDistance){
-            //     controller.ChangeState(new UnitIdleState());
-            // }
-        }
-        else if (controller.IsClient && controller.IsLocalPlayer)
+        if (controller.IsClient && controller.IsLocalPlayer)   //Ask server to move your unit if you are client
         {
             controller.unitMover.MoveServerRPC();
         }
@@ -80,20 +73,26 @@ public class UnitMover : NetworkBehaviour
             rb.velocity-=rb.velocity.normalized*friction *Time.deltaTime;
         }
     }
-    
+    /// <summary>
+    /// Requests server to move this character for client.
+    /// </summary>
     [ServerRpc]
     public void MoveServerRPC()
     {
         Move();
     }
 
+    /// <summary>
+    /// Sets target position on server side (as its the server that needs to know where you want to go)
+    /// </summary>
+    /// <param name="targetPosition"></param>
     [ServerRpc]
     public void SetTargetPositionServerRPC(Vector3 targetPosition)
     {
         SetTargetPosition(targetPosition);
     }
     /// <summary>
-    /// Sets the target position of the unit to the given Vector3. Can only be called from server.
+    /// Sets the local target position of the unit to the given Vector3.
     /// </summary>
     /// <param name="targetPosition"></param>
     public void SetTargetPosition(Vector3 targetPosition){

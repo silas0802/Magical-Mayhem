@@ -15,6 +15,12 @@ public class ProjectileInstance : NetworkBehaviour
     float unitTimer;
     UnitController unitTarget;
 
+    /// <summary>
+    /// Initialize the projectile with inputted information.
+    /// </summary>
+    /// <param name="spell"></param>
+    /// <param name="target"></param>
+    /// <param name="owner"></param>
     public void Initialize(ProjectileSpell spell, Vector3 target, UnitController owner)
     {
         this.spell = spell;
@@ -56,12 +62,17 @@ public class ProjectileInstance : NetworkBehaviour
         }
         
     }
-
+    /// <summary>
+    /// Calls its endEffect Activation and Despawns this object. Server Only.
+    /// </summary>
     private void Detonate()
     {
         spell.endEffect.Activate(owner, transform.position);
         GetComponent<NetworkObject>().Despawn();
     }
+    /// <summary>
+    /// Is called in update if homing is enabled.
+    /// </summary>
     private void Homing()
     {
         unitTimer-=Time.deltaTime;
