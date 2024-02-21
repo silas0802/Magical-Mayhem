@@ -146,4 +146,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 5309182829436942770}
+  defaultImage: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   buyable: {fileID: 0}

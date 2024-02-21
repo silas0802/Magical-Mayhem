@@ -23,22 +23,30 @@ public class Item : Buyable
 [SerializeField, Range(1,20), Tooltip("Boost the percentage damage of the element bost")]
     private float ElementBoostPercent = 5F;
 
-[SerializeField,Tooltip("Defines whether the item have elementBost or not")]
-    private bool HasElementBoost=true;
+
+
+[SerializeField,Tooltip("What itemType this item has")]
+    private ItemType ItemType;
+
+[SerializeField,Tooltip("what elementBoost this item has")]
+    private SpellElementType ItemElement;
 
 public int damage => this.Damage;
 public int health => this.Health;
 public int cDReduction => this.CDReduction;
 
-public float elementBoostPercent => ElementBoostPercent;
-public bool hasElementBoost => HasElementBoost;
+public float elementBoostPercent => this.ElementBoostPercent;
 
- public enum ItemType{
-    Defensive, Offensive, Utility
- }
+public ItemType itemType => this.itemType;
+public SpellElementType itemElement => this.itemElement;
 
- public enum ElementBoost{
-    Ice, Fire, Arcane
- }
+ 
+
+ 
 
 }
+
+public enum ItemType
+{
+    Defensive, Offensive, Utility
+ }

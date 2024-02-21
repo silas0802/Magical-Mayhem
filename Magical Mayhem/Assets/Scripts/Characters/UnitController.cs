@@ -18,6 +18,9 @@ public class UnitController : NetworkBehaviour, IDamagable
     [SerializeField]
     public UnitClass unitClass;
 
+    [SerializeField]
+    public Inventory inventory;
+
     [HideInInspector]
     public UnitCaster unitCaster;
 
