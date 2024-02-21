@@ -10,10 +10,6 @@ public class LavaTileScript : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider player){
-        
-    }
-
     // Update is called once per frame
     void Update()
     {

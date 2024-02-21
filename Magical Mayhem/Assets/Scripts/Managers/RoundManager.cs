@@ -140,6 +140,7 @@ public class RoundManager : NetworkBehaviour
         {
             unit.ResetHealth();
         }
+        //mapgen.instence.Genmap
         //PlaceUnits();
         roundIsOngoing = true;
         Debug.Log("New round has started");
