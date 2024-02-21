@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class ProjectileInstance : NetworkBehaviour
 {
-    UnitController owner;
+    public UnitController owner { get; private set; }
     ProjectileSpell spell;
     Vector3 startPos;
     float range;
