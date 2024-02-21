@@ -3237,6 +3237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f901bfc090a08654bad2963eed524fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testing: 0
   spells:
   - {fileID: 11400000, guid: c5d2430883271c840a808ec7e5516c76, type: 2}
   - {fileID: 11400000, guid: 402dd65d07d049c45a77355826135c09, type: 2}
@@ -3249,11 +3250,20 @@ MonoBehaviour:
   - {fileID: 1261898938}
   - {fileID: 2027855068}
   - {fileID: 1926188527}
+  ownedItems:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   spellIconTemplate: {fileID: 1387811985314800435, guid: 0e59685db848a2a4aa21c203a553f63d,
     type: 3}
   selectedSpellicon: {fileID: 1447212572}
   buyables: {fileID: 162731438}
   selected: {fileID: 0}
+  spellHolder: {fileID: 0}
+  itemHolder: {fileID: 0}
   descriptionText: {fileID: 1677906545}
   timerText: {fileID: 1658854567}
 --- !u!1001 &1321556345
