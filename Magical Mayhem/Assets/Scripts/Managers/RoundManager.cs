@@ -83,6 +83,7 @@ public class RoundManager : NetworkBehaviour
     /// <param name="clientId"></param>
     private void OnClientDisconnectCallback(ulong clientId)
     {
+        
         if (!IsServer) return;
         NetworkObject player = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
         UnitController unit = player.GetComponent<UnitController>();
@@ -141,6 +142,7 @@ public class RoundManager : NetworkBehaviour
             unit.ResetHealth();
         }
         //PlaceUnits();
+        //Call Map Generator function via MapGenerator.instance.GenerateMap();
         roundIsOngoing = true;
         Debug.Log("New round has started");
 
