@@ -96,4 +96,7 @@ public class SpellShop : MonoBehaviour
         }
         
     }
+    public void OnValidate(){
+        LoadSlots();
+    }
 }
