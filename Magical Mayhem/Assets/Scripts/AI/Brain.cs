@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New AI Brain", menuName = "Game/AI/Brain")]
 public class Brain : ScriptableObject
 {
-    float timer = 5;
     public BuyingLogic buyingLogic;
     public FightingLogic fightingLogic;
 
