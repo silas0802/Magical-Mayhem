@@ -25,10 +25,16 @@ MonoBehaviour:
     Arcane'
   Icon: {fileID: 21300000, guid: bfd472219b231094ba01cdd3406137ee, type: 3}
   Price: 10
-  isComponentSpell: 0
-  Type: 0
+  UseType: 0
+  ElementType: 0
+  IsComponentSpell: 0
+  Cooldown: 3
+  CastTime: 0.5
+  CanMoveWhileCasting: 0
+  Damage: 20
+  Knockback: 100
   Delay: 0
   LifeTime: 1
   Radius: 0.5
-  ExplodeAtTarget: 1
+  ExplodeAtTarget: 0
   Explosion: {fileID: 0}

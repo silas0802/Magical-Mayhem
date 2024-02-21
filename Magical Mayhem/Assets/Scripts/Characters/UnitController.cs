@@ -12,7 +12,6 @@ using UnityEngine.InputSystem;
 public class UnitController : NetworkBehaviour, IDamagable
 {
     #region Fields
-
     [SerializeField] private int health;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
     private Brain brain;

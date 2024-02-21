@@ -4,7 +4,6 @@ using UnityEngine;
 
 public abstract class Spell : Buyable
 {
-
     [SerializeField, Tooltip("What kind of function the spell serves. (e.g: An attack is offensive)")] 
     private SpellUseType UseType;
 
