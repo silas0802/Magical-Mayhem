@@ -28,11 +28,11 @@ public class UnitCaster : NetworkBehaviour
     /// <param name="target"></param>
     public void TryCastSpell(int index, Vector3 target)
     {
-        if (IsServer && IsLocalPlayer)
+        if (IsServer)
         {
             CastSpell(index, target);
         }
-        else if (IsClient && IsLocalPlayer)
+        else if (IsClient)
         {
             if (cooldowns[index] <= 0)
             {

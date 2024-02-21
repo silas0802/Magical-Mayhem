@@ -14,5 +14,8 @@ public class Brain : ScriptableObject
     /// <param name="controller"></param>
     public void HandleActions(UnitController controller){
 
+        //Prøver hver frame at kaste en fireball 5m foran sig selv
+        Debug.Log("Bot cast");
+        controller.unitCaster.TryCastSpell(0, controller.transform.forward * 5 + controller.transform.position);
     }
 }
