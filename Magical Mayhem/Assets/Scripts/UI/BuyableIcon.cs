@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SpellIcon : MonoBehaviour
+public class BuyableIcon : MonoBehaviour
 {
     public Image image;
     public Buyable buyable;
@@ -15,9 +15,8 @@ public class SpellIcon : MonoBehaviour
         
         
     }
-    void Start(){
-        Initialize(buyable);
-    }
+    
+    
     
 
 }

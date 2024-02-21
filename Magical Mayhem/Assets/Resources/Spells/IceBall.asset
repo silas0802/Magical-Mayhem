@@ -9,19 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd56fffb0ab098a4fb88ac2a88fbf079, type: 3}
-  m_Name: Fire Barrage
+  m_Script: {fileID: 11500000, guid: 32bc9b83314621f41a21c6be28f98c92, type: 3}
+  m_Name: IceBall
   m_EditorClassIdentifier: 
   Description: 
   Icon: {fileID: 0}
   Price: 0
-  UseType: 0
-  ElementType: 0
+  Type: 0
   IsComponentSpell: 0
-  Cooldown: 1
-  CastTime: 0.32
+  Cooldown: 3
+  CastTime: 0.5
   CanMoveWhileCasting: 0
-  SpellToCast: {fileID: 11400000, guid: c5d2430883271c840a808ec7e5516c76, type: 2}
-  Amount: 5
-  Spray: 13
-  TimeInterval: 0.125
+  Projectile: {fileID: 0}
+  EndEffect: {fileID: 0}
+  Speed: 10
+  Range: 10
+  TriggerRadius: 0.5
+  HomingForce: 0
