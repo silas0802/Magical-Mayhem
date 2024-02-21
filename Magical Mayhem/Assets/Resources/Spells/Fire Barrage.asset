@@ -22,6 +22,6 @@ MonoBehaviour:
   CastTime: 0.32
   CanMoveWhileCasting: 0
   SpellToCast: {fileID: 11400000, guid: c5d2430883271c840a808ec7e5516c76, type: 2}
-  Amount: 20
-  Spray: 12.6
-  TimeInterval: 0.037
+  Amount: 5
+  Spray: 13
+  TimeInterval: 0.125
