@@ -30,7 +30,7 @@ MonoBehaviour:
   Cooldown: 3
   CastTime: 0.27
   CanMoveWhileCasting: 0
-  Projectile: {fileID: 3257114547246139475, guid: f17561f759f361a4e999a2fb2a24ab81,
+  Projectile: {fileID: 3257114547246139475, guid: 1449f286128e5574490e921d2ad4908f,
     type: 3}
   EndEffect: {fileID: 11400000, guid: 7861af9072e7cc048b109828d9681462, type: 2}
   Speed: 10
