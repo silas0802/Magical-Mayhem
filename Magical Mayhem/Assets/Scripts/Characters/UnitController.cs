@@ -47,6 +47,10 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     void Update()
     {
+        if (!IsServer) return;
+        
+            
+        
         brain?.HandleActions(this);
     }
     #endregion
@@ -58,7 +62,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     /// </summary>
     void OnRightClick()
     {
-        if (!IsLocalPlayer) return;
+        if (!IsLocalPlayer || brain) return;
         bool validClickPosition;
         Vector3 target = HelperClass.GetMousePosInWorld(out validClickPosition); //gets mouse pos
         if (validClickPosition)
@@ -71,11 +75,11 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     void OnLeftClick()
     {
-
+        if (!IsLocalPlayer || brain) return;
     }
     void OnStop()
     {
-
+        if (!IsLocalPlayer || brain) return;
     }
     #endregion
 
@@ -108,11 +112,12 @@ public class UnitController : NetworkBehaviour, IDamagable
     #endregion 
 
     /// <summary>
-    /// Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule
+    /// Handles input. Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule
     /// </summary>
     /// <param name="index"></param>
     void CastSpell(int index)
-    {   
+    {
+        if (!IsLocalPlayer || brain) return;
         bool validTarget;
         Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
         if (validTarget)
@@ -173,6 +178,10 @@ public class UnitController : NetworkBehaviour, IDamagable
     private void SetDeadClientRPC(bool isDead)
     {
         GetComponent<Collider>().enabled = !isDead;
+    }
+    public void InitializeBot(Brain brain)
+    {
+        this.brain = brain;
     }
 }
 

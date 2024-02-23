@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32bc9b83314621f41a21c6be28f98c92, type: 3}
+  m_Name: P-Ball
+  m_EditorClassIdentifier: 
+  Description: 'Made from the element of fire. The fire ball is one of the most basic
+    of spell known to wizards and is always the first spell young wizards are taught.
+
+
+    Damage: 
+    50
+
+    Range:  100
+
+    Type: Fire'
+  Icon: {fileID: 21300000, guid: 65334ac3fa9bbcf4dbeeb0498c20a852, type: 3}
+  Price: 15
+  UseType: 0
+  ElementType: 0
+  IsComponentSpell: 0
+  Cooldown: 3
+  CastTime: 0.27
+  CanMoveWhileCasting: 0
+  Projectile: {fileID: 3257114547246139475, guid: 1449f286128e5574490e921d2ad4908f,
+    type: 3}
+  EndEffect: {fileID: 11400000, guid: 7861af9072e7cc048b109828d9681462, type: 2}
+  Speed: 10
+  Range: 10
+  TriggerRadius: 0.5
+  HomingForce: 0
