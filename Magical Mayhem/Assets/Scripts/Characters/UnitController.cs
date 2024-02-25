@@ -55,7 +55,9 @@ public class UnitController : NetworkBehaviour, IDamagable
         brain?.HandleActions(this);
     }
     #endregion
-
+    public int GetHealth(){
+        return health;
+    }
 
     #region Movement Inputs
     /// <summary>
@@ -151,6 +153,8 @@ public class UnitController : NetworkBehaviour, IDamagable
         {
             Item item = buyable as Item;
             inventory.items[index]=item;
+            inventory.gold = inventory.gold-item.price;
+            health = health+item.health;
         }else
         {
             Spell spell = buyable as Spell;

@@ -55,8 +55,8 @@ public class SpellShop : NetworkBehaviour
         
         
         MakeMap();
-        goldText.SetText(gold.ToString());
-        healthText.SetText(health.ToString());
+        goldText.SetText(localUnitController.inventory.gold.ToString());
+        healthText.SetText(localUnitController.GetHealth().ToString());
         damageText.SetText(damage.ToString());
         initatedSpells = new BuyableIcon[spells.Length];
         initiatedItems = new BuyableIcon[items.Length];
@@ -199,14 +199,7 @@ public class SpellShop : NetworkBehaviour
                         
                         localUnitController.inventory.items[i]=item;
                         localUnitController.TryPlaceBuyable(item.GetID(),i);
-                        ownedItems[i].Initialize(selectedBuyable);
-                        gold=gold-selectedBuyable.price;
-                        goldText.SetText(gold.ToString());
-                        health=health+item.health;
-                        damage=damage+item.damage;
-                        healthText.SetText(health.ToString());
-                        damageText.SetText(damage.ToString());
-
+                        UpdateVisuals(ownedItems[i]);
                         EndByablePhase();
                         break;
                     }
@@ -233,23 +226,36 @@ public class SpellShop : NetworkBehaviour
             }
             Spell spell = selectedBuyable as Spell;
             localUnitController.inventory.spells[j]=spell;
-            Debug.Log(IsServer);
-            Debug.Log(IsHost);
-            Debug.Log(IsClient);
+            
             
             localUnitController.TryPlaceBuyable(spell.GetID(),j);
+            UpdateVisuals(icon);
             
-            icon.Initialize(selectedBuyable);
-            gold=gold-selectedBuyable.price;
-            goldText.SetText(gold.ToString());
-            Debug.Log(localUnitController.inventory.spells[j]);
            
             
         }
         
         EndByablePhase();
     }
+    void UpdateVisuals(BuyableIcon icon){
+        icon.Initialize(selectedBuyable);
+        
+        goldText.SetText(localUnitController.inventory.gold.ToString());
+        if (selectedBuyable is Item)
+        {
+            Item item = selectedBuyable as Item;
+            
+            damage=damage+item.damage;
+            healthText.SetText(localUnitController.GetHealth().ToString());
+            damageText.SetText(damage.ToString());
 
+        }
+ 
+    }
+    
+    void UpdatePlayer(){
+
+    }
     public void EndByablePhase(){
         buyablePhase=false;
         if (selectedBuyable is Spell)
