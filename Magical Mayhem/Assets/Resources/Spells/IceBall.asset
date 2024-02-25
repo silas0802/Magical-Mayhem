@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32bc9b83314621f41a21c6be28f98c92, type: 3}
   m_Name: IceBall
   m_EditorClassIdentifier: 
+  ID: 104
   Description: 
   Icon: {fileID: 0}
   Price: 0
-  Type: 0
+  UseType: 0
+  ElementType: 0
   IsComponentSpell: 0
   Cooldown: 3
   CastTime: 0.5

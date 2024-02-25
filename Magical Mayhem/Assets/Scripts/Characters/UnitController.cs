@@ -42,6 +42,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         unitMover = GetComponent<UnitMover>();
         animator = GetComponentInChildren<Animator>();
         health = unitClass.maxHealth;
+        inventory = new Inventory();
     }
     
 
@@ -127,6 +128,35 @@ public class UnitController : NetworkBehaviour, IDamagable
         
     }
 
+    public void TryPlaceBuyable(int itemId,int index){
+        if (IsServer)
+        {
+            PlaceBuyable(itemId,index);
+        }else
+        {
+            PlaceBuyableServerRpc(itemId,index);
+        }
+    }
+    [ServerRpc]
+
+    void PlaceBuyableServerRpc(int itemId, int index){
+        
+        PlaceBuyable(itemId, index);
+    }
+
+    void PlaceBuyable(int itemId,int index){
+        Buyable buyable = SpellShop.instance.buyableIDs[itemId];
+
+        if (buyable is Item)
+        {
+            Item item = buyable as Item;
+            inventory.items[index]=item;
+        }else
+        {
+            Spell spell = buyable as Spell;
+            inventory.spells[index]=spell;
+        }
+    }
     /// <summary>
     /// Changes the units health and clamps the value between 0 and maxHealth. Calls Death method if health reaches 0. Server Only. - Silas Thule
     /// </summary>

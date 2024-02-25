@@ -23,7 +23,7 @@ public class RoundManager : NetworkBehaviour
     [SerializeField] private NetworkObject playerPrefab;
     [SerializeField] private Button startButton;
     
-
+    public List<UnitController> GetUnits => units;
     private void Awake()
     {
         if (instance == null)
@@ -69,6 +69,7 @@ public class RoundManager : NetworkBehaviour
     private void OnClientConnectedCallback(ulong clientId)
     {
         if (!IsServer) return;
+        
         NetworkObject player = Instantiate(playerPrefab);
         player.SpawnAsPlayerObject(clientId, false);
         UnitController unit = player.GetComponent<UnitController>();

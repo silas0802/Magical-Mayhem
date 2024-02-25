@@ -14,14 +14,14 @@ public class Brain : ScriptableObject
     /// <param name="controller"></param>
     public void HandleActions(UnitController controller){
 
-        //Prøver hver frame at kaste en fireball 5m foran sig selv
-        Debug.Log("Bot cast");
+        //Prï¿½ver hver frame at kaste en fireball 5m foran sig selv
+        //Debug.Log("Bot cast");
         controller.unitCaster.TryCastSpell(0, controller.transform.forward * 5 + controller.transform.position);
     }
 
     //RoundManager.instance.FindNearestUnit() 
     
-    private List<ProjectileInstance> CheckForNearbyProjectiles(UnitController controller)//Dette er ikke testet så kan ikke garantere at det virker
+    private List<ProjectileInstance> CheckForNearbyProjectiles(UnitController controller)//Dette er ikke testet sï¿½ kan ikke garantere at det virker
     {
         float size = 10;
         Collider[] detected = new Collider[20];

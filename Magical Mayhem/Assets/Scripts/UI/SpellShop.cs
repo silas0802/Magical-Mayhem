@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 
-public class SpellShop : MonoBehaviour
+public class SpellShop : NetworkBehaviour
 {
     public static SpellShop instance;
     public UnitController localUnitController;
     public bool testing = false;
-
+    public Dictionary<int, Buyable> buyableIDs = new Dictionary<int, Buyable>();
     private int gold=50;
     private int health=1000;
     private int damage=500;    
@@ -53,6 +52,9 @@ public class SpellShop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {   
+        
+        
+        MakeMap();
         goldText.SetText(gold.ToString());
         healthText.SetText(health.ToString());
         damageText.SetText(damage.ToString());
@@ -61,7 +63,7 @@ public class SpellShop : MonoBehaviour
          
         for (int i = 0; i < spells.Length; i++)
         {
-
+            Debug.Log("i am in spells initiate");
             BuyableIcon buyableSpell = Instantiate(spellIconTemplate,buyables);
             buyableSpell.Initialize(spells[i]);
             buyableSpell.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableSpell); CancelBuyablePhase();});
@@ -73,7 +75,7 @@ public class SpellShop : MonoBehaviour
         {
             BuyableIcon buyableItem = Instantiate(spellIconTemplate,buyables);
             buyableItem.Initialize(items[i]);
-            buyableItem.GetComponent<Button>().onClick.AddListener(()=>SelectBuyable(buyableItem));  
+            buyableItem.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableItem); CancelBuyablePhase();});  
             initiatedItems[i]=buyableItem; 
         }  
         LoadSlots();
@@ -83,6 +85,18 @@ public class SpellShop : MonoBehaviour
         
     }
 
+    public void ConnectPlayer(){
+        List<UnitController> players = RoundManager.instance.GetUnits;
+        foreach (UnitController item in players)
+        {
+            if (item.GetComponent<NetworkObject>().IsLocalPlayer)
+            {
+                
+                localUnitController=item;       
+                         
+            }            
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -137,7 +151,7 @@ public class SpellShop : MonoBehaviour
         
         itemHolder.gameObject.SetActive(!active);
         
-
+        SelectBuyable(null);
     }
 
     public void LoadSlots(){
@@ -157,30 +171,47 @@ public class SpellShop : MonoBehaviour
     }
 
     public void BuyBuyable(){
-        if (gold>selectedBuyable.price)
+        
+        if (gold>selectedBuyable.price&&!localUnitController.inventory.items.Contains(selectedBuyable)&&!localUnitController.inventory.spells.Contains(selectedBuyable))
         {
             
-        
+            Spell spell =selectedBuyable as Spell;
+            Item item = selectedBuyable as Item;
             buyablePhase=true;
             if (selectedBuyable is Spell)
             {
-                foreach (BuyableIcon item in ownedSpells)
+                foreach (BuyableIcon item1 in ownedSpells)
                 {
-                if (item.buyable==null)
+                if (item1.buyable==null)
                 {
-                    item.SetColor(new Color32(40,255,0,255));
+                    item1.SetColor(new Color32(40,255,0,255));
                 }
 
                 }    
             }else{
-                foreach (BuyableIcon item in ownedItems)
-                {
-                if (item.buyable==null)
-                {
-                    item.SetColor(new Color32(40,255,0,255));
-                }
+                
+                for (int i = 0; i < localUnitController.inventory.items.Length; i++)
+                {   
+                
+                    if (localUnitController.inventory.items[i] is null)
+                    {
+                        ulong id = NetworkManager.Singleton.LocalClient.ClientId;
+                        
+                        localUnitController.inventory.items[i]=item;
+                        localUnitController.TryPlaceBuyable(item.GetID(),i);
+                        ownedItems[i].Initialize(selectedBuyable);
+                        gold=gold-selectedBuyable.price;
+                        goldText.SetText(gold.ToString());
+                        health=health+item.health;
+                        damage=damage+item.damage;
+                        healthText.SetText(health.ToString());
+                        damageText.SetText(damage.ToString());
 
+                        EndByablePhase();
+                        break;
+                    }
                 }
+                
 
             }
         }
@@ -189,20 +220,30 @@ public class SpellShop : MonoBehaviour
 
     public void PlaceBuyable(BuyableIcon icon){
         if (buyablePhase&&!icon.buyable)
-        {
+        {   
+            int j=0;
+            for (int i = 0; i < ownedSpells.Length; i++)
+            {   
+
+                if (ownedSpells[i]==icon)
+                {
+                    break;
+                }
+                j++;
+            }
+            Spell spell = selectedBuyable as Spell;
+            localUnitController.inventory.spells[j]=spell;
+            Debug.Log(IsServer);
+            Debug.Log(IsHost);
+            Debug.Log(IsClient);
+            
+            localUnitController.TryPlaceBuyable(spell.GetID(),j);
+            
             icon.Initialize(selectedBuyable);
             gold=gold-selectedBuyable.price;
             goldText.SetText(gold.ToString());
-            if (selectedBuyable is Item)
-            {
-                Item buy = selectedBuyable as Item;
-                health=health+buy.health;
-                damage=damage+buy.damage;
-                healthText.SetText(health.ToString());
-                damageText.SetText(damage.ToString());    
-                
-                
-            }
+            Debug.Log(localUnitController.inventory.spells[j]);
+           
             
         }
         
@@ -214,14 +255,23 @@ public class SpellShop : MonoBehaviour
         if (selectedBuyable is Spell)
         {
             foreach (BuyableIcon item in ownedSpells)
-            {
-                item.SetColor(new Color32(255,255,255,255));
-                        
+            {   
+                if (item.buyable is not null)
+                {
+                    item.SetColor(new Color32(255,255,255,255));    
+                }else{
+                    item.SetColor(new Color32(0,0,0,0));
+                }     
             }    
         }else{
             foreach (BuyableIcon item in ownedItems)
             {
-                item.SetColor(new Color32(255,255,255,255));
+                if (item.buyable is not null)
+                {
+                    item.SetColor(new Color32(255,255,255,255));    
+                }else{
+                    item.SetColor(new Color32(0,0,0,0));
+                }
                         
             }
         }
@@ -238,4 +288,17 @@ public class SpellShop : MonoBehaviour
     }
 
 
+    private void MakeMap(){
+        foreach (Spell item in spells)
+        {
+            buyableIDs.Add(item.GetID(),item);
+        }
+        foreach (Item item in items)
+        {
+            buyableIDs.Add(item.GetID(),item);
+        }
+    }
+    
+
+    
 }
