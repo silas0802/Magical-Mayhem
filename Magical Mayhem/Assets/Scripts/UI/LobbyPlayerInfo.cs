@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class LobbyPlayerInfo : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private TMP_Text userName;
+    [SerializeField] private TMP_Text className;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private UnitClass unitClass;
+    private ulong clientId;
+
+    public void Initialize(UnitClass unitClass, string userName){
+        this.unitClass = unitClass;
+        this.userName.text = userName;
+        this.className.text = unitClass.name;
+
     }
 }

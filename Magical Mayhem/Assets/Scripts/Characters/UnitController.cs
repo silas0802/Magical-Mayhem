@@ -134,6 +134,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     /// <param name="amount"></param>
     public void ModifyHealth(UnitController dealer,int amount)
     {
+        
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
         health = Mathf.Clamp(health+amount,0,unitClass.maxHealth);
         if (health == 0)
