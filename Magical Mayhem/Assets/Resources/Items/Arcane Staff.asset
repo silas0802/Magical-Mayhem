@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a385dd2d425f0d640847121719ada6ab, type: 3}
   m_Name: Arcane Staff
   m_EditorClassIdentifier: 
+  ID: 201
   Description: 'arcane staff. grants exceptional intellect
 
 '

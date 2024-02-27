@@ -4,7 +4,8 @@ using UnityEngine;
 
 public abstract class Buyable : ScriptableObject
 {
-
+    [SerializeField,Tooltip("The items ID")]
+    private int ID;
     [SerializeField,TextArea(5,10)] 
     private string Description;
     
@@ -17,4 +18,10 @@ public abstract class Buyable : ScriptableObject
     public string description => this.Description;
     public Sprite icon => this.Icon;
     public int price => this.Price;
+    public int id => this.ID;
+
+   
+    public int GetID(){
+        return this.ID;
+    }
 }

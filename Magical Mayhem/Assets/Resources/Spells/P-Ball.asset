@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32bc9b83314621f41a21c6be28f98c92, type: 3}
   m_Name: P-Ball
   m_EditorClassIdentifier: 
+  ID: 105
   Description: 'Made from the element of fire. The fire ball is one of the most basic
     of spell known to wizards and is always the first spell young wizards are taught.
 
