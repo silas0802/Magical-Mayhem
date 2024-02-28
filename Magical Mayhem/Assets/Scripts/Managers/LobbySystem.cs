@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,13 +10,26 @@ public class LobbySystem : NetworkBehaviour
 {
     [SerializeField] private NetworkObject playerTemplate;
     [SerializeField] private TMP_Text ipText;
-    [SerializeField] private Transform playerInfoSpawnPoint;
+    [SerializeField] private RectTransform playerInfoSpawnPoint;
     [SerializeField] private Button startLobbyButton;
     [SerializeField] private Button leaveLobbyButton;
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        leaveLobbyButton.onClick.AddListener(LeaveButton);
+        startLobbyButton.onClick.AddListener(StartLobbyButton);
+
+    }
     void Start()
     {
-        
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+        if (IsHost)
+        {
+            print("Hosting");
+            NetworkObject t = Instantiate(playerTemplate);
+            t.SpawnAsPlayerObject(0, true);
+            t.TrySetParent(playerInfoSpawnPoint, false);
+        }
     }
 
     // Update is called once per frame
@@ -31,8 +45,10 @@ public class LobbySystem : NetworkBehaviour
     private void OnClientConnectedCallback(ulong clientId)
     {
         if (!IsServer) return;
+        Debug.Log("PlayerId: " + clientId + " has joined");
         NetworkObject player = Instantiate(playerTemplate,playerInfoSpawnPoint);
         player.SpawnAsPlayerObject(clientId, true);
+        player.TrySetParent(playerInfoSpawnPoint, false);
         // units.Add(unit);
         // if (units.Count > 1)
         // {
@@ -55,5 +71,29 @@ public class LobbySystem : NetworkBehaviour
         // {
         //     startButton.gameObject.SetActive(false);
         // }
+    }
+    private void LeaveButton()
+    {
+        NetworkManager.Singleton.Shutdown();
+        SceneHelper.instance.LoadScene("Connection Screen");
+    }
+    private void StartLobbyButton()
+    {
+        if (NetworkManager.Singleton.ConnectedClientsList.Count>0)
+        {
+            StartGame();
+        }
+        else
+        {
+            Debug.Log("Not enough players");
+        }
+    }
+    private void StartGame()
+    {
+        foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            player.PlayerObject.Despawn();
+        }
+        NetworkManager.Singleton.SceneManager.LoadScene("GameScreen", UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
 }

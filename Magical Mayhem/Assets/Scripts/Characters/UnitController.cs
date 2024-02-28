@@ -32,6 +32,11 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     public static KillEvent OnUnitDeath;
     public bool isDead { get; private set; }
+
+    public int GetHealth()
+    {
+        return health;
+    }
     #endregion
 
 
@@ -55,9 +60,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         brain?.HandleActions(this);
     }
     #endregion
-    public int GetHealth(){
-        return health;
-    }
+    
 
     #region Movement Inputs
     /// <summary>
