@@ -36,6 +36,11 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     public static KillEvent OnUnitDeath;
     public bool isDead { get; private set; }
+
+    public int GetHealth()
+    {
+        return health;
+    }
     #endregion
 
 
@@ -68,9 +73,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         brain?.HandleActions(this);
     }
     #endregion
-    public int GetHealth(){
-        return health;
-    }
+    
     public int GetArcaneDamageMultiplier(){
         return arcaneMultiplier;
     }
@@ -233,6 +236,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     /// <param name="amount"></param>
     public void ModifyHealth(UnitController dealer,int amount)
     {
+        
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
         health = Mathf.Clamp(health+amount,0,unitClass.maxHealth);
         if (health == 0)

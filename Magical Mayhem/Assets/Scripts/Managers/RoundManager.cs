@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,7 +22,6 @@ public class RoundManager : NetworkBehaviour
     [SerializeField] private List<KillData> kills = new List<KillData>();
     [Header("References")]
     [SerializeField] private NetworkObject playerPrefab;
-    [SerializeField] private Button startButton;
     
     public List<UnitController> GetUnits => units;
     private void Awake()
@@ -30,27 +30,15 @@ public class RoundManager : NetworkBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-
-            //Setup the start lobby button
-            startButton.onClick.AddListener(() =>
-            {
-                if (units.Count > 1)
-                {
-                    StartShoppingPhase();
-                    AddBot();
-                    startButton.gameObject.SetActive(false);
-                }
-                else
-                {
-                    throw new NotSupportedException("At least 2 players needed in lobby to start game.");
-                }
-            });
-
-            startButton.gameObject.SetActive(false);
+            
             if (UnitController.OnUnitDeath == null)
             {
                 UnitController.OnUnitDeath = new KillEvent();
             }
+        }
+        else
+        {
+            Destroy(gameObject);
         }
        
     }
@@ -60,6 +48,8 @@ public class RoundManager : NetworkBehaviour
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
         UnitController.OnUnitDeath.AddListener(OnUnitDeath);
+        OnStart();
+        StartShoppingPhase();
     }
     
     /// <summary>
@@ -74,10 +64,7 @@ public class RoundManager : NetworkBehaviour
         player.SpawnAsPlayerObject(clientId, false);
         UnitController unit = player.GetComponent<UnitController>();
         units.Add(unit);
-        if (units.Count > 1)
-        {
-            startButton.gameObject.SetActive(true);
-        }
+        
     }
     /// <summary>
     /// Is called when a client disconnects. It despawns the playerprefab for them and removes the reference to their UnitController. Server Only. - Silas Thule
@@ -92,10 +79,7 @@ public class RoundManager : NetworkBehaviour
         units.Remove(unit);
         player.Despawn(true);
         Destroy(player.gameObject);
-        if (units.Count < 2)
-        {
-            startButton.gameObject.SetActive(false);
-        }
+        
     }
 
     /// <summary>
@@ -206,6 +190,15 @@ public class RoundManager : NetworkBehaviour
         NetworkObject bot = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
         bot.Spawn();
         bot.GetComponent<UnitController>().InitializeBot(botBrain);
+    }
+    private void OnStart()
+    {
+        foreach (ulong player in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            NetworkObject prefab = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
+            prefab.SpawnAsPlayerObject(player, true);
+            units.Add(prefab.GetComponent<UnitController>());
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 /// <summary>
 ///  - Silas Thule
@@ -100,4 +101,9 @@ public class ProjectileInstance : NetworkBehaviour
             Detonate();
         }
     }
+    void OnDrawGizmos(){
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position,rb.velocity*2);
+    }
 }
+
