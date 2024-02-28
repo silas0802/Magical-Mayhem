@@ -11,8 +11,8 @@ using UnityEngine.UI;
 public class RoundManager : NetworkBehaviour
 {
     public static RoundManager instance;
-    
 
+    [SerializeField] private Brain botBrain;
     [SerializeField] private int roundNumber = 0;
     [SerializeField] private int shoppingTime = 60;
 
@@ -23,7 +23,7 @@ public class RoundManager : NetworkBehaviour
     [SerializeField] private NetworkObject playerPrefab;
     [SerializeField] private Button startButton;
     
-
+    public List<UnitController> GetUnits => units;
     private void Awake()
     {
         if (instance == null)
@@ -37,6 +37,7 @@ public class RoundManager : NetworkBehaviour
                 if (units.Count > 1)
                 {
                     StartShoppingPhase();
+                    AddBot();
                     startButton.gameObject.SetActive(false);
                 }
                 else
@@ -68,6 +69,7 @@ public class RoundManager : NetworkBehaviour
     private void OnClientConnectedCallback(ulong clientId)
     {
         if (!IsServer) return;
+        
         NetworkObject player = Instantiate(playerPrefab);
         player.SpawnAsPlayerObject(clientId, false);
         UnitController unit = player.GetComponent<UnitController>();
@@ -83,6 +85,7 @@ public class RoundManager : NetworkBehaviour
     /// <param name="clientId"></param>
     private void OnClientDisconnectCallback(ulong clientId)
     {
+        
         if (!IsServer) return;
         NetworkObject player = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
         UnitController unit = player.GetComponent<UnitController>();
@@ -142,6 +145,7 @@ public class RoundManager : NetworkBehaviour
         }
         //mapgen.instence.Genmap
         //PlaceUnits();
+        //Call Map Generator function via MapGenerator.instance.GenerateMap();
         roundIsOngoing = true;
         Debug.Log("New round has started");
 
@@ -195,6 +199,13 @@ public class RoundManager : NetworkBehaviour
             StartCoroutine(BeforeShopPhase());
         }
 
+    }
+    public void AddBot()
+    {
+        if (!IsServer) return;
+        NetworkObject bot = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
+        bot.Spawn();
+        bot.GetComponent<UnitController>().InitializeBot(botBrain);
     }
 
 }

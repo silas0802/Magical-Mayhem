@@ -18,6 +18,9 @@ public class UnitController : NetworkBehaviour, IDamagable
     [SerializeField]
     public UnitClass unitClass;
 
+    [SerializeField]
+    public Inventory inventory;
+
     [HideInInspector]
     public UnitCaster unitCaster;
 
@@ -39,15 +42,22 @@ public class UnitController : NetworkBehaviour, IDamagable
         unitMover = GetComponent<UnitMover>();
         animator = GetComponentInChildren<Animator>();
         health = unitClass.maxHealth;
+        inventory = new Inventory();
     }
     
 
     void Update()
     {
+        if (!IsServer) return;
+        
+            
+        
         brain?.HandleActions(this);
     }
     #endregion
-
+    public int GetHealth(){
+        return health;
+    }
 
     #region Movement Inputs
     /// <summary>
@@ -55,7 +65,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     /// </summary>
     void OnRightClick()
     {
-        if (!IsLocalPlayer) return;
+        if (!IsLocalPlayer || brain) return;
         bool validClickPosition;
         Vector3 target = HelperClass.GetMousePosInWorld(out validClickPosition); //gets mouse pos
         if (validClickPosition)
@@ -68,11 +78,11 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     void OnLeftClick()
     {
-
+        if (!IsLocalPlayer || brain) return;
     }
     void OnStop()
     {
-
+        if (!IsLocalPlayer || brain) return;
     }
     #endregion
 
@@ -105,11 +115,12 @@ public class UnitController : NetworkBehaviour, IDamagable
     #endregion 
 
     /// <summary>
-    /// Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule
+    /// Handles input. Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule
     /// </summary>
     /// <param name="index"></param>
     void CastSpell(int index)
-    {   
+    {
+        if (!IsLocalPlayer || brain) return;
         bool validTarget;
         Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
         if (validTarget)
@@ -119,6 +130,37 @@ public class UnitController : NetworkBehaviour, IDamagable
         
     }
 
+    public void TryPlaceBuyable(int itemId,int index){
+        if (IsServer)
+        {
+            PlaceBuyable(itemId,index);
+        }else
+        {
+            PlaceBuyableServerRpc(itemId,index);
+        }
+    }
+    [ServerRpc]
+
+    void PlaceBuyableServerRpc(int itemId, int index){
+        
+        PlaceBuyable(itemId, index);
+    }
+
+    void PlaceBuyable(int itemId,int index){
+        Buyable buyable = SpellShop.instance.buyableIDs[itemId];
+
+        if (buyable is Item)
+        {
+            Item item = buyable as Item;
+            inventory.items[index]=item;
+            inventory.gold = inventory.gold-item.price;
+            health = health+item.health;
+        }else
+        {
+            Spell spell = buyable as Spell;
+            inventory.spells[index]=spell;
+        }
+    }
     /// <summary>
     /// Changes the units health and clamps the value between 0 and maxHealth. Calls Death method if health reaches 0. Server Only. - Silas Thule
     /// </summary>
@@ -126,6 +168,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     /// <param name="amount"></param>
     public void ModifyHealth(UnitController dealer,int amount)
     {
+        
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
         health = Mathf.Clamp(health+amount,0,unitClass.maxHealth);
         if (health == 0)
@@ -170,6 +213,10 @@ public class UnitController : NetworkBehaviour, IDamagable
     private void SetDeadClientRPC(bool isDead)
     {
         GetComponent<Collider>().enabled = !isDead;
+    }
+    public void InitializeBot(Brain brain)
+    {
+        this.brain = brain;
     }
 }
 

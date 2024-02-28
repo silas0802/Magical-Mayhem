@@ -2341,21 +2341,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shop
       objectReference: {fileID: 0}
-    - target: {fileID: 2720972837589373989, guid: 5721868cd33472840b651a4a6596b553,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2720972837589373989, guid: 5721868cd33472840b651a4a6596b553,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2720972837589373989, guid: 5721868cd33472840b651a4a6596b553,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7625609295861312013, guid: 5721868cd33472840b651a4a6596b553,
         type: 3}
       propertyPath: m_AnchorMax.x

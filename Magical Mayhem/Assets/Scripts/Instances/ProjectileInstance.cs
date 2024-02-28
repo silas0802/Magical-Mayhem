@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 /// <summary>
 ///  - Silas Thule
 /// </summary>
 public class ProjectileInstance : NetworkBehaviour
 {
-    UnitController owner;
+    public UnitController owner { get; private set; }
     ProjectileSpell spell;
     Vector3 startPos;
     float range;
@@ -100,4 +101,9 @@ public class ProjectileInstance : NetworkBehaviour
             Detonate();
         }
     }
+    void OnDrawGizmos(){
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position,rb.velocity*2);
+    }
 }
+
