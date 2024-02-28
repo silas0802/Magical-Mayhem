@@ -21,4 +21,4 @@ MonoBehaviour:
   CDReduction: 5
   ElementBoostPercent: 5
   ItemType: 0
-  ItemElement: 0
+  ItemElement: 2

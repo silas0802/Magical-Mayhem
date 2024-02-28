@@ -13,12 +13,12 @@ public class ConnectionHUD : MonoBehaviour
     public void JoinGame(){
         SetConnectionData();
         NetworkManager.Singleton.StartClient();
-        SpellShop.instance.ConnectPlayer();
+        
     }
     public void HostGame(){
         SetConnectionData();
         NetworkManager.Singleton.StartHost();
-        SpellShop.instance.ConnectPlayer();
+        
     }
 
     public void SetConnectionData()

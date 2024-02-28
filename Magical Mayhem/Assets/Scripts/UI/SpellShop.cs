@@ -12,12 +12,13 @@ public class SpellShop : NetworkBehaviour
     public UnitController localUnitController;
     public bool testing = false;
     public Dictionary<int, Buyable> buyableIDs = new Dictionary<int, Buyable>();
-    private int gold=50;
-    private int health=1000;
+    private bool toggleSpellHolder = false;
+    public TMP_Text toggleSpellItemButtonText;
     private int damage=500;    
     public TMP_Text goldText;
     public TMP_Text healthText;
     public TMP_Text damageText;
+    
     public Spell[] spells;
     public Item[] items;
     public BuyableIcon[] initatedSpells;
@@ -79,7 +80,7 @@ public class SpellShop : NetworkBehaviour
             initiatedItems[i]=buyableItem; 
         }  
         LoadSlots();
-        ToggleSpellHolder(true);
+        ToggleSpellHolder();
         
         
         
@@ -134,22 +135,31 @@ public class SpellShop : NetworkBehaviour
     {
         this.time = time;
     }
-    public void ToggleSpellHolder(bool active){
-        spellHolder.gameObject.SetActive(active);
+
+    public void ToggleSpellHolder(){
+        toggleSpellHolder =!toggleSpellHolder;
+        spellHolder.gameObject.SetActive(toggleSpellHolder);
         
         
         foreach (BuyableIcon item in initatedSpells)
         {
-            item.gameObject.SetActive(active);
+            item.gameObject.SetActive(toggleSpellHolder);
 
         }
 
         foreach (BuyableIcon item in initiatedItems)
         {
-            item.gameObject.SetActive(!active);
+            item.gameObject.SetActive(!toggleSpellHolder);
         }
+        itemHolder.gameObject.SetActive(!toggleSpellHolder);
         
-        itemHolder.gameObject.SetActive(!active);
+        if (toggleSpellHolder)
+        {
+            toggleSpellItemButtonText.SetText("Items");
+        }else
+        {
+            toggleSpellItemButtonText.SetText("Spells");
+        }
         
         SelectBuyable(null);
     }
@@ -170,10 +180,10 @@ public class SpellShop : NetworkBehaviour
         LoadSlots();
     }
 
+    public void ServerTryBuyBuyable(){
+        localUnitController.TryGetItem(NetworkManager.Singleton.LocalClientId,selectedBuyable.GetID());
+    }
     public void BuyBuyable(){
-        
-        if (gold>selectedBuyable.price&&!localUnitController.inventory.items.Contains(selectedBuyable)&&!localUnitController.inventory.spells.Contains(selectedBuyable))
-        {
             
             Spell spell =selectedBuyable as Spell;
             Item item = selectedBuyable as Item;
@@ -195,7 +205,7 @@ public class SpellShop : NetworkBehaviour
                 
                     if (localUnitController.inventory.items[i] is null)
                     {
-                        ulong id = NetworkManager.Singleton.LocalClient.ClientId;
+                        
                         
                         localUnitController.inventory.items[i]=item;
                         localUnitController.TryPlaceBuyable(item.GetID(),i);
@@ -207,7 +217,7 @@ public class SpellShop : NetworkBehaviour
                 
 
             }
-        }
+        
         
     }
 
