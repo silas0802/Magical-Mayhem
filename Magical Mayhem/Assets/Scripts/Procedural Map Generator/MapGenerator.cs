@@ -24,7 +24,7 @@ public class MapGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {   
-        
+        GenerateMap(1);
     }
     public void GenerateMap(int genType){
         //save the floortiles

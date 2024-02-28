@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1195,6 +1195,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shop
       objectReference: {fileID: 0}
+    - target: {fileID: 2720972837589373989, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2720972837589373989, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2720972837589373989, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5864009926116751697, guid: 5721868cd33472840b651a4a6596b553,
         type: 3}
       propertyPath: GlobalObjectIdHash
@@ -1242,7 +1257,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1473423318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2419,4 +2434,4 @@ SceneRoots:
   - {fileID: 655069129}
   - {fileID: 2129836971}
   - {fileID: 7711180997215476552}
-  - {fileID: 1742340597}
+  - {fileID: 1473423319}
