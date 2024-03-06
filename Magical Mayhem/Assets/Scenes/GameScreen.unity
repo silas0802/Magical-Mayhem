@@ -645,6 +645,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shop
       objectReference: {fileID: 0}
+    - target: {fileID: 2720972837589373989, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2720972837589373989, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2720972837589373989, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5864009926116751697, guid: 5721868cd33472840b651a4a6596b553,
         type: 3}
       propertyPath: GlobalObjectIdHash
@@ -1021,13 +1036,18 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 7540452803720585187, guid: 0c46a99496aeb3149af1ee5f295dd46b,
         type: 3}
+      propertyPath: isDebugging
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7540452803720585187, guid: 0c46a99496aeb3149af1ee5f295dd46b,
+        type: 3}
       propertyPath: startButton
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7540452803720585187, guid: 0c46a99496aeb3149af1ee5f295dd46b,
         type: 3}
       propertyPath: shoppingTime
-      value: 10
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7540452803720585187, guid: 0c46a99496aeb3149af1ee5f295dd46b,
         type: 3}
