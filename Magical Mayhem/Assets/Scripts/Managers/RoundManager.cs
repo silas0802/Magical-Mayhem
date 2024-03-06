@@ -44,6 +44,7 @@ public class RoundManager : NetworkBehaviour
     void Start()
     {
         //Subscribes to Connection Events
+        if (NetworkManager.Singleton == null) return;
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
         UnitController.OnUnitDeath.AddListener(OnUnitDeath);
