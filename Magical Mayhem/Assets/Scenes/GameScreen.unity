@@ -2481,27 +2481,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Round Manager
       objectReference: {fileID: 0}
-    - target: {fileID: 7540452803720585187, guid: 0c46a99496aeb3149af1ee5f295dd46b,
-        type: 3}
-      propertyPath: botBrain
-      value: 
-      objectReference: {fileID: 11400000, guid: 39bec31604f3a6d4ebcb7539fd7b1363,
-        type: 2}
-    - target: {fileID: 7540452803720585187, guid: 0c46a99496aeb3149af1ee5f295dd46b,
-        type: 3}
-      propertyPath: startButton
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7540452803720585187, guid: 0c46a99496aeb3149af1ee5f295dd46b,
-        type: 3}
-      propertyPath: shoppingTime
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7540452803720585187, guid: 0c46a99496aeb3149af1ee5f295dd46b,
-        type: 3}
-      propertyPath: kills.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7616468731676276880, guid: 0c46a99496aeb3149af1ee5f295dd46b,
         type: 3}
       propertyPath: m_LocalPosition.x
