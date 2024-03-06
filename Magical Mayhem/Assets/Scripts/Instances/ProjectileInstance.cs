@@ -30,13 +30,21 @@ public class ProjectileInstance : NetworkBehaviour
         Vector3 direction = (target-startPos).normalized;
         direction.y = 0f;
         rb = GetComponent<Rigidbody>();
+        GetComponent<SphereCollider>().radius = spell.triggerRadius;
         if (spell.homingForce > 0)
         {
             range = spell.range;
         }
         else
         {
-            range = Mathf.Min((target - startPos).magnitude, spell.range);
+            if (spell.mustFlyMaxDistance)
+            {
+                range = spell.range;
+            }
+            else
+            {
+                range = Mathf.Min((target - startPos).magnitude, spell.range);
+            }
         }
 
 
@@ -101,6 +109,23 @@ public class ProjectileInstance : NetworkBehaviour
             Detonate();
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        print("HIT");
+        if (IsServer)
+        {
+
+            UnitController hit = other.gameObject.GetComponent<UnitController>();
+            if (hit != null)
+            {
+                if (hit != owner)
+                {
+                    Detonate();
+                }
+            }
+        }
+    }
+    
     void OnDrawGizmos(){
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position,rb.velocity*2);
