@@ -58,14 +58,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         inventory = new Inventory();
     }
 
-    void Start()
-    {
-        
-        if (IsLocalPlayer)
-        {
-            SpellShop.instance.ConnectPlayer();
-        }
-    }
+    
 
 
     void Update()
