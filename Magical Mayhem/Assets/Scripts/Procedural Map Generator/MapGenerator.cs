@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using System.Security.Cryptography;
+using System;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -13,7 +15,7 @@ public class MapGenerator : MonoBehaviour
     
     int mapSize = 41;
     int lavaTileCounter = 0;
-    [SerializeField ]private float seed = 3.5f;
+    //[SerializeField ]private float seed = 3.5f;
     float wallHieght = 5f;
     [SerializeField] float lavaSpawnTime = 1f;
     [SerializeField]float nextLavaSpawn;
@@ -69,21 +71,25 @@ public class MapGenerator : MonoBehaviour
 
     public void WallGen(int choose){
         wallArray = new GameObject[mapSize, mapSize];
+        float seed = SeedGen();
         switch (choose)
         {
-            case 1: PerlinWallGen();
+            case 1: SimplexWallGen(seed);
                 break;
-            default: WorlyWallGen();
+            default: WorlyWallGen(seed);
                 break;
         }
     }
-    private void PerlinWallGen(){
+    //Generates random placement of walls based on simplex noise (it is uniformly random) it takes in 2 floats as coordinates and returns a value 
+    //Then we have a cutoff value and if the noise map returns a value above this value a wall is placed
+    private void SimplexWallGen(float seed){
         Vector3 coords;
         for (int i = 0; i < mapSize; i++){
             for (int j = 0; j < mapSize; j++){
-                float perlin = noise.snoise(new float2(i+seed,j+seed*2));
-                if(perlin > worlyCutOff){
+                float Simplex  = noise.snoise(new float2(i+seed,j+seed));
+                if(Simplex  > worlyCutOff){
                     coords = tileArray[i,j].transform.position;
+                    coords.y += 1;
                     wallArray[i,j] = Instantiate(mapWall, coords, Quaternion.identity, transform);
                 } 
                 
@@ -92,7 +98,7 @@ public class MapGenerator : MonoBehaviour
     }
     //Generate wall placement from worly noise (the cellular function returns a distence to a point in the noise map)
     //if the magnitude of the returend distence exeeds the cutoff a wall is placed at the coresponding location
-    private void WorlyWallGen(){
+    private void WorlyWallGen(float seed){
         Vector3 coords;
         Vector2 worly;
         for (int i = 0; i < mapSize; i++){
@@ -107,6 +113,27 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    private float SeedGen(){
+        float oldSeed = PlayerPrefs.HasKey("Seed")? PlayerPrefs.GetFloat("Seed") : RandomFloat();
+        if(PlayerPrefs.HasKey("Seed")){ print(PlayerPrefs.GetFloat("Seed")+"   !1");}
+        print(oldSeed+"   !2");
+        MD5 hash = MD5.Create();
+        double newSeed = BitConverter.ToDouble(hash.ComputeHash(BitConverter.GetBytes(oldSeed)));
+        hash.Dispose();
+        PlayerPrefs.SetFloat("Seed", (float)newSeed);
+        print(newSeed + "   !3!   " + ((float)newSeed));
+        print(PlayerPrefs.GetFloat("Seed") + "   !4");
+        PlayerPrefs.DeleteAll();
+        return (float)newSeed;
+    }
+
+    private float RandomFloat(){
+        System.Random random = new System.Random();
+        double dub = random.NextDouble();
+        double dub2 = Math.Pow(2, random.Next(0, 8));
+        return (float)(dub*dub2);
+        
+    }
     //Resets the map
     public void ResetMap(){
         Transform[] mapChildren = transform.GetComponentsInChildren<Transform>();
