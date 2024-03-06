@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 202
   Description: 
   Icon: {fileID: 21300000, guid: d94ba1e961e70b445893058501464e13, type: 3}
-  Price: 8
+  Price: 20
   Damage: 100
   Health: 1000
   CDReduction: 5

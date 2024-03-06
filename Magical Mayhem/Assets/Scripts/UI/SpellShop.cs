@@ -17,7 +17,7 @@ public class SpellShop : NetworkBehaviour
     public TMP_Text toggleSpellItemButtonText;
     public Button sellButton;
     public Button upgradeButton;
-
+    public Button buyButton;
        
     public TMP_Text goldText;
     public TMP_Text healthText;
@@ -128,10 +128,18 @@ public class SpellShop : NetworkBehaviour
                 descriptionText.text=null;
                 selectedBuyable=null;
                 selectedSpellicon.Initialize(null);
+                buyButton.GetComponent<Image>().color=new Color(255,255,255,255);
             }else{
                 selectedBuyable=buyableIcon.buyable;
                 selectedSpellicon.Initialize(buyableIcon.buyable);
                 descriptionText.text=selectedBuyable.description;
+                if (localUnitController.inventory.gold<selectedBuyable.price)
+                {
+                    buyButton.GetComponent<Image>().color=new Color32(255,255,255,100);
+                }else
+                {
+                    buyButton.GetComponent<Image>().color=new Color(255,255,255,255);
+                }
             }
         }
     }

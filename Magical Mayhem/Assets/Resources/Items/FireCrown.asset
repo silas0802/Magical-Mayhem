@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 203
   Description: THe fire crown ouch very hot
   Icon: {fileID: 21300000, guid: db482fbdd46d15d4eae77499b68362a9, type: 3}
-  Price: 9
+  Price: 20
   Damage: 100
   Health: 1000
   CDReduction: 5
