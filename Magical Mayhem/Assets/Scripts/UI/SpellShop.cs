@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,9 @@ public class SpellShop : NetworkBehaviour
     public Dictionary<int, Buyable> buyableIDs = new Dictionary<int, Buyable>();
     private bool toggleSpellHolder = false;
     public TMP_Text toggleSpellItemButtonText;
+    public Button sellButton;
+    public Button upgradeButton;
+
     private int damage=500;    
     public TMP_Text goldText;
     public TMP_Text healthText;
@@ -67,7 +71,7 @@ public class SpellShop : NetworkBehaviour
             Debug.Log("i am in spells initiate");
             BuyableIcon buyableSpell = Instantiate(spellIconTemplate,buyables);
             buyableSpell.Initialize(spells[i]);
-            buyableSpell.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableSpell); CancelBuyablePhase();});
+            buyableSpell.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableSpell); CancelBuyablePhase(); ActivateSellButton();});
 
             initatedSpells[i]=buyableSpell; 
         }
@@ -76,11 +80,13 @@ public class SpellShop : NetworkBehaviour
         {
             BuyableIcon buyableItem = Instantiate(spellIconTemplate,buyables);
             buyableItem.Initialize(items[i]);
-            buyableItem.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableItem); CancelBuyablePhase();});  
+            buyableItem.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableItem); CancelBuyablePhase(); ActivateSellButton();});  
             initiatedItems[i]=buyableItem; 
         }  
         LoadSlots();
         ToggleSpellHolder();
+        // upgradeButton.gameObject.SetActive(false);
+        // sellButton.gameObject.SetActive(false);
         
         
         
@@ -303,6 +309,22 @@ public class SpellShop : NetworkBehaviour
         }
     }
 
+
+    public void ActivateSellButton(){
+        
+        if (localUnitController.inventory.items.Contains(selectedBuyable)||localUnitController.inventory.spells.Contains(selectedBuyable))
+        {
+            upgradeButton.gameObject.SetActive(true);
+            sellButton.gameObject.SetActive(true);
+
+        }else
+        {
+            upgradeButton.gameObject.SetActive(false);
+            sellButton.gameObject.SetActive(false);
+        }
+
+
+    }
 
     private void MakeMap(){
         foreach (Spell item in spells)
