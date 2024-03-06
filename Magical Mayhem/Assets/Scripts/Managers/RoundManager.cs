@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,7 +22,6 @@ public class RoundManager : NetworkBehaviour
     [SerializeField] private List<KillData> kills = new List<KillData>();
     [Header("References")]
     [SerializeField] private NetworkObject playerPrefab;
-    [SerializeField] private Button startButton;
     
     public List<UnitController> GetUnits => units;
     private void Awake()
@@ -29,37 +29,27 @@ public class RoundManager : NetworkBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
-
-            //Setup the start lobby button
-            startButton.onClick.AddListener(() =>
-            {
-                if (units.Count > 1)
-                {
-                    StartShoppingPhase();
-                    AddBot();
-                    startButton.gameObject.SetActive(false);
-                }
-                else
-                {
-                    throw new NotSupportedException("At least 2 players needed in lobby to start game.");
-                }
-            });
-
-            startButton.gameObject.SetActive(false);
+            
             if (UnitController.OnUnitDeath == null)
             {
                 UnitController.OnUnitDeath = new KillEvent();
             }
+        }
+        else
+        {
+            Destroy(gameObject);
         }
        
     }
     void Start()
     {
         //Subscribes to Connection Events
+        if (NetworkManager.Singleton == null) return;
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
         UnitController.OnUnitDeath.AddListener(OnUnitDeath);
+        OnStart();
+        StartCoroutine(BeforeShopPhase());
     }
     
     /// <summary>
@@ -74,10 +64,7 @@ public class RoundManager : NetworkBehaviour
         player.SpawnAsPlayerObject(clientId, false);
         UnitController unit = player.GetComponent<UnitController>();
         units.Add(unit);
-        if (units.Count > 1)
-        {
-            startButton.gameObject.SetActive(true);
-        }
+        
     }
     /// <summary>
     /// Is called when a client disconnects. It despawns the playerprefab for them and removes the reference to their UnitController. Server Only. - Silas Thule
@@ -92,10 +79,7 @@ public class RoundManager : NetworkBehaviour
         units.Remove(unit);
         player.Despawn(true);
         Destroy(player.gameObject);
-        if (units.Count < 2)
-        {
-            startButton.gameObject.SetActive(false);
-        }
+        
     }
 
     /// <summary>
@@ -134,7 +118,7 @@ public class RoundManager : NetworkBehaviour
     /// <summary>
     /// Resets the health of units and their position. Also enables damage.
     /// </summary>
-    public void StartNewRound()
+    private void StartNewRound()
     {
         if (!IsServer) return;
         kills.Clear();
@@ -147,7 +131,6 @@ public class RoundManager : NetworkBehaviour
         //PlaceUnits();
         //Call Map Generator function via MapGenerator.instance.GenerateMap();
         roundIsOngoing = true;
-        Debug.Log("New round has started");
 
     }
     /// <summary>
@@ -164,7 +147,6 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void OpenPlayerShopsClientRPC()
     {
-        Debug.Log("Shopping Phase started");
         SpellShop.instance.SetTimer(shoppingTime);
         SpellShop.instance.gameObject.SetActive(true);
     }
@@ -172,14 +154,18 @@ public class RoundManager : NetworkBehaviour
     /// Waits for some time then starts a new round
     /// </summary>
     /// <returns></returns>
-    IEnumerator ShoppingPhaseCoroutine()
+    private IEnumerator ShoppingPhaseCoroutine()
     {
 
         yield return new WaitForSeconds(shoppingTime);
         StartNewRound();
         
     }
-    IEnumerator BeforeShopPhase()
+    /// <summary>
+    /// Waits for some time then starts the shopping phase
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator BeforeShopPhase()
     {
         yield return new WaitForSeconds(2);
         StartShoppingPhase();
@@ -187,8 +173,7 @@ public class RoundManager : NetworkBehaviour
     /// <summary>
     /// Event that is called on every kill. Handles ending the round.
     /// </summary>
-    /// <param name="deadUnit"></param>
-    /// <param name="killer"></param>
+    /// <param name="kill">The information about the kill</param>
     public void OnUnitDeath(KillData kill)
     {
         if (!IsServer) return;
@@ -200,12 +185,30 @@ public class RoundManager : NetworkBehaviour
         }
 
     }
-    public void AddBot()
+    /// <summary>
+    /// Adds a bot with a given brain to the game
+    /// </summary>
+    /// <param name="brain"></param>
+    public void AddBot(Brain brain)
     {
         if (!IsServer) return;
         NetworkObject bot = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
         bot.Spawn();
-        bot.GetComponent<UnitController>().InitializeBot(botBrain);
+        bot.GetComponent<UnitController>().InitializeBot(brain);
+        units.Add(bot.GetComponent<UnitController>());
+    }
+    /// <summary>
+    /// Initializes all player Units
+    /// </summary>
+    private void OnStart()
+    {
+        if (!IsServer) return;
+        foreach (ulong player in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            NetworkObject prefab = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
+            prefab.SpawnAsPlayerObject(player, true);
+            units.Add(prefab.GetComponent<UnitController>());
+        }
     }
 
 }

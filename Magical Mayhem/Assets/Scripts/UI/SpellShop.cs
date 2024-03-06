@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,12 +13,16 @@ public class SpellShop : NetworkBehaviour
     public UnitController localUnitController;
     public bool testing = false;
     public Dictionary<int, Buyable> buyableIDs = new Dictionary<int, Buyable>();
-    private int gold=50;
-    private int health=1000;
+    private bool toggleSpellHolder = false;
+    public TMP_Text toggleSpellItemButtonText;
+    public Button sellButton;
+    public Button upgradeButton;
+
     private int damage=500;    
     public TMP_Text goldText;
     public TMP_Text healthText;
     public TMP_Text damageText;
+    
     public Spell[] spells;
     public Item[] items;
     public BuyableIcon[] initatedSpells;
@@ -34,7 +39,7 @@ public class SpellShop : NetworkBehaviour
     public Transform itemHolder;
     public TMP_Text descriptionText;
     public TMP_Text timerText;
-    private float time;
+    [SerializeField] private float time;
 
 
     private void Awake()
@@ -51,9 +56,9 @@ public class SpellShop : NetworkBehaviour
     }
     // Start is called before the first frame update
     void Start()
-    {   
-        
-        
+    {
+
+        ConnectPlayer();
         MakeMap();
         goldText.SetText(localUnitController.inventory.gold.ToString());
         healthText.SetText(localUnitController.GetHealth().ToString());
@@ -66,7 +71,7 @@ public class SpellShop : NetworkBehaviour
             Debug.Log("i am in spells initiate");
             BuyableIcon buyableSpell = Instantiate(spellIconTemplate,buyables);
             buyableSpell.Initialize(spells[i]);
-            buyableSpell.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableSpell); CancelBuyablePhase();});
+            buyableSpell.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableSpell); CancelBuyablePhase(); ActivateSellButton();});
 
             initatedSpells[i]=buyableSpell; 
         }
@@ -75,11 +80,13 @@ public class SpellShop : NetworkBehaviour
         {
             BuyableIcon buyableItem = Instantiate(spellIconTemplate,buyables);
             buyableItem.Initialize(items[i]);
-            buyableItem.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableItem); CancelBuyablePhase();});  
+            buyableItem.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableItem); CancelBuyablePhase(); ActivateSellButton();});  
             initiatedItems[i]=buyableItem; 
         }  
         LoadSlots();
-        ToggleSpellHolder(true);
+        ToggleSpellHolder();
+        // upgradeButton.gameObject.SetActive(false);
+        // sellButton.gameObject.SetActive(false);
         
         
         
@@ -104,7 +111,7 @@ public class SpellShop : NetworkBehaviour
         if (!testing)
         {
             time -= Time.deltaTime;
-            if (time < 0)
+            if (time < 0 && gameObject.activeSelf)
         {
             gameObject.SetActive(false);
         }
@@ -134,22 +141,31 @@ public class SpellShop : NetworkBehaviour
     {
         this.time = time;
     }
-    public void ToggleSpellHolder(bool active){
-        spellHolder.gameObject.SetActive(active);
+
+    public void ToggleSpellHolder(){
+        toggleSpellHolder =!toggleSpellHolder;
+        spellHolder.gameObject.SetActive(toggleSpellHolder);
         
         
         foreach (BuyableIcon item in initatedSpells)
         {
-            item.gameObject.SetActive(active);
+            item.gameObject.SetActive(toggleSpellHolder);
 
         }
 
         foreach (BuyableIcon item in initiatedItems)
         {
-            item.gameObject.SetActive(!active);
+            item.gameObject.SetActive(!toggleSpellHolder);
         }
+        itemHolder.gameObject.SetActive(!toggleSpellHolder);
         
-        itemHolder.gameObject.SetActive(!active);
+        if (toggleSpellHolder)
+        {
+            toggleSpellItemButtonText.SetText("Items");
+        }else
+        {
+            toggleSpellItemButtonText.SetText("Spells");
+        }
         
         SelectBuyable(null);
     }
@@ -170,10 +186,10 @@ public class SpellShop : NetworkBehaviour
         LoadSlots();
     }
 
+    public void ServerTryBuyBuyable(){
+        localUnitController.TryGetItem(NetworkManager.Singleton.LocalClientId,selectedBuyable.GetID());
+    }
     public void BuyBuyable(){
-        
-        if (gold>selectedBuyable.price&&!localUnitController.inventory.items.Contains(selectedBuyable)&&!localUnitController.inventory.spells.Contains(selectedBuyable))
-        {
             
             Spell spell =selectedBuyable as Spell;
             Item item = selectedBuyable as Item;
@@ -195,7 +211,7 @@ public class SpellShop : NetworkBehaviour
                 
                     if (localUnitController.inventory.items[i] is null)
                     {
-                        ulong id = NetworkManager.Singleton.LocalClient.ClientId;
+                        
                         
                         localUnitController.inventory.items[i]=item;
                         localUnitController.TryPlaceBuyable(item.GetID(),i);
@@ -207,7 +223,7 @@ public class SpellShop : NetworkBehaviour
                 
 
             }
-        }
+        
         
     }
 
@@ -293,6 +309,22 @@ public class SpellShop : NetworkBehaviour
         }
     }
 
+
+    public void ActivateSellButton(){
+        
+        if (localUnitController.inventory.items.Contains(selectedBuyable)||localUnitController.inventory.spells.Contains(selectedBuyable))
+        {
+            upgradeButton.gameObject.SetActive(true);
+            sellButton.gameObject.SetActive(true);
+
+        }else
+        {
+            upgradeButton.gameObject.SetActive(false);
+            sellButton.gameObject.SetActive(false);
+        }
+
+
+    }
 
     private void MakeMap(){
         foreach (Spell item in spells)

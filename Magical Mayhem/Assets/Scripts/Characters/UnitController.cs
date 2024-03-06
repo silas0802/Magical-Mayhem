@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,6 +14,9 @@ public class UnitController : NetworkBehaviour, IDamagable
 {
     #region Fields
     [SerializeField] private int health;
+    [SerializeField] private int arcaneMultiplier =0;
+    [SerializeField] private int fireDamageMultiplier=0;
+    [SerializeField] private int frostDamageMultiplier=0;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
     private Brain brain;
     [SerializeField]
@@ -32,6 +36,15 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     public static KillEvent OnUnitDeath;
     public bool isDead { get; private set; }
+
+    public int GetHealth()
+    {
+        return health;
+    }
+    public int GetArcaneDamageMultiplier()
+    {
+        return arcaneMultiplier;
+    }
     #endregion
 
 
@@ -44,7 +57,6 @@ public class UnitController : NetworkBehaviour, IDamagable
         health = unitClass.maxHealth;
         inventory = new Inventory();
     }
-    
 
     void Update()
     {
@@ -55,9 +67,8 @@ public class UnitController : NetworkBehaviour, IDamagable
         brain?.HandleActions(this);
     }
     #endregion
-    public int GetHealth(){
-        return health;
-    }
+    
+    
 
     #region Movement Inputs
     /// <summary>
@@ -112,7 +123,17 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         CastSpell(5);
     }
-    #endregion 
+    #endregion
+
+    
+    #region Other Inputs
+
+    void OnPause()
+    {
+        PauseMenu.instance.OpenPauseMenu();
+    }
+
+    #endregion
 
     /// <summary>
     /// Handles input. Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule
@@ -155,11 +176,60 @@ public class UnitController : NetworkBehaviour, IDamagable
             inventory.items[index]=item;
             inventory.gold = inventory.gold-item.price;
             health = health+item.health;
+            if (item.itemElement is SpellElementType.Frost)
+            {
+                frostDamageMultiplier +=item.elementBoostPercent;      
+            }else if(item.itemElement is SpellElementType.Arcane)
+            {
+                arcaneMultiplier +=item.elementBoostPercent;
+            }else if(item.itemElement is SpellElementType.Fire){
+                fireDamageMultiplier += item.elementBoostPercent;
+            }
         }else
         {
             Spell spell = buyable as Spell;
             inventory.spells[index]=spell;
         }
+    }
+
+    
+
+    public void TryGetItem(ulong clientID,int itemID){
+        
+        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
+        if (IsServer)
+        {   
+            
+           if ((!inventory.items.Contains(buyable)||!inventory.spells.Contains(buyable))&&inventory.gold>buyable.price)
+            {
+                Debug.Log("in if check of item contains");
+             SpellShop.instance.BuyBuyable(); 
+            }
+        }else
+        {   
+             GetItemServerRpc(clientID,itemID);
+        }
+    }
+
+    [ServerRpc]
+    void GetItemServerRpc(ulong clientID,int itemID){
+        
+        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
+         if (inventory.items.Contains(buyable)||inventory.spells.Contains(buyable)&&inventory.gold>buyable.price)
+            {
+               GetItemClientRpc(clientID);
+            }
+         
+    }
+
+    [ClientRpc]
+    void GetItemClientRpc(ulong clientID){
+        
+        if (clientID==NetworkManager.Singleton.LocalClientId)
+        {
+               SpellShop.instance.BuyBuyable();  
+        }
+         
     }
     /// <summary>
     /// Changes the units health and clamps the value between 0 and maxHealth. Calls Death method if health reaches 0. Server Only. - Silas Thule

@@ -44,6 +44,6 @@ public enum SpellElementType
     None,
     Arcane,
     Fire,
-    Water,
+    Frost,
     Ground,
 }

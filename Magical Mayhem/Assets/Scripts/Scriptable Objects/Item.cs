@@ -21,7 +21,7 @@ public class Item : Buyable
     private int CDReduction = 5;
 
 [SerializeField, Range(1,20), Tooltip("Boost the percentage damage of the element bost")]
-    private float ElementBoostPercent = 5F;
+    private int ElementBoostPercent = 5;
 
 
 
@@ -35,10 +35,10 @@ public int damage => this.Damage;
 public int health => this.Health;
 public int cDReduction => this.CDReduction;
 
-public float elementBoostPercent => this.ElementBoostPercent;
+public int elementBoostPercent => this.ElementBoostPercent;
 
-public ItemType itemType => this.itemType;
-public SpellElementType itemElement => this.itemElement;
+public ItemType itemType => this.ItemType;
+public SpellElementType itemElement => this.ItemElement;
 
  
 
