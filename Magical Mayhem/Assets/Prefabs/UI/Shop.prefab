@@ -1704,6 +1704,7 @@ MonoBehaviour:
   itemHolder: {fileID: 695515423851444802}
   descriptionText: {fileID: 4216815665129868426}
   timerText: {fileID: 2259561999674926097}
+  time: 0
 --- !u!1 &2702958557360888648
 GameObject:
   m_ObjectHideFlags: 0
