@@ -58,9 +58,6 @@ public class UnitController : NetworkBehaviour, IDamagable
         inventory = new Inventory();
     }
 
-    
-
-
     void Update()
     {
         if (!IsServer) return;

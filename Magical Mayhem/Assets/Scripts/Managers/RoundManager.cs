@@ -49,7 +49,7 @@ public class RoundManager : NetworkBehaviour
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
         UnitController.OnUnitDeath.AddListener(OnUnitDeath);
         OnStart();
-        StartShoppingPhase();
+        StartCoroutine(BeforeShopPhase());
     }
     
     /// <summary>
@@ -202,6 +202,7 @@ public class RoundManager : NetworkBehaviour
     /// </summary>
     private void OnStart()
     {
+        if (!IsServer) return;
         foreach (ulong player in NetworkManager.Singleton.ConnectedClientsIds)
         {
             NetworkObject prefab = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
