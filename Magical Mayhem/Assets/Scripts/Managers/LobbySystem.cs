@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LobbySystem : NetworkBehaviour
@@ -80,7 +81,7 @@ public class LobbySystem : NetworkBehaviour
     private void LeaveButton()
     {
         NetworkManager.Singleton.Shutdown();
-        SceneHelper.instance.LoadScene("Connection Screen");
+        SceneManager.LoadScene("Connection Screen");
     }
     private void StartLobbyButton()
     {

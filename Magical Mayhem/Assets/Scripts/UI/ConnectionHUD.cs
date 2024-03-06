@@ -6,6 +6,7 @@ using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ConnectionHUD : MonoBehaviour
@@ -43,7 +44,7 @@ public class ConnectionHUD : MonoBehaviour
         print(NetworkManager.Singleton.StartClient());
         if (NetworkManager.Singleton.IsConnectedClient)
         {
-            SceneHelper.instance.LoadScene("Lobby Screen");
+            SceneManager.LoadScene("Lobby Screen");
         }
         else
         {
@@ -55,7 +56,7 @@ public class ConnectionHUD : MonoBehaviour
     {
         SetConnectionData(ipField.text);
         NetworkManager.Singleton.StartClient();
-        SceneHelper.instance.LoadScene("Lobby Screen");
+        SceneManager.LoadScene("Lobby Screen");
         
     }
     private void HostGame()

@@ -41,6 +41,10 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         return health;
     }
+    public int GetArcaneDamageMultiplier()
+    {
+        return arcaneMultiplier;
+    }
     #endregion
 
 
@@ -74,9 +78,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     }
     #endregion
     
-    public int GetArcaneDamageMultiplier(){
-        return arcaneMultiplier;
-    }
+    
 
     #region Movement Inputs
     /// <summary>
@@ -131,7 +133,17 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         CastSpell(5);
     }
-    #endregion 
+    #endregion
+
+    
+    #region Other Inputs
+
+    void OnPause()
+    {
+        PauseMenu.instance.OpenPauseMenu();
+    }
+
+    #endregion
 
     /// <summary>
     /// Handles input. Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule

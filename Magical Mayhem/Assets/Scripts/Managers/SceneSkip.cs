@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneSkip : MonoBehaviour
 {
     private void Start()
     {
-        SceneHelper.instance.LoadScene(1);
+        SceneManager.LoadScene(1);
     }
 }
