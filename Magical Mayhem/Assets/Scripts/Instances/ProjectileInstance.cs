@@ -111,10 +111,8 @@ public class ProjectileInstance : NetworkBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        print("HIT");
         if (IsServer)
         {
-
             UnitController hit = other.gameObject.GetComponent<UnitController>();
             if (hit != null)
             {
