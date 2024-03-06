@@ -35,7 +35,7 @@ public class SpellShop : NetworkBehaviour
     public Transform itemHolder;
     public TMP_Text descriptionText;
     public TMP_Text timerText;
-    private float time;
+    [SerializeField] private float time;
 
 
     private void Awake()
@@ -52,9 +52,9 @@ public class SpellShop : NetworkBehaviour
     }
     // Start is called before the first frame update
     void Start()
-    {   
-        
-        
+    {
+
+        ConnectPlayer();
         MakeMap();
         goldText.SetText(localUnitController.inventory.gold.ToString());
         healthText.SetText(localUnitController.GetHealth().ToString());
@@ -105,7 +105,7 @@ public class SpellShop : NetworkBehaviour
         if (!testing)
         {
             time -= Time.deltaTime;
-            if (time < 0)
+            if (time < 0 && gameObject.activeSelf)
         {
             gameObject.SetActive(false);
         }
