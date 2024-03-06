@@ -29,7 +29,6 @@ public class RoundManager : NetworkBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
             
             if (UnitController.OnUnitDeath == null)
             {
@@ -118,7 +117,7 @@ public class RoundManager : NetworkBehaviour
     /// <summary>
     /// Resets the health of units and their position. Also enables damage.
     /// </summary>
-    public void StartNewRound()
+    private void StartNewRound()
     {
         if (!IsServer) return;
         kills.Clear();
@@ -131,7 +130,6 @@ public class RoundManager : NetworkBehaviour
         //PlaceUnits();
         //Call Map Generator function via MapGenerator.instance.GenerateMap();
         roundIsOngoing = true;
-        Debug.Log("New round has started");
 
     }
     /// <summary>
@@ -148,7 +146,6 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     private void OpenPlayerShopsClientRPC()
     {
-        Debug.Log("Shopping Phase started");
         SpellShop.instance.SetTimer(shoppingTime);
         SpellShop.instance.gameObject.SetActive(true);
     }
@@ -156,14 +153,18 @@ public class RoundManager : NetworkBehaviour
     /// Waits for some time then starts a new round
     /// </summary>
     /// <returns></returns>
-    IEnumerator ShoppingPhaseCoroutine()
+    private IEnumerator ShoppingPhaseCoroutine()
     {
 
         yield return new WaitForSeconds(shoppingTime);
         StartNewRound();
         
     }
-    IEnumerator BeforeShopPhase()
+    /// <summary>
+    /// Waits for some time then starts the shopping phase
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator BeforeShopPhase()
     {
         yield return new WaitForSeconds(2);
         StartShoppingPhase();
@@ -171,8 +172,7 @@ public class RoundManager : NetworkBehaviour
     /// <summary>
     /// Event that is called on every kill. Handles ending the round.
     /// </summary>
-    /// <param name="deadUnit"></param>
-    /// <param name="killer"></param>
+    /// <param name="kill">The information about the kill</param>
     public void OnUnitDeath(KillData kill)
     {
         if (!IsServer) return;
@@ -184,13 +184,21 @@ public class RoundManager : NetworkBehaviour
         }
 
     }
-    public void AddBot()
+    /// <summary>
+    /// Adds a bot with a given brain to the game
+    /// </summary>
+    /// <param name="brain"></param>
+    public void AddBot(Brain brain)
     {
         if (!IsServer) return;
         NetworkObject bot = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
         bot.Spawn();
-        bot.GetComponent<UnitController>().InitializeBot(botBrain);
+        bot.GetComponent<UnitController>().InitializeBot(brain);
+        units.Add(bot.GetComponent<UnitController>());
     }
+    /// <summary>
+    /// Initializes all player Units
+    /// </summary>
     private void OnStart()
     {
         foreach (ulong player in NetworkManager.Singleton.ConnectedClientsIds)

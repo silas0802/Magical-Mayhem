@@ -30,6 +30,11 @@ public class LobbySystem : NetworkBehaviour
             t.SpawnAsPlayerObject(0, true);
             t.TrySetParent(playerInfoSpawnPoint, false);
         }
+        else
+        {
+            print("Joined successfully");
+            startLobbyButton.gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
