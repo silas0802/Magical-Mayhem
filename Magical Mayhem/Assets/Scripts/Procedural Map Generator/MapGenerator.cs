@@ -13,29 +13,53 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private GameObject mapWall;
 
     
-    int mapSize = 41;
+    int mapSize;
     int lavaTileCounter = 0;
-    //[SerializeField ]private float seed = 3.5f;
     float wallHieght = 5f;
     [SerializeField] float lavaSpawnTime = 1f;
     [SerializeField]float nextLavaSpawn;
-    [SerializeField] float worlyCutOff = 0.5f;
     GameObject[,] tileArray;
+    [SerializeField] float wallCutOff = 0.75f;
+    [SerializeField] float islandCutOff = 0.45f;
     GameObject[,] wallArray;
     
     // Start is called before the first frame update
     void Start()
     {   
-        GenerateMap(1);
+        GenerateMap(1, 1, "Medium");
     }
-    public void GenerateMap(int genType){
+
+    public void GenerateMap(int genType, int mapType, string Size){
+        switch (Size)
+        {
+            case "Small": mapSize = 21;
+                break;
+            case "Medium": mapSize = 31;
+                break;
+            case "Large": mapSize = 41;
+                break;
+            default: mapSize = 31;
+                break;
+        }
         //save the floortiles
         tileArray = new GameObject[mapSize,mapSize];
-        TileSpawner();
-        //set invisible border walls
-        SetWalls();
-        //generate walls on the map
-        WallGen(genType);
+        float seed = SeedGen();
+        switch (mapType)
+        {
+            case 1: BrokenWorldGen(seed);
+                break;
+            default: TileSpawner();
+                break;
+        }
+        //Obsticles on map
+        switch (genType)
+        {
+            case 1: wallArray = new GameObject[mapSize, mapSize];
+                SimplexWallGen(seed);
+                break;
+            default: break;
+        }
+        SetBorderWalls();
     }
 
     // Update is called once per frame
@@ -45,7 +69,7 @@ public class MapGenerator : MonoBehaviour
     }
 
     //This function transforms the walls to fit the egde of the gamemap and stops the player from falling off
-    private void SetWalls(){
+    private void SetBorderWalls(){
         //init borderwalls
         BorderWallScript southWall = Instantiate(borderWall, new Vector3(mapSize/2-20, wallHieght/2, 0-20), Quaternion.identity, transform);
         BorderWallScript northWall = Instantiate(borderWall, new Vector3(mapSize/2-20, wallHieght/2, mapSize-1-20), Quaternion.identity, transform);
@@ -69,17 +93,21 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    public void WallGen(int choose){
-        wallArray = new GameObject[mapSize, mapSize];
-        float seed = SeedGen();
-        switch (choose)
-        {
-            case 1: SimplexWallGen(seed);
-                break;
-            default: WorlyWallGen(seed);
-                break;
+    //generate a map with a lot of lava 
+    private void BrokenWorldGen(float seed){
+         for (int i = 0; i < mapSize; i++){
+            for (int j = 0; j < mapSize; j++){
+                float perlin  = Mathf.PerlinNoise(i+seed/100, j+seed/100);
+                if(perlin  > islandCutOff){
+                    tileArray[i,j] = Instantiate(tile, new Vector3(i-20, 0, j-20), Quaternion.identity, transform);   
+                } 
+                else{
+                    tileArray[i,j] = Instantiate(lavaTile, new Vector3(i-20,0,j-20), Quaternion.identity, transform);
+                }
+            }
         }
     }
+
     //Generates random placement of walls based on simplex noise (it is uniformly random) it takes in 2 floats as coordinates and returns a value 
     //Then we have a cutoff value and if the noise map returns a value above this value a wall is placed
     private void SimplexWallGen(float seed){
@@ -87,7 +115,8 @@ public class MapGenerator : MonoBehaviour
         for (int i = 0; i < mapSize; i++){
             for (int j = 0; j < mapSize; j++){
                 float Simplex  = noise.snoise(new float2(i+seed,j+seed));
-                if(Simplex  > worlyCutOff){
+                if (Simplex > wallCutOff && tileArray[i, j].GetComponent("TileScript") != null )
+                {
                     coords = tileArray[i,j].transform.position;
                     coords.y += 1;
                     wallArray[i,j] = Instantiate(mapWall, coords, Quaternion.identity, transform);
@@ -104,7 +133,7 @@ public class MapGenerator : MonoBehaviour
         for (int i = 0; i < mapSize; i++){
             for (int j = 0; j < mapSize; j++){
                 worly = noise.cellular(new float2(i+seed,j+seed));
-                if(worly.magnitude > worlyCutOff){
+                if(worly.magnitude > wallCutOff){
                     coords = tileArray[i,j].transform.position;
                     wallArray[i,j] = Instantiate(mapWall, coords, Quaternion.identity, transform);
                 } 
@@ -113,18 +142,18 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    //generate a seed based on the privious one by hashing it and saving it
     private float SeedGen(){
         float oldSeed = PlayerPrefs.HasKey("Seed")? PlayerPrefs.GetFloat("Seed") : RandomFloat();
-        if(PlayerPrefs.HasKey("Seed")){ print(PlayerPrefs.GetFloat("Seed")+"   !1");}
-        print(oldSeed+"   !2");
         MD5 hash = MD5.Create();
-        double newSeed = BitConverter.ToDouble(hash.ComputeHash(BitConverter.GetBytes(oldSeed)));
+        float newSeed = BitConverter.ToInt16(hash.ComputeHash(BitConverter.GetBytes(oldSeed)));
         hash.Dispose();
-        PlayerPrefs.SetFloat("Seed", (float)newSeed);
-        print(newSeed + "   !3!   " + ((float)newSeed));
-        print(PlayerPrefs.GetFloat("Seed") + "   !4");
-        PlayerPrefs.DeleteAll();
-        return (float)newSeed;
+        newSeed /= 100;
+        PlayerPrefs.SetFloat("Seed", newSeed);
+        print(newSeed);
+        //PlayerPrefs.DeleteAll();
+        //newSeed = 308.99f;
+        return newSeed;
     }
 
     private float RandomFloat(){
@@ -150,15 +179,15 @@ public class MapGenerator : MonoBehaviour
             for (int i = lavaTileCounter; i < mapSize-lavaTileCounter; i++)
             {
                 //bottom row
-                if(tileArray[i,lavaTileCounter]){
-                    coords = tileArray[i,lavaTileCounter].transform.position;
-                    Destroy(tileArray[i,lavaTileCounter].gameObject);
+                if(tileArray[i, lavaTileCounter]){
+                    coords = tileArray[i, lavaTileCounter].transform.position;
+                    Destroy(tileArray[i, lavaTileCounter]);
                     tileArray[i,lavaTileCounter] = Instantiate(lavaTile, coords, Quaternion.identity, transform);
                 }
                 //left col
                 if(tileArray[lavaTileCounter,i]){
-                    coords = tileArray[lavaTileCounter,i].transform.position;
-                    Destroy(tileArray[lavaTileCounter,i].gameObject);    
+                    coords = tileArray[lavaTileCounter, i].transform.position;
+                    Destroy(tileArray[lavaTileCounter, i]);
                     tileArray[lavaTileCounter,i] = Instantiate(lavaTile, coords, Quaternion.identity, transform);
                 }
                 //right col
