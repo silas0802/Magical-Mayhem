@@ -106,18 +106,18 @@ public class SpellShop : NetworkBehaviour
     void Update()
     {
         
-        // if (!testing)
-        // {
-        //     time -= Time.deltaTime;
-        //     if (time < 0 && gameObject.activeSelf)
-        // {
-        //     gameObject.SetActive(false);
-        // }
-        // else
-        // {
-        //     timerText.text = ((int)time).ToString();
-        // }    
-        // }
+        if (!testing)
+        {
+            time -= Time.deltaTime;
+            if (time < 0 && gameObject.activeSelf)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            timerText.text = ((int)time).ToString();
+        }    
+        }
         
     }
     public void SelectBuyable(BuyableIcon buyableIcon){
