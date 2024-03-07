@@ -10,17 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a385dd2d425f0d640847121719ada6ab, type: 3}
-  m_Name: Frozen Heart
+  m_Name: OrbOfAbsoluteZero
   m_EditorClassIdentifier: 
-  ID: 204
-  Description: 'the Frozen heart
-
-'
-  Icon: {fileID: 21300000, guid: 2bc28e2075c96a04caeceb333f4e8dc9, type: 3}
-  Price: 9
-  Damage: 100
+  ID: 207
+  Description: 
+  Icon: {fileID: 21300000, guid: 50adff0b55459634093f04e133b19f69, type: 3}
+  Price: 7
+  Damage: 529
   Health: 1000
   CDReduction: 5
-  ElementBoostPercent: 10
+  ElementBoostPercent: 9
   ItemType: 0
   ItemElement: 3

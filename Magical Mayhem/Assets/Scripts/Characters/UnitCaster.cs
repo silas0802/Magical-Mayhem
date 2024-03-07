@@ -7,7 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(UnitController))]
 public class UnitCaster : NetworkBehaviour
 {
-    [SerializeField] private Spell[] spells = new Spell[6];
     [SerializeField] private float[] cooldowns = new float[6];
     private UnitController controller;
 
@@ -36,7 +35,7 @@ public class UnitCaster : NetworkBehaviour
         {
             if (cooldowns[index] <= 0)
             {
-                SetCooldown(index, spells[index].cooldown);
+                SetCooldown(index, controller.inventory.spells[index].cooldown);
                 CastSpellServerRPC(index, target);
 
             }
@@ -61,10 +60,10 @@ public class UnitCaster : NetworkBehaviour
     private void CastSpell(int index, Vector3 target)
     {
         
-        Spell spell = spells[index];
+        Spell spell = controller.inventory.spells[index];
         if (!spell || cooldowns[index]>0) return;
 
-        SetCooldown(index, spells[index].cooldown);
+        SetCooldown(index, controller.inventory.spells[index].cooldown);
         StartCoroutine(CastingSpell(spell, target));
         
 

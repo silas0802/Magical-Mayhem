@@ -11,18 +11,19 @@ public class SpellShop : NetworkBehaviour
 {
     public static SpellShop instance;
     public UnitController localUnitController;
-    public bool testing = false;
+    public bool testing = true;
     public Dictionary<int, Buyable> buyableIDs = new Dictionary<int, Buyable>();
     private bool toggleSpellHolder = false;
     public TMP_Text toggleSpellItemButtonText;
     public Button sellButton;
     public Button upgradeButton;
-
-    private int damage=500;    
+    public Button buyButton;
+       
     public TMP_Text goldText;
     public TMP_Text healthText;
-    public TMP_Text damageText;
-    
+    public TMP_Text frostMultiplier;
+    public TMP_Text ArcaneMultiplier;
+    public TMP_Text fireMultiplier;
     public Spell[] spells;
     public Item[] items;
     public BuyableIcon[] initatedSpells;
@@ -58,17 +59,16 @@ public class SpellShop : NetworkBehaviour
     void Start()
     {
 
-        ConnectPlayer();
+        
+
         MakeMap();
-        goldText.SetText(localUnitController.inventory.gold.ToString());
-        healthText.SetText(localUnitController.GetHealth().ToString());
-        damageText.SetText(damage.ToString());
+        
         initatedSpells = new BuyableIcon[spells.Length];
         initiatedItems = new BuyableIcon[items.Length];
          
         for (int i = 0; i < spells.Length; i++)
         {
-            Debug.Log("i am in spells initiate");
+            
             BuyableIcon buyableSpell = Instantiate(spellIconTemplate,buyables);
             buyableSpell.Initialize(spells[i]);
             buyableSpell.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableSpell); CancelBuyablePhase(); ActivateSellButton();});
@@ -91,18 +91,16 @@ public class SpellShop : NetworkBehaviour
         
         
     }
+    public void InitalizePlayerInformation(){
+        goldText.SetText(localUnitController.inventory.gold.ToString());
+        healthText.SetText(localUnitController.GetHealth().ToString());
+        Debug.Log("initializing player information");
+        
+    }
 
-    public void ConnectPlayer(){
-        List<UnitController> players = RoundManager.instance.GetUnits;
-        foreach (UnitController item in players)
-        {
-            if (item.GetComponent<NetworkObject>().IsLocalPlayer)
-            {
-                
-                localUnitController=item;       
-                         
-            }            
-        }
+    public void ConnectPlayer(UnitController local){
+       localUnitController=local;
+       Debug.Log("unitcontroller initiated with: " + local);
     }
     // Update is called once per frame
     void Update()
@@ -130,10 +128,18 @@ public class SpellShop : NetworkBehaviour
                 descriptionText.text=null;
                 selectedBuyable=null;
                 selectedSpellicon.Initialize(null);
+                buyButton.GetComponent<Image>().color=new Color(255,255,255,255);
             }else{
                 selectedBuyable=buyableIcon.buyable;
                 selectedSpellicon.Initialize(buyableIcon.buyable);
                 descriptionText.text=selectedBuyable.description;
+                if (localUnitController.inventory.gold<selectedBuyable.price)
+                {
+                    buyButton.GetComponent<Image>().color=new Color32(255,255,255,100);
+                }else
+                {
+                    buyButton.GetComponent<Image>().color=new Color(255,255,255,255);
+                }
             }
         }
     }
@@ -248,10 +254,10 @@ public class SpellShop : NetworkBehaviour
             UpdateVisuals(icon);
             
            
-            
+            EndByablePhase();
         }
         
-        EndByablePhase();
+        
     }
     void UpdateVisuals(BuyableIcon icon){
         icon.Initialize(selectedBuyable);
@@ -261,9 +267,12 @@ public class SpellShop : NetworkBehaviour
         {
             Item item = selectedBuyable as Item;
             
-            damage=damage+item.damage;
+            
             healthText.SetText(localUnitController.GetHealth().ToString());
-            damageText.SetText(damage.ToString());
+            frostMultiplier.SetText(localUnitController.GetFrostMult().ToString()+"%");
+            ArcaneMultiplier.SetText(localUnitController.GetArcaneMult().ToString()+"%");
+            fireMultiplier.SetText(localUnitController.GetFireMult().ToString()+"%");
+            
 
         }
  

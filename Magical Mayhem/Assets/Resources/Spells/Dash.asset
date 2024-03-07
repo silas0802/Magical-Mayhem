@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 107
   Description: 
   Icon: {fileID: 21300000, guid: ed7a41c45ab12dc42805e3d0dec70f4e, type: 3}
-  Price: 0
+  Price: 7
   UseType: 0
   ElementType: 0
   IsComponentSpell: 0

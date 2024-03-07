@@ -19,6 +19,9 @@ public class ProjectileSpell : Spell
     [SerializeField,Range(0,30), Tooltip("How far the projectile can travel. If homing is active this range is now the projectiles lifespan.")] 
     private float Range = 10;
 
+    [SerializeField, Tooltip("If checked, then the projectile will always try to travel it's full distance")]
+    private bool MustFlyMaxDistance = false;
+
     [SerializeField,Range(0,3), Tooltip("How far away from the projectile a target can be before it explodes")] 
     private float TriggerRadius = 0.5f;
 
@@ -27,6 +30,7 @@ public class ProjectileSpell : Spell
 
     public float speed => this.Speed;
     public float range => this.Range;
+    public bool mustFlyMaxDistance => this.MustFlyMaxDistance;
     public float triggerRadius => this.TriggerRadius;
     public float homingForce => this.HomingForce;
     public ProjectileInstance projectile => this.Projectile;
