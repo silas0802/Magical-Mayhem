@@ -1464,6 +1464,11 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 6330256180783527255, guid: 5721868cd33472840b651a4a6596b553,
         type: 3}
+      propertyPath: testing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6330256180783527255, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
       propertyPath: buyButton
       value: 
       objectReference: {fileID: 1810178720}

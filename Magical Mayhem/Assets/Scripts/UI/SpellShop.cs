@@ -18,7 +18,7 @@ public class SpellShop : NetworkBehaviour
     public Button sellButton;
     public Button upgradeButton;
     public Button buyButton;
-       
+
     public TMP_Text goldText;
     public TMP_Text healthText;
     public TMP_Text frostMultiplier;
@@ -28,13 +28,13 @@ public class SpellShop : NetworkBehaviour
     public Item[] items;
     public BuyableIcon[] initatedSpells;
     public BuyableIcon[] initiatedItems;
-    public BuyableIcon[] ownedSpells =new BuyableIcon[6];
+    public BuyableIcon[] ownedSpells = new BuyableIcon[6];
     public BuyableIcon[] ownedItems = new BuyableIcon[6];
     public BuyableIcon spellIconTemplate;
     public BuyableIcon selectedSpellicon;
     public Transform buyables;
     public Buyable selectedBuyable;
-    public bool buyablePhase=false;
+    public bool buyablePhase = false;
     public Transform selectedSpellSlot;
     public Transform spellHolder;
     public Transform itemHolder;
@@ -51,94 +51,100 @@ public class SpellShop : NetworkBehaviour
         }
         if (!testing)
         {
-          gameObject.SetActive(false);  
+            gameObject.SetActive(false);
         }
-        
+
     }
     // Start is called before the first frame update
     void Start()
     {
 
-        
+
 
         MakeMap();
-        
+
         initatedSpells = new BuyableIcon[spells.Length];
         initiatedItems = new BuyableIcon[items.Length];
-         
+
         for (int i = 0; i < spells.Length; i++)
         {
-            
-            BuyableIcon buyableSpell = Instantiate(spellIconTemplate,buyables);
-            buyableSpell.Initialize(spells[i]);
-            buyableSpell.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableSpell); CancelBuyablePhase(); ActivateSellButton();});
 
-            initatedSpells[i]=buyableSpell; 
+            BuyableIcon buyableSpell = Instantiate(spellIconTemplate, buyables);
+            buyableSpell.Initialize(spells[i]);
+            buyableSpell.GetComponent<Button>().onClick.AddListener(() => { SelectBuyable(buyableSpell); CancelBuyablePhase(); ActivateSellButton(); });
+
+            initatedSpells[i] = buyableSpell;
         }
 
         for (int i = 0; i < items.Length; i++)
         {
-            BuyableIcon buyableItem = Instantiate(spellIconTemplate,buyables);
+            BuyableIcon buyableItem = Instantiate(spellIconTemplate, buyables);
             buyableItem.Initialize(items[i]);
-            buyableItem.GetComponent<Button>().onClick.AddListener(()=>{SelectBuyable(buyableItem); CancelBuyablePhase(); ActivateSellButton();});  
-            initiatedItems[i]=buyableItem; 
-        }  
+            buyableItem.GetComponent<Button>().onClick.AddListener(() => { SelectBuyable(buyableItem); CancelBuyablePhase(); ActivateSellButton(); });
+            initiatedItems[i] = buyableItem;
+        }
         LoadSlots();
         ToggleSpellHolder();
         // upgradeButton.gameObject.SetActive(false);
         // sellButton.gameObject.SetActive(false);
-        
-        
-        
+
+
+
     }
-    public void InitalizePlayerInformation(){
+    public void InitalizePlayerInformation()
+    {
         goldText.SetText(localUnitController.inventory.gold.ToString());
         healthText.SetText(localUnitController.GetHealth().ToString());
         Debug.Log("initializing player information");
-        
+
     }
 
-    public void ConnectPlayer(UnitController local){
-       localUnitController=local;
-       Debug.Log("unitcontroller initiated with: " + local);
+    public void ConnectPlayer(UnitController local)
+    {
+        localUnitController = local;
+        Debug.Log("unitcontroller initiated with: " + local);
     }
     // Update is called once per frame
     void Update()
     {
-        
+
         if (!testing)
         {
             time -= Time.deltaTime;
             if (time < 0 && gameObject.activeSelf)
-        {
-            gameObject.SetActive(false);
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                timerText.text = ((int)time).ToString();
+            }
         }
-        else
-        {
-            timerText.text = ((int)time).ToString();
-        }    
-        }
-        
+
     }
-    public void SelectBuyable(BuyableIcon buyableIcon){
+    public void SelectBuyable(BuyableIcon buyableIcon)
+    {
         if (!buyablePhase)
         {
-            if (buyableIcon==null)
+            if (buyableIcon == null)
             {
-                descriptionText.text=null;
-                selectedBuyable=null;
+                descriptionText.text = null;
+                selectedBuyable = null;
                 selectedSpellicon.Initialize(null);
-                buyButton.GetComponent<Image>().color=new Color(255,255,255,255);
-            }else{
-                selectedBuyable=buyableIcon.buyable;
+                buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+            }
+            else
+            {
+                selectedBuyable = buyableIcon.buyable;
                 selectedSpellicon.Initialize(buyableIcon.buyable);
-                descriptionText.text=selectedBuyable.description;
-                if (localUnitController.inventory.gold<selectedBuyable.price)
+                descriptionText.text = selectedBuyable.description;
+                if (localUnitController.inventory.gold < selectedBuyable.price)
                 {
-                    buyButton.GetComponent<Image>().color=new Color32(255,255,255,100);
-                }else
+                    buyButton.GetComponent<Image>().color = new Color32(255, 255, 255, 100);
+                }
+                else
                 {
-                    buyButton.GetComponent<Image>().color=new Color(255,255,255,255);
+                    buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
                 }
             }
         }
@@ -148,11 +154,12 @@ public class SpellShop : NetworkBehaviour
         this.time = time;
     }
 
-    public void ToggleSpellHolder(){
-        toggleSpellHolder =!toggleSpellHolder;
+    public void ToggleSpellHolder()
+    {
+        toggleSpellHolder = !toggleSpellHolder;
         spellHolder.gameObject.SetActive(toggleSpellHolder);
-        
-        
+
+
         foreach (BuyableIcon item in initatedSpells)
         {
             item.gameObject.SetActive(toggleSpellHolder);
@@ -164,20 +171,22 @@ public class SpellShop : NetworkBehaviour
             item.gameObject.SetActive(!toggleSpellHolder);
         }
         itemHolder.gameObject.SetActive(!toggleSpellHolder);
-        
+
         if (toggleSpellHolder)
         {
             toggleSpellItemButtonText.SetText("Items");
-        }else
+        }
+        else
         {
             toggleSpellItemButtonText.SetText("Spells");
         }
-        
+
         SelectBuyable(null);
     }
 
-    public void LoadSlots(){
-        
+    public void LoadSlots()
+    {
+
         foreach (BuyableIcon item in ownedSpells)
         {
             item.Initialize(item.buyable);
@@ -186,132 +195,148 @@ public class SpellShop : NetworkBehaviour
         {
             item.Initialize(item.buyable);
         }
-        
+
     }
-    public void OnValidate(){
+    public void OnValidate()
+    {
         LoadSlots();
     }
 
-    public void ServerTryBuyBuyable(){
-        localUnitController.TryGetItem(NetworkManager.Singleton.LocalClientId,selectedBuyable.GetID());
+    public void ServerTryBuyBuyable()
+    {
+        localUnitController.TryGetItem(NetworkManager.Singleton.LocalClientId, selectedBuyable.GetID());
     }
-    public void BuyBuyable(){
-            
-            Spell spell =selectedBuyable as Spell;
-            Item item = selectedBuyable as Item;
-            buyablePhase=true;
-            if (selectedBuyable is Spell)
-            {
-                foreach (BuyableIcon item1 in ownedSpells)
-                {
-                if (item1.buyable==null)
-                {
-                    item1.SetColor(new Color32(40,255,0,255));
-                }
+    public void BuyBuyable()
+    {
 
-                }    
-            }else{
-                
-                for (int i = 0; i < localUnitController.inventory.items.Length; i++)
-                {   
-                
-                    if (localUnitController.inventory.items[i] is null)
-                    {
-                        
-                        
-                        localUnitController.inventory.items[i]=item;
-                        localUnitController.TryPlaceBuyable(item.GetID(),i);
-                        UpdateVisuals(ownedItems[i]);
-                        EndByablePhase();
-                        break;
-                    }
+        Spell spell = selectedBuyable as Spell;
+        Item item = selectedBuyable as Item;
+        buyablePhase = true;
+        if (selectedBuyable is Spell)
+        {
+            foreach (BuyableIcon item1 in ownedSpells)
+            {
+                if (item1.buyable == null)
+                {
+                    item1.SetColor(new Color32(40, 255, 0, 255));
                 }
-                
 
             }
-        
-        
+        }
+        else
+        {
+
+            for (int i = 0; i < localUnitController.inventory.items.Length; i++)
+            {
+
+                if (localUnitController.inventory.items[i] is null)
+                {
+
+
+                    localUnitController.inventory.items[i] = item;
+                    localUnitController.TryPlaceBuyable(item.GetID(), i);
+                    UpdateVisuals(ownedItems[i]);
+                    EndByablePhase();
+                    break;
+                }
+            }
+
+
+        }
+
+
     }
 
-    public void PlaceBuyable(BuyableIcon icon){
-        if (buyablePhase&&!icon.buyable)
-        {   
-            int j=0;
+    public void PlaceBuyable(BuyableIcon icon)
+    {
+        if (buyablePhase && !icon.buyable)
+        {
+            int j = 0;
             for (int i = 0; i < ownedSpells.Length; i++)
-            {   
+            {
 
-                if (ownedSpells[i]==icon)
+                if (ownedSpells[i] == icon)
                 {
                     break;
                 }
                 j++;
             }
             Spell spell = selectedBuyable as Spell;
-            localUnitController.inventory.spells[j]=spell;
-            
-            
-            localUnitController.TryPlaceBuyable(spell.GetID(),j);
+            localUnitController.inventory.spells[j] = spell;
+
+
+            localUnitController.TryPlaceBuyable(spell.GetID(), j);
             UpdateVisuals(icon);
-            
-           
+
+
             EndByablePhase();
         }
-        
-        
+
+
     }
-    void UpdateVisuals(BuyableIcon icon){
+    void UpdateVisuals(BuyableIcon icon)
+    {
         icon.Initialize(selectedBuyable);
-        
+
         goldText.SetText(localUnitController.inventory.gold.ToString());
         if (selectedBuyable is Item)
         {
             Item item = selectedBuyable as Item;
-            
-            
+
+
             healthText.SetText(localUnitController.GetHealth().ToString());
-            frostMultiplier.SetText(localUnitController.GetFrostMult().ToString()+"%");
-            ArcaneMultiplier.SetText(localUnitController.GetArcaneMult().ToString()+"%");
-            fireMultiplier.SetText(localUnitController.GetFireMult().ToString()+"%");
-            
+            frostMultiplier.SetText(localUnitController.GetFrostMult().ToString() + "%");
+            ArcaneMultiplier.SetText(localUnitController.GetArcaneMult().ToString() + "%");
+            fireMultiplier.SetText(localUnitController.GetFireMult().ToString() + "%");
+
 
         }
- 
-    }
-    
-    void UpdatePlayer(){
 
     }
-    public void EndByablePhase(){
-        buyablePhase=false;
+
+    void UpdatePlayer()
+    {
+
+    }
+    public void EndByablePhase()
+    {
+        buyablePhase = false;
         if (selectedBuyable is Spell)
         {
             foreach (BuyableIcon item in ownedSpells)
-            {   
+            {
                 if (item.buyable is not null)
                 {
-                    item.SetColor(new Color32(255,255,255,255));    
-                }else{
-                    item.SetColor(new Color32(0,0,0,0));
-                }     
-            }    
-        }else{
+                    item.SetColor(new Color32(255, 255, 255, 255));
+                }
+                else
+                {
+                    item.SetColor(new Color32(0, 0, 0, 0));
+                }
+            }
+        }
+        else
+        {
             foreach (BuyableIcon item in ownedItems)
             {
                 if (item.buyable is not null)
                 {
-                    item.SetColor(new Color32(255,255,255,255));    
-                }else{
-                    item.SetColor(new Color32(0,0,0,0));
+                    item.SetColor(new Color32(255, 255, 255, 255));
                 }
-                        
+                else
+                {
+                    item.SetColor(new Color32(0, 0, 0, 0));
+                }
+
             }
         }
-        
+
         SelectBuyable(null);
 
     }
 
-    public void CancelBuyablePhase(){
+    public void CancelBuyablePhase()
+    {
         if (buyablePhase)
         {
             EndByablePhase();
@@ -319,14 +344,16 @@ public class SpellShop : NetworkBehaviour
     }
 
 
-    public void ActivateSellButton(){
-        
-        if (localUnitController.inventory.items.Contains(selectedBuyable)||localUnitController.inventory.spells.Contains(selectedBuyable))
+    public void ActivateSellButton()
+    {
+
+        if (localUnitController.inventory.items.Contains(selectedBuyable) || localUnitController.inventory.spells.Contains(selectedBuyable))
         {
             upgradeButton.gameObject.SetActive(true);
             sellButton.gameObject.SetActive(true);
 
-        }else
+        }
+        else
         {
             upgradeButton.gameObject.SetActive(false);
             sellButton.gameObject.SetActive(false);
@@ -335,17 +362,18 @@ public class SpellShop : NetworkBehaviour
 
     }
 
-    private void MakeMap(){
+    private void MakeMap()
+    {
         foreach (Spell item in spells)
         {
-            buyableIDs.Add(item.GetID(),item);
+            buyableIDs.Add(item.GetID(), item);
         }
         foreach (Item item in items)
         {
-            buyableIDs.Add(item.GetID(),item);
+            buyableIDs.Add(item.GetID(), item);
         }
     }
-    
 
-    
+
+
 }
