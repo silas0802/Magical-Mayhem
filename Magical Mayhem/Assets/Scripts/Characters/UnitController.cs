@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -19,6 +20,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     [SerializeField] private int frostDamageMultiplier=0;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
     private Brain brain;
+
     [SerializeField]
     public UnitClass unitClass;
 
@@ -210,6 +212,7 @@ public class UnitController : NetworkBehaviour, IDamagable
             inventory.spells[index]=spell;
         }
     }
+    
 
     
 
@@ -221,7 +224,7 @@ public class UnitController : NetworkBehaviour, IDamagable
             
            if (inventory.gold>buyable.price&&!inventory.items.Contains(buyable)&&!inventory.spells.Contains(buyable))
             {
-                Debug.Log("in if check of item contains");
+                
              SpellShop.instance.BuyBuyable(); 
             }
         }else
@@ -249,6 +252,72 @@ public class UnitController : NetworkBehaviour, IDamagable
                SpellShop.instance.BuyBuyable();  
         }
          
+    }
+
+    public void TrySellItem(ulong clientID,int itemID){
+        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
+        if (IsServer)
+        {
+            if (inventory.spells.Contains(buyable)||inventory.items.Contains(buyable))
+            {   
+                inventory.gold+=buyable.price/2;
+                if (buyable is Item)
+                {
+                    Item item = buyable as Item;
+                    health-=item.health;
+                     if (item.itemElement is SpellElementType.Frost)
+                    {
+                        frostDamageMultiplier -=item.elementBoostPercent;      
+                    }else if(item.itemElement is SpellElementType.Arcane)
+                    {
+                        arcaneMultiplier -=item.elementBoostPercent;
+                    }else if(item.itemElement is SpellElementType.Fire){
+                        fireDamageMultiplier -= item.elementBoostPercent;
+                    }
+
+                }
+                SpellShop.instance.SellOwnedBuyable();
+            }
+        }else
+        {
+            SellItemServerRPC(clientID,itemID);
+        }
+    }
+
+    [ServerRpc]
+    void SellItemServerRPC(ulong clientID,int itemID){
+        
+       SellItemClientRPC(clientID,itemID);
+    }
+
+    [ClientRpc]
+    void SellItemClientRPC(ulong clientID,int itemID){
+        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
+         if (clientID==NetworkManager.Singleton.LocalClientId)
+        {
+             if (inventory.spells.Contains(buyable)||inventory.items.Contains(buyable))
+            {
+                inventory.gold+=buyable.price/2;
+                if (buyable is Item)
+                {
+                    Item item = buyable as Item;
+                    health-=item.health;
+                     if (item.itemElement is SpellElementType.Frost)
+                    {
+                        frostDamageMultiplier -=item.elementBoostPercent;      
+                    }else if(item.itemElement is SpellElementType.Arcane)
+                    {
+                        arcaneMultiplier -=item.elementBoostPercent;
+                    }else if(item.itemElement is SpellElementType.Fire){
+                        fireDamageMultiplier -= item.elementBoostPercent;
+                    }
+                    
+
+                }
+                SpellShop.instance.SellOwnedBuyable();
+            }
+               
+        }
     }
     /// <summary>
     /// Changes the units health and clamps the value between 0 and maxHealth. Calls Death method if health reaches 0. Server Only. - Silas Thule
@@ -310,10 +379,36 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     private void OnDrawGizmos()
     {
-        if (RoundManager.instance.isDebugging)
+        foreach (UnitController unit in RoundManager.instance.GetUnits)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, 0.5f);
+            Gizmos.DrawLine(transform.position, unit.transform.position);
+        }
+
+        
+        if (brain && brain.threatLevel >= 0f && brain.threatLevel < 0.25f) 
+        {
+            Handles.color = Color.green;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 0.5f);
+        } 
+        else if (brain && brain.threatLevel >= 0.25f && brain.threatLevel < 0.5f) 
+        {
+            Handles.color = Color.yellow;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 0.5f);
+        }
+        else 
+        {
+            Handles.color = Color.red;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 0.5f);
+        }
+
+        if (brain && brain.isNearUnit) {
+            Handles.color = Color.red;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 3f);
+        } 
+        else 
+        {
+            Handles.color = Color.green;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 3f);
         }
     }
 }

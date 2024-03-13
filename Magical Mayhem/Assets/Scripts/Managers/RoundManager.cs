@@ -64,7 +64,6 @@ public class RoundManager : NetworkBehaviour
         player.SpawnAsPlayerObject(clientId, false);
         UnitController unit = player.GetComponent<UnitController>();
         units.Add(unit);
-        
     }
     /// <summary>
     /// Is called when a client disconnects. It despawns the playerprefab for them and removes the reference to their UnitController. Server Only. - Silas Thule
@@ -128,7 +127,7 @@ public class RoundManager : NetworkBehaviour
             unit.ResetHealth();
         }
         //mapgen.instence.Genmap
-        //PlaceUnits();
+        PlaceUnits();
         //Call Map Generator function via MapGenerator.instance.GenerateMap();
         roundIsOngoing = true;
 
@@ -139,7 +138,19 @@ public class RoundManager : NetworkBehaviour
     private void PlaceUnits()
     {
         if (!IsServer) return;
-        throw new NotImplementedException();
+        
+        foreach (UnitController unit in units)
+        {
+
+            Vector3 radius = new Vector3(UnityEngine.Random.Range(-1.0f, 1.0f),0, UnityEngine.Random.Range(-1.0f, 1.0f));
+            radius = radius.normalized * 10;
+            unit.transform.position = radius;
+            unit.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            unit.unitMover.SetTargetPosition(radius);
+            unit.GetComponent<UnitController>().unitMover.canMove = true;
+
+        }
+        //throw new NotImplementedException();
     }
     /// <summary>
     /// Opens the shop for all players
@@ -205,10 +216,13 @@ public class RoundManager : NetworkBehaviour
         if (!IsServer) return;
         foreach (ulong player in NetworkManager.Singleton.ConnectedClientsIds)
         {
-            NetworkObject prefab = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
+            NetworkObject prefab = Instantiate(playerPrefab,new Vector3 (10f,0,10f),Quaternion.identity);
             prefab.SpawnAsPlayerObject(player, true);
             units.Add(prefab.GetComponent<UnitController>());
+            prefab.GetComponent<UnitController>().unitMover.canMove = false;
         }
+
+        AddBot(botBrain);
     }
 
 }

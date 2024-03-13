@@ -126,12 +126,14 @@ public class SpellShop : NetworkBehaviour
     {
         if (!buyablePhase)
         {
+            selectedSpellicon.GetComponent<Image>().color= new Color(255,255,255,255);
             if (buyableIcon == null)
             {
                 descriptionText.text = null;
                 selectedBuyable = null;
                 selectedSpellicon.Initialize(null);
                 buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+                selectedSpellicon.GetComponent<Image>().color= new Color(0,0,0,255);
             }
             else
             {
@@ -275,9 +277,13 @@ public class SpellShop : NetworkBehaviour
 
     }
     void UpdateVisuals(BuyableIcon icon)
-    {
-        icon.Initialize(selectedBuyable);
+    {   
+        if (icon is not null)
+        {
+             icon.Initialize(selectedBuyable);
 
+        }
+       
         goldText.SetText(localUnitController.inventory.gold.ToString());
         if (selectedBuyable is Item)
         {
@@ -373,6 +379,66 @@ public class SpellShop : NetworkBehaviour
             buyableIDs.Add(item.GetID(), item);
         }
     }
+
+    public void TrySellOwnedBuyable(){
+       localUnitController.TrySellItem(NetworkManager.Singleton.LocalClientId,selectedBuyable.GetID());
+    }
+
+    public void SellOwnedBuyable(){
+        if (selectedBuyable is Item)
+        {
+             int counter=0;
+            for (int i = 0; i < localUnitController.inventory.items.Length; i++)
+            {   
+
+                if (localUnitController.inventory.items[i]==selectedBuyable)
+                {
+                    break;
+                }
+                counter++;
+                
+            }
+            localUnitController.inventory.items[counter]=null;
+            
+            foreach (BuyableIcon item in ownedItems)
+            {
+                if (item.buyable==selectedBuyable)
+                {
+                    item.Initialize(null);
+                    item.SetColor(new Color32(0, 0, 0, 0));
+                    break;
+                }
+            }
+            
+           
+        }else
+        {
+            foreach (BuyableIcon item in ownedSpells)
+            {
+                if (item.buyable == selectedBuyable)
+                {
+                    item.Initialize(null);
+                    item.SetColor(new Color32(0, 0, 0, 0));
+                }
+            }
+             int counter=0;
+            for (int i = 0; i < localUnitController.inventory.spells.Length; i++)
+            {   
+
+                if (localUnitController.inventory.spells[i] == selectedBuyable)
+                {
+                    break;
+                }
+                counter++;
+                
+            }
+            localUnitController.inventory.spells[counter]=null;
+            
+        }
+        UpdateVisuals(null);
+        SelectBuyable(null);
+    }
+
 
 
 
