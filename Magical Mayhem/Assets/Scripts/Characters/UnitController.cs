@@ -43,6 +43,15 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         return health;
     }
+    public int GetFrostMult(){
+        return frostDamageMultiplier;
+    }
+    public int GetArcaneMult(){
+        return arcaneMultiplier;
+    }
+    public int GetFireMult(){
+        return fireDamageMultiplier;
+    }
     public int GetArcaneDamageMultiplier()
     {
         return arcaneMultiplier;
@@ -58,6 +67,16 @@ public class UnitController : NetworkBehaviour, IDamagable
         animator = GetComponentInChildren<Animator>();
         health = unitClass.maxHealth;
         inventory = new Inventory();
+    }
+
+    void Start()
+    {   
+        if (IsLocalPlayer)
+        {
+            SpellShop.instance.ConnectPlayer(this);
+            SpellShop.instance.InitalizePlayerInformation();    
+        }
+        
     }
 
     void Update()
@@ -171,12 +190,12 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     void PlaceBuyable(int itemId,int index){
         Buyable buyable = SpellShop.instance.buyableIDs[itemId];
-
+        inventory.gold = inventory.gold-buyable.price;
         if (buyable is Item)
         {
             Item item = buyable as Item;
             inventory.items[index]=item;
-            inventory.gold = inventory.gold-item.price;
+            
             health = health+item.health;
             if (item.itemElement is SpellElementType.Frost)
             {
@@ -202,7 +221,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         if (IsServer)
         {   
             
-           if ((!inventory.items.Contains(buyable)||!inventory.spells.Contains(buyable))&&inventory.gold>buyable.price)
+           if (inventory.gold>buyable.price&&!inventory.items.Contains(buyable)&&!inventory.spells.Contains(buyable))
             {
                 Debug.Log("in if check of item contains");
              SpellShop.instance.BuyBuyable(); 
@@ -217,7 +236,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     void GetItemServerRpc(ulong clientID,int itemID){
         
         Buyable buyable = SpellShop.instance.buyableIDs[itemID];
-         if (inventory.items.Contains(buyable)||inventory.spells.Contains(buyable)&&inventory.gold>buyable.price)
+         if (inventory.gold>buyable.price&&!inventory.items.Contains(buyable)&&!inventory.spells.Contains(buyable))
             {
                GetItemClientRpc(clientID);
             }

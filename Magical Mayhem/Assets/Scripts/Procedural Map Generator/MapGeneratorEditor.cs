@@ -14,7 +14,7 @@ public class MapGeneratorEditor : Editor
 
         MapGenerator mapGenerator = (MapGenerator)target;
         if(GUILayout.Button("Generate")){
-            mapGenerator.GenerateMap(1);
+            mapGenerator.GenerateMap( 1,1, "Large");
         }
         if(GUILayout.Button("Delete")){
             mapGenerator.ResetMap();
