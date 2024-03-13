@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class LobbySystem : NetworkBehaviour
 {
+    public static LobbySystem instance;
+    public Dictionary<ulong,string> names = new Dictionary<ulong, string>();
     [SerializeField] private NetworkObject playerTemplate;
     [SerializeField] private TMP_Text ipText;
     [SerializeField] private RectTransform playerInfoSpawnPoint;
@@ -16,6 +18,12 @@ public class LobbySystem : NetworkBehaviour
     [SerializeField] private Button leaveLobbyButton;
     private void Awake()
     {
+        if (instance == null){
+            instance = this;
+        }
+        else{
+            Destroy(gameObject);
+        }
         leaveLobbyButton.onClick.AddListener(LeaveButton);
         startLobbyButton.onClick.AddListener(StartLobbyButton);
 
@@ -30,6 +38,7 @@ public class LobbySystem : NetworkBehaviour
             NetworkObject t = Instantiate(playerTemplate);
             t.SpawnAsPlayerObject(0, true);
             t.TrySetParent(playerInfoSpawnPoint, false);
+            ipText.text = ConnectionHUD.GetLocalIPv4();
         }
         else
         {
@@ -53,6 +62,7 @@ public class LobbySystem : NetworkBehaviour
         if (!IsServer) return;
         Debug.Log("PlayerId: " + clientId + " has joined");
         NetworkObject player = Instantiate(playerTemplate,playerInfoSpawnPoint);
+        //player.GetComponent<LobbyPlayerInfo>().SetName(names.TryGetValue());
         player.SpawnAsPlayerObject(clientId, true);
         player.TrySetParent(playerInfoSpawnPoint, false);
         // units.Add(unit);

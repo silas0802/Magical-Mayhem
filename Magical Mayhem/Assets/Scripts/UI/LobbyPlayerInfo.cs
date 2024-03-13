@@ -17,4 +17,7 @@ public class LobbyPlayerInfo : MonoBehaviour
         this.className.text = unitClass.name;
 
     }
+    public void SetName(string userName){
+        this.userName.text = userName;
+    }
 }
