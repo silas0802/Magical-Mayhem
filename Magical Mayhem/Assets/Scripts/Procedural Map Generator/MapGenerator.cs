@@ -21,7 +21,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private float nextLavaSpawn;
     private GameObject[,] tileArray;
     [SerializeField] private float wallCutOff = 0.75f;
-    [SerializeField] private float landCutOff = 0.4f;
+    [SerializeField] private float landCutOff = 0.6f;
     private MapWallScript[,] wallArray;
     
     // Start is called before the first frame update
@@ -69,14 +69,47 @@ public class MapGenerator : MonoBehaviour
                 break;
             default: break;
         }
+        //SetSpawnPoints();
         SetBorderWalls();
     }
 
-    public List<(int,int)> GetUnitPlacement(){
-        List<(int,int)> place = new();
-        
-        return place;
+    public List<(int,int)> GetSpanPoints(){
+        List<(int,int)> points = new();
+        int sideLen = mapSize/2;
+        points.Add((sideLen,sideLen));
+        points.Add((sideLen,-sideLen));
+        points.Add((-sideLen,sideLen));
+        points.Add((-sideLen,-sideLen));
+        points.Add((sideLen,0));
+        points.Add((0,sideLen));
+        points.Add((-sideLen,0));
+        points.Add((0,-sideLen));
+
+        return points;
     }
+    private void SetSpawnPoints(){
+        int sideLen = mapSize/2;
+        PlaceSpawnTile(sideLen,sideLen);
+        PlaceSpawnTile(-sideLen,sideLen);
+        PlaceSpawnTile(-sideLen,-sideLen);
+        PlaceSpawnTile(sideLen,-sideLen);
+        PlaceSpawnTile(sideLen,0);
+        PlaceSpawnTile(0,sideLen);
+        PlaceSpawnTile(-sideLen,0);
+        PlaceSpawnTile(0,-sideLen);
+
+    }
+    //if the floor is lava change it to floortile and if there is a wall delete it
+    private void PlaceSpawnTile(int x, int y){
+        if(tileArray[x,y].GetComponent<LavaTileScript>()){
+            Destroy(tileArray[x,y]);
+            tileArray[x,y] = Instantiate(tile, new Vector3(x, -0.05f, y), Quaternion.identity, transform);
+        }
+        if(wallArray[x,y]){
+            Destroy(wallArray[x,y]);
+        }
+    }
+    
 
     // Update is called once per frame
     void Update()
@@ -114,7 +147,7 @@ public class MapGenerator : MonoBehaviour
          for (int i = 0; i < mapSize; i++){
             for (int j = 0; j < mapSize; j++){
                 float perlin  = Mathf.PerlinNoise(i/1.5f+seed, j/1.5f+seed);
-                if(perlin  > landCutOff){
+                if(  landCutOff > perlin){
                     tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, -0.05f, j-mapSize/2), Quaternion.identity, transform);   
                 } 
                 else{

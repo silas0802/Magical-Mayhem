@@ -119,7 +119,9 @@ public class RoundManager : NetworkBehaviour
     /// </summary>
     private void StartNewRound()
     {
+
         if (!IsServer) return;
+        MapGenerator.instance.ResetMap();
         kills.Clear();
         roundNumber++;
         foreach (UnitController unit in units)
