@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 /// <summary>
 ///  - Silas Thule
@@ -15,6 +16,7 @@ public class ProjectileInstance : NetworkBehaviour
     Rigidbody rb;
     float unitTimer;
     UnitController unitTarget;
+    bool isThreat = false;
 
     /// <summary>
     /// Initialize the projectile with inputted information.
@@ -101,9 +103,20 @@ public class ProjectileInstance : NetworkBehaviour
             Detonate();
         }
     }
-    void OnDrawGizmos(){
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position,rb.velocity*2);
+    void OnDrawGizmos() 
+    {   
+        Handles.DrawWireDisc(transform.position, Vector3.up, spell.triggerRadius * 2);
+
+        if (isThreat) 
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position,rb.velocity.normalized * 2);
+        } 
+        else 
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(transform.position, rb.velocity.normalized * 2);
+        }
     }
 }
 

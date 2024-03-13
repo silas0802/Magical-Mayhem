@@ -7,21 +7,26 @@ public class Brain : ScriptableObject
 {
     public BuyingLogic buyingLogic;
     public FightingLogic fightingLogic;
+    public float threatLevel = 0f;
+    public bool isNearUnit = false;
 
     /// <summary>
     /// Handles the decisions that the AI or player makes
     /// </summary>
     /// <param name="controller"></param>
     public void HandleActions(UnitController controller){
-
-        //Pr�ver hver frame at kaste en fireball 5m foran sig selv
-        //Debug.Log("Bot cast");
-        controller.unitCaster.TryCastSpell(0, controller.transform.forward * 5 + controller.transform.position);
+        UnitController nearestUnit = RoundManager.instance.FindNearestUnit(controller.transform.position, controller);
+        float distanceToNearestUnit = (controller.transform.position - nearestUnit.transform.position).magnitude;
+        
+        if (distanceToNearestUnit <= 3f) {
+            isNearUnit = true;
+        } else 
+        {
+            isNearUnit = false;
+        }
     }
 
-    //RoundManager.instance.FindNearestUnit() 
-    
-    private List<ProjectileInstance> CheckForNearbyProjectiles(UnitController controller)//Dette er ikke testet s� kan ikke garantere at det virker
+    private List<ProjectileInstance> CheckForNearbyProjectiles(UnitController controller)
     {
         float size = 10;
         Collider[] detected = new Collider[20];

@@ -209,6 +209,8 @@ public class RoundManager : NetworkBehaviour
             prefab.SpawnAsPlayerObject(player, true);
             units.Add(prefab.GetComponent<UnitController>());
         }
+
+        AddBot(botBrain);
     }
 
 }
