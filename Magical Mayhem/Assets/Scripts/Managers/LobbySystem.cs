@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class LobbySystem : NetworkBehaviour
 {
     public static LobbySystem instance;
-    public Dictionary<ulong,string> names;
+    public Dictionary<ulong,string> names = new Dictionary<ulong, string>();
     [SerializeField] private NetworkObject playerTemplate;
     [SerializeField] private TMP_Text ipText;
     [SerializeField] private RectTransform playerInfoSpawnPoint;
