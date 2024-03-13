@@ -49,7 +49,8 @@ MonoBehaviour:
     type: 3}
   lavaTile: {fileID: 1976333778091470370, guid: d68aad199f1dc4946a7dc359e0d57b92,
     type: 3}
-  mapWall: {fileID: 919194464005098066, guid: 27fa92111435e504e8074e185930db85, type: 3}
+  mapWall: {fileID: -8799296613263074156, guid: 27fa92111435e504e8074e185930db85,
+    type: 3}
   lavaSpawnTime: 1
   nextLavaSpawn: 0
   wallCutOff: 0.75

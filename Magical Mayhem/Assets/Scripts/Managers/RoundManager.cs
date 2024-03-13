@@ -129,7 +129,7 @@ public class RoundManager : NetworkBehaviour
             unit.ResetHealth();
         }
         MapGenerator.instance.GenerateMap(1,1,"Medium");
-        //PlaceUnits();
+        PlaceUnits();
         roundIsOngoing = true;
 
     }
