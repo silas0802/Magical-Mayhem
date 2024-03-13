@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -19,6 +20,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     [SerializeField] private int frostDamageMultiplier=0;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
     private Brain brain;
+
     [SerializeField]
     public UnitClass unitClass;
 
@@ -377,10 +379,30 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     private void OnDrawGizmos()
     {
-        if (RoundManager.instance.isDebugging)
+        if (brain && brain.threatLevel >= 0f && brain.threatLevel < 0.25f) 
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, 0.5f);
+            Handles.color = Color.green;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 0.5f);
+        } 
+        else if (brain && brain.threatLevel >= 0.25f && brain.threatLevel < 0.5f) 
+        {
+            Handles.color = Color.yellow;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 0.5f);
+        }
+        else 
+        {
+            Handles.color = Color.red;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 0.5f);
+        }
+
+        if (brain && brain.isNearUnit) {
+            Handles.color = Color.red;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 3f);
+        } 
+        else 
+        {
+            Handles.color = Color.green;
+            Handles.DrawWireDisc(transform.position, Vector3.up, 3f);
         }
     }
 }
