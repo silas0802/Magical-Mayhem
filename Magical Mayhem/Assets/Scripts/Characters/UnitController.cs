@@ -312,6 +312,12 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     private void OnDrawGizmos()
     {
+        foreach (UnitController unit in RoundManager.instance.GetUnits)
+        {
+            Gizmos.DrawLine(transform.position, unit.transform.position);
+        }
+
+        
         if (brain && brain.threatLevel >= 0f && brain.threatLevel < 0.25f) 
         {
             Handles.color = Color.green;

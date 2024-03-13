@@ -60,7 +60,7 @@ public class RoundManager : NetworkBehaviour
     {
         if (!IsServer) return;
         
-        NetworkObject player = Instantiate(playerPrefab);
+        NetworkObject player = Instantiate(playerPrefab,new Vector3(UnityEngine.Random.Range(-10,10),0,UnityEngine.Random.Range(-10,10)),Quaternion.identity);
         player.SpawnAsPlayerObject(clientId, false);
         UnitController unit = player.GetComponent<UnitController>();
         units.Add(unit);
@@ -142,10 +142,13 @@ public class RoundManager : NetworkBehaviour
         
         foreach (UnitController unit in units)
         {
+
             Vector3 radius = new Vector3(UnityEngine.Random.Range(-1.0f, 1.0f),0, UnityEngine.Random.Range(-1.0f, 1.0f));
             radius = radius.normalized * 10;
-            Debug.Log("Unit placed at" + radius);
             unit.transform.position = radius;
+            unit.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            unit.unitMover.SetTargetPosition(radius);
+
         }
         //throw new NotImplementedException();
     }
