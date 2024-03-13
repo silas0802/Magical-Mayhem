@@ -15,6 +15,7 @@ public class ConnectionHUD : MonoBehaviour
     [SerializeField] private Button host;
     [SerializeField] private Button join;
     [SerializeField] private TMP_InputField ipField;
+    [SerializeField] private TMP_InputField userNameField;
 
     const string LOCALHOST = "127.0.0.1";
 
@@ -55,6 +56,7 @@ public class ConnectionHUD : MonoBehaviour
     private void JoinGame()
     {
         SetConnectionData(ipField.text);
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = System.Text.ASCIIEncoding.ASCII.GetBytes(userNameField.text);
         NetworkManager.Singleton.StartClient();
         SceneManager.LoadScene("Lobby Screen");
         
@@ -63,10 +65,41 @@ public class ConnectionHUD : MonoBehaviour
     {
         print(GetLocalIPv4());
         SetConnectionData(LOCALHOST);
+        NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
         NetworkManager.Singleton.StartHost();
         NetworkManager.Singleton.SceneManager.LoadScene("Lobby Screen",UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
-    public string GetLocalIPv4()// Taken from https://discussions.unity.com/t/get-the-device-ip-address-from-unity/235351
+    private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+    {
+        // The client identifier to be authenticated
+        ulong clientId = request.ClientNetworkId;
+
+        // Additional connection data defined by user code
+        string connectionData = System.Text.Encoding.UTF8.GetString(request.Payload);
+        LobbySystem.instance.names.Add(clientId,connectionData);
+
+        // Your approval logic determines the following values
+        response.Approved = true;
+        response.CreatePlayerObject = false;
+
+        // The Prefab hash value of the NetworkPrefab, if null the default NetworkManager player Prefab is used
+        response.PlayerPrefabHash = null;
+
+        // Position to spawn the player object (if null it uses default of Vector3.zero)
+        response.Position = Vector3.zero;
+
+        // Rotation to spawn the player object (if null it uses the default of Quaternion.identity)
+        response.Rotation = Quaternion.identity;
+
+        // If response.Approved is false, you can provide a message that explains the reason why via ConnectionApprovalResponse.Reason
+        // On the client-side, NetworkManager.DisconnectReason will be populated with this message via DisconnectReasonMessage
+        response.Reason = "Some reason for not approving the client";
+
+        // If additional approval steps are needed, set this to true until the additional steps are complete
+        // once it transitions from true to false the connection approval response will be processed.
+        response.Pending = false;
+    }
+    public static string GetLocalIPv4()// Taken from https://discussions.unity.com/t/get-the-device-ip-address-from-unity/235351
     {
         return Dns.GetHostEntry(Dns.GetHostName())
         .AddressList.First(
