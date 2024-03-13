@@ -4,13 +4,14 @@ using Unity.Mathematics;
 using UnityEngine;
 using System.Security.Cryptography;
 using System;
+using Unity.Netcode;
 
 public class MapGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject tile;
     [SerializeField] private BorderWallScript borderWall;
     [SerializeField] private GameObject lavaTile;
-    [SerializeField] private GameObject mapWall;
+    [SerializeField] private MapWallScript mapWall;
     public static MapGenerator instance;
     
     private int mapSize;
@@ -21,7 +22,7 @@ public class MapGenerator : MonoBehaviour
     private GameObject[,] tileArray;
     [SerializeField] private float wallCutOff = 0.75f;
     [SerializeField] private float landCutOff = 0.4f;
-    private GameObject[,] wallArray;
+    private MapWallScript[,] wallArray;
     
     // Start is called before the first frame update
     void Start()
@@ -63,7 +64,7 @@ public class MapGenerator : MonoBehaviour
         //Obsticles on map
         switch (genType)
         {
-            case 1: wallArray = new GameObject[mapSize, mapSize];
+            case 1: wallArray = new MapWallScript[mapSize, mapSize];
                 SimplexWallGen(seed);
                 break;
             default: break;
@@ -103,7 +104,7 @@ public class MapGenerator : MonoBehaviour
         {
             for (int j = 0; j < mapSize; j++)
             {
-                tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, 0, j-mapSize/2), Quaternion.identity, transform);
+                tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, -0.05f, j-mapSize/2), Quaternion.identity, transform);
             }
         }
     }
@@ -112,12 +113,12 @@ public class MapGenerator : MonoBehaviour
     private void BrokenWorldGen(float seed){
          for (int i = 0; i < mapSize; i++){
             for (int j = 0; j < mapSize; j++){
-                float perlin  = Mathf.PerlinNoise(i+seed/100, j+seed/100);
+                float perlin  = Mathf.PerlinNoise(i/1.5f+seed, j/1.5f+seed);
                 if(perlin  > landCutOff){
-                    tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, 0, j-mapSize/2), Quaternion.identity, transform);   
+                    tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, -0.05f, j-mapSize/2), Quaternion.identity, transform);   
                 } 
                 else{
-                    tileArray[i,j] = Instantiate(lavaTile, new Vector3(i-mapSize/2,0,j-mapSize/2), Quaternion.identity, transform);
+                    tileArray[i,j] = Instantiate(lavaTile, new Vector3(i-mapSize/2, -0.05f,j-mapSize/2), Quaternion.identity, transform);
                 }
             }
         }
@@ -133,8 +134,9 @@ public class MapGenerator : MonoBehaviour
                 if (Simplex > wallCutOff && tileArray[i, j].GetComponent("TileScript") != null )
                 {
                     coords = tileArray[i,j].transform.position;
-                    coords.y += 1;
+                    coords.y += 1.5f;
                     wallArray[i,j] = Instantiate(mapWall, coords, Quaternion.identity, transform);
+                    //wallArray[i,j].GetComponent<NetworkObject>().Spawn();
                 } 
                 
             }
@@ -163,11 +165,11 @@ public class MapGenerator : MonoBehaviour
         MD5 hash = MD5.Create();
         float newSeed = BitConverter.ToInt16(hash.ComputeHash(BitConverter.GetBytes(oldSeed)));
         hash.Dispose();
-        newSeed /= 100;
+        newSeed /= 1000;
         PlayerPrefs.SetFloat("Seed", newSeed);
         print(newSeed);
         //PlayerPrefs.DeleteAll();
-        //newSeed = 308.99f;
+        //newSeed = 180.26f;
         return newSeed;
     }
 
