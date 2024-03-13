@@ -60,11 +60,10 @@ public class RoundManager : NetworkBehaviour
     {
         if (!IsServer) return;
         
-        NetworkObject player = Instantiate(playerPrefab,new Vector3(UnityEngine.Random.Range(-10,10),0,UnityEngine.Random.Range(-10,10)),Quaternion.identity);
+        NetworkObject player = Instantiate(playerPrefab);
         player.SpawnAsPlayerObject(clientId, false);
         UnitController unit = player.GetComponent<UnitController>();
         units.Add(unit);
-        
     }
     /// <summary>
     /// Is called when a client disconnects. It despawns the playerprefab for them and removes the reference to their UnitController. Server Only. - Silas Thule
@@ -147,6 +146,7 @@ public class RoundManager : NetworkBehaviour
             unit.transform.position = radius;
             unit.GetComponent<Rigidbody>().velocity = Vector3.zero;
             unit.unitMover.SetTargetPosition(radius);
+            unit.GetComponent<UnitController>().unitMover.canMove = true;
 
         }
         //throw new NotImplementedException();
@@ -215,9 +215,10 @@ public class RoundManager : NetworkBehaviour
         if (!IsServer) return;
         foreach (ulong player in NetworkManager.Singleton.ConnectedClientsIds)
         {
-            NetworkObject prefab = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
+            NetworkObject prefab = Instantiate(playerPrefab,new Vector3 (10f,0,10f),Quaternion.identity);
             prefab.SpawnAsPlayerObject(player, true);
             units.Add(prefab.GetComponent<UnitController>());
+            prefab.GetComponent<UnitController>().unitMover.canMove = false;
         }
 
         AddBot(botBrain);
