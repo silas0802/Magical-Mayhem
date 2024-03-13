@@ -26,17 +26,17 @@ public class MapGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {   
-        GenerateMap(1, 1, "Medium");
+        //GenerateMap(1, 1, "Medium");
     }
 
     public void GenerateMap(int genType, int mapType, string Size){
         switch (Size)
         {
-            case "Small": mapSize = 21;
+            case "Small": mapSize = 20;
                 break;
-            case "Medium": mapSize = 31;
+            case "Medium": mapSize = 30;
                 break;
-            case "Large": mapSize = 41;
+            case "Large": mapSize = 40;
                 break;
             default: mapSize = 31;
                 break;
@@ -71,14 +71,14 @@ public class MapGenerator : MonoBehaviour
     //This function transforms the walls to fit the egde of the gamemap and stops the player from falling off
     private void SetBorderWalls(){
         //init borderwalls
-        BorderWallScript southWall = Instantiate(borderWall, new Vector3(mapSize/2-20, wallHieght/2, 0-20), Quaternion.identity, transform);
-        BorderWallScript northWall = Instantiate(borderWall, new Vector3(mapSize/2-20, wallHieght/2, mapSize-1-20), Quaternion.identity, transform);
-        BorderWallScript eastWall = Instantiate(borderWall, new Vector3(mapSize-1-20, wallHieght/2, mapSize/2-20), Quaternion.identity, transform);
-        BorderWallScript westWall = Instantiate(borderWall, new Vector3(0-20, wallHieght/2, mapSize/2-20), Quaternion.identity, transform);
-        southWall.transform.localScale = new Vector3(mapSize,wallHieght,1);
-        northWall.transform.localScale = new Vector3(mapSize,wallHieght,1);
-        eastWall.transform.localScale = new Vector3(1,wallHieght,mapSize);
-        westWall.transform.localScale = new Vector3(1,wallHieght,mapSize);
+        BorderWallScript southWall = Instantiate(borderWall, new Vector3(0, wallHieght/2, -mapSize/2-1), Quaternion.identity, transform);
+        BorderWallScript northWall = Instantiate(borderWall, new Vector3(0, wallHieght/2, mapSize/2), Quaternion.identity, transform);
+        BorderWallScript eastWall = Instantiate(borderWall, new Vector3(mapSize/2, wallHieght/2, 0), Quaternion.identity, transform);
+        BorderWallScript westWall = Instantiate(borderWall, new Vector3(-mapSize/2-1, wallHieght/2, 0), Quaternion.identity, transform);
+        southWall.transform.localScale = new Vector3(mapSize+1,wallHieght,1);
+        northWall.transform.localScale = new Vector3(mapSize+1,wallHieght,1);
+        eastWall.transform.localScale = new Vector3(1,wallHieght,mapSize+1);
+        westWall.transform.localScale = new Vector3(1,wallHieght,mapSize+1);
 
     }
 
@@ -88,7 +88,7 @@ public class MapGenerator : MonoBehaviour
         {
             for (int j = 0; j < mapSize; j++)
             {
-                tileArray[i,j] = Instantiate(tile, new Vector3(i-20, 0, j-20), Quaternion.identity, transform);
+                tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, 0, j-mapSize/2), Quaternion.identity, transform);
             }
         }
     }
@@ -99,10 +99,10 @@ public class MapGenerator : MonoBehaviour
             for (int j = 0; j < mapSize; j++){
                 float perlin  = Mathf.PerlinNoise(i+seed/100, j+seed/100);
                 if(perlin  > islandCutOff){
-                    tileArray[i,j] = Instantiate(tile, new Vector3(i-20, 0, j-20), Quaternion.identity, transform);   
+                    tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, 0, j-mapSize/2), Quaternion.identity, transform);   
                 } 
                 else{
-                    tileArray[i,j] = Instantiate(lavaTile, new Vector3(i-20,0,j-20), Quaternion.identity, transform);
+                    tileArray[i,j] = Instantiate(lavaTile, new Vector3(i-mapSize/2,0,j-mapSize/2), Quaternion.identity, transform);
                 }
             }
         }
