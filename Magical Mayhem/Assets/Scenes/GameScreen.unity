@@ -1167,6 +1167,56 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1226737759}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1226737759}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CancelBuyablePhase
+      objectReference: {fileID: 0}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: TrySellOwnedBuyable
+      objectReference: {fileID: 0}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SpellShop, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1630876974853366055, guid: 5721868cd33472840b651a4a6596b553,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1710232888026907553, guid: 5721868cd33472840b651a4a6596b553,
         type: 3}
       propertyPath: m_SizeDelta.x

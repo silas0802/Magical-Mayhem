@@ -13,13 +13,14 @@ public class BuyableIcon : MonoBehaviour
     public Buyable buyable {get; private set;}
     public void Initialize(Buyable buyable){
         image = GetComponent<Image>();
+        this.buyable=buyable;
         if (buyable==null)
         {
             image.sprite=defaultImage;
-
+            
         }else{
         image.sprite = buyable.icon;
-        this.buyable=buyable;
+        
         }
     
 
@@ -29,7 +30,9 @@ public class BuyableIcon : MonoBehaviour
     public void SetColor(Color color){
         image.color=color;
     }
-    
+    public void setNull(){
+        buyable=null;
+    }
     
 
 }
