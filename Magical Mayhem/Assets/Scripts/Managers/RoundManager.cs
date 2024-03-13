@@ -127,9 +127,8 @@ public class RoundManager : NetworkBehaviour
         {
             unit.ResetHealth();
         }
-        //mapgen.instence.Genmap
+        MapGenerator.instance.GenerateMap(1,1,"Medium");
         //PlaceUnits();
-        //Call Map Generator function via MapGenerator.instance.GenerateMap();
         roundIsOngoing = true;
 
     }

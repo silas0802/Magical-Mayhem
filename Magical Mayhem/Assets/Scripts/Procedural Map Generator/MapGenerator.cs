@@ -11,22 +11,31 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private BorderWallScript borderWall;
     [SerializeField] private GameObject lavaTile;
     [SerializeField] private GameObject mapWall;
-
+    public static MapGenerator instance;
     
-    int mapSize;
-    int lavaTileCounter = 0;
-    float wallHieght = 5f;
-    [SerializeField] float lavaSpawnTime = 1f;
-    [SerializeField]float nextLavaSpawn;
-    GameObject[,] tileArray;
-    [SerializeField] float wallCutOff = 0.75f;
-    [SerializeField] float islandCutOff = 0.45f;
-    GameObject[,] wallArray;
+    private int mapSize;
+    private int lavaTileCounter = 0;
+    private float wallHieght = 5f;
+    [SerializeField] private float lavaSpawnTime = 1f;
+    [SerializeField] private float nextLavaSpawn;
+    private GameObject[,] tileArray;
+    [SerializeField] private float wallCutOff = 0.75f;
+    [SerializeField] private float landCutOff = 0.4f;
+    private GameObject[,] wallArray;
     
     // Start is called before the first frame update
     void Start()
     {   
         //GenerateMap(1, 1, "Medium");
+    }
+
+    void Awake(){
+        if(instance == null){
+            instance = this;
+        }
+        else{
+            Destroy(gameObject);
+        }
     }
 
     public void GenerateMap(int genType, int mapType, string Size){
@@ -38,7 +47,7 @@ public class MapGenerator : MonoBehaviour
                 break;
             case "Large": mapSize = 40;
                 break;
-            default: mapSize = 31;
+            default: mapSize = 30;
                 break;
         }
         //save the floortiles
@@ -60,6 +69,12 @@ public class MapGenerator : MonoBehaviour
             default: break;
         }
         SetBorderWalls();
+    }
+
+    public List<(int,int)> GetUnitPlacement(){
+        List<(int,int)> place = new();
+        
+        return place;
     }
 
     // Update is called once per frame
@@ -98,7 +113,7 @@ public class MapGenerator : MonoBehaviour
          for (int i = 0; i < mapSize; i++){
             for (int j = 0; j < mapSize; j++){
                 float perlin  = Mathf.PerlinNoise(i+seed/100, j+seed/100);
-                if(perlin  > islandCutOff){
+                if(perlin  > landCutOff){
                     tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, 0, j-mapSize/2), Quaternion.identity, transform);   
                 } 
                 else{
