@@ -126,12 +126,14 @@ public class SpellShop : NetworkBehaviour
     {
         if (!buyablePhase)
         {
+            selectedSpellicon.GetComponent<Image>().color= new Color(255,255,255,255);
             if (buyableIcon == null)
             {
                 descriptionText.text = null;
                 selectedBuyable = null;
                 selectedSpellicon.Initialize(null);
                 buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+                selectedSpellicon.GetComponent<Image>().color= new Color(0,0,0,255);
             }
             else
             {
