@@ -128,7 +128,7 @@ public class RoundManager : NetworkBehaviour
             unit.ResetHealth();
         }
         //mapgen.instence.Genmap
-        //PlaceUnits();
+        PlaceUnits();
         //Call Map Generator function via MapGenerator.instance.GenerateMap();
         roundIsOngoing = true;
 
@@ -139,7 +139,15 @@ public class RoundManager : NetworkBehaviour
     private void PlaceUnits()
     {
         if (!IsServer) return;
-        throw new NotImplementedException();
+        
+        foreach (UnitController unit in units)
+        {
+            Vector3 radius = new Vector3(UnityEngine.Random.Range(-1.0f, 1.0f),0, UnityEngine.Random.Range(-1.0f, 1.0f));
+            radius = radius.normalized * 10;
+            Debug.Log("Unit placed at" + radius);
+            unit.transform.position = radius;
+        }
+        //throw new NotImplementedException();
     }
     /// <summary>
     /// Opens the shop for all players
