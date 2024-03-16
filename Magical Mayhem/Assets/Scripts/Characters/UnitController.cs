@@ -376,7 +376,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         this.brain = brain;
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         foreach (UnitController unit in RoundManager.instance.GetUnits)
@@ -411,6 +411,7 @@ public class UnitController : NetworkBehaviour, IDamagable
             Handles.DrawWireDisc(transform.position, Vector3.up, 3f);
         }
     }
+#endif
 }
 
 
