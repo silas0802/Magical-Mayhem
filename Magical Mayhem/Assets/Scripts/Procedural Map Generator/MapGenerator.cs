@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -8,10 +7,10 @@ using Unity.Netcode;
 
 public class MapGenerator : MonoBehaviour
 {
-    [SerializeField] private GameObject tile;
-    [SerializeField] private BorderWallScript borderWall;
-    [SerializeField] private GameObject lavaTile;
-    [SerializeField] private MapWallScript mapWall;
+    [SerializeField] private NetworkObject tile;
+    [SerializeField] private NetworkObject borderWall;
+    [SerializeField] private NetworkObject lavaTile;
+    [SerializeField] private NetworkObject mapWall;
     public static MapGenerator instance;
     
     private int mapSize;
@@ -19,10 +18,10 @@ public class MapGenerator : MonoBehaviour
     private float wallHieght = 5f;
     [SerializeField] private float lavaSpawnTime = 1f;
     [SerializeField] private float nextLavaSpawn;
-    private GameObject[,] tileArray;
+    private NetworkObject[,] tileArray;
     [SerializeField] private float wallCutOff = 0.75f;
-    [SerializeField] private float landCutOff = 0.6f;
-    private MapWallScript[,] wallArray;
+    [SerializeField] private float landCutOff = 0.55f;
+    private NetworkObject[,] wallArray;
     
     // Start is called before the first frame update
     void Start()
@@ -52,7 +51,7 @@ public class MapGenerator : MonoBehaviour
                 break;
         }
         //save the floortiles
-        tileArray = new GameObject[mapSize,mapSize];
+        tileArray = new NetworkObject[mapSize,mapSize];
         float seed = SeedGen();
         switch (mapType)
         {
@@ -64,7 +63,7 @@ public class MapGenerator : MonoBehaviour
         //Obsticles on map
         switch (genType)
         {
-            case 1: wallArray = new MapWallScript[mapSize, mapSize];
+            case 1: wallArray = new NetworkObject[mapSize, mapSize];
                 SimplexWallGen(seed);
                 break;
             default: break;
@@ -102,11 +101,11 @@ public class MapGenerator : MonoBehaviour
     //if the floor is lava change it to floortile and if there is a wall delete it
     private void PlaceSpawnTile(int x, int y){
         if(tileArray[x,y].GetComponent<LavaTileScript>()){
-            Destroy(tileArray[x,y]);
-            tileArray[x,y] = Instantiate(tile, new Vector3(x, -0.05f, y), Quaternion.identity, transform);
+            tileArray[x,y].Despawn();
+            tileArray[x,y] = InstObj("tile",x, -0.05f, y);
         }
         if(wallArray[x,y]){
-            Destroy(wallArray[x,y]);
+            wallArray[x,y].Despawn();
         }
     }
     
@@ -117,13 +116,58 @@ public class MapGenerator : MonoBehaviour
         Lava();
     }
 
+    private NetworkObject InstObj(string type, float x, float y, float z){
+        Vector3 vec = new(x,y,z);
+        NetworkObject obj;
+        switch (type)
+        {
+            case "tile": obj = Instantiate(tile, vec, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+            case "borderWall": obj = Instantiate(borderWall, vec, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+            case "mapWall": obj = Instantiate(mapWall, vec, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+            case "lavaTile": obj = Instantiate(lavaTile, vec, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+            default: obj = Instantiate(tile, vec, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+        };
+    }
+    private NetworkObject InstObj(string type, Vector3 coords)
+    {
+        NetworkObject obj;
+        switch (type)
+        {
+            case "tile": obj = Instantiate(tile, coords, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+            case "borderWall": obj = Instantiate(borderWall, coords, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+            case "mapWall": obj = Instantiate(mapWall, coords, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+            case "lavaTile": obj = Instantiate(lavaTile, coords, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+            default: obj = Instantiate(tile, coords, Quaternion.identity, transform);
+                obj.Spawn(true);
+                return obj;
+        };
+    }
+
     //This function transforms the walls to fit the egde of the gamemap and stops the player from falling off
     private void SetBorderWalls(){
         //init borderwalls
-        BorderWallScript southWall = Instantiate(borderWall, new Vector3(0, wallHieght/2, -mapSize/2-1), Quaternion.identity, transform);
-        BorderWallScript northWall = Instantiate(borderWall, new Vector3(0, wallHieght/2, mapSize/2), Quaternion.identity, transform);
-        BorderWallScript eastWall = Instantiate(borderWall, new Vector3(mapSize/2, wallHieght/2, 0), Quaternion.identity, transform);
-        BorderWallScript westWall = Instantiate(borderWall, new Vector3(-mapSize/2-1, wallHieght/2, 0), Quaternion.identity, transform);
+        NetworkObject southWall = InstObj("borderWall",0, wallHieght / 2, -mapSize/2-1);
+        NetworkObject northWall = InstObj("borderWall",0, wallHieght / 2, mapSize/2);
+        NetworkObject eastWall = InstObj("borderWall",mapSize/2, wallHieght / 2, 0);
+        NetworkObject westWall = InstObj("borderWall",-mapSize/2-1, wallHieght/2, 0);
         southWall.transform.localScale = new Vector3(mapSize+1,wallHieght,1);
         northWall.transform.localScale = new Vector3(mapSize+1,wallHieght,1);
         eastWall.transform.localScale = new Vector3(1,wallHieght,mapSize+1);
@@ -137,7 +181,7 @@ public class MapGenerator : MonoBehaviour
         {
             for (int j = 0; j < mapSize; j++)
             {
-                tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, -0.05f, j-mapSize/2), Quaternion.identity, transform);
+                tileArray[i,j] = InstObj("tile",i-mapSize/2, -0.05f, j-mapSize/2);
             }
         }
     }
@@ -148,10 +192,10 @@ public class MapGenerator : MonoBehaviour
             for (int j = 0; j < mapSize; j++){
                 float perlin  = Mathf.PerlinNoise(i/1.5f+seed, j/1.5f+seed);
                 if(  landCutOff > perlin){
-                    tileArray[i,j] = Instantiate(tile, new Vector3(i-mapSize/2, -0.05f, j-mapSize/2), Quaternion.identity, transform);   
+                    tileArray[i,j] = InstObj("tile",i-mapSize/2, -0.05f, j-mapSize/2);   
                 } 
                 else{
-                    tileArray[i,j] = Instantiate(lavaTile, new Vector3(i-mapSize/2, -0.05f,j-mapSize/2), Quaternion.identity, transform);
+                    tileArray[i,j] = InstObj("lavaTile",i-mapSize/2, -0.05f,j-mapSize/2);
                 }
             }
         }
@@ -168,29 +212,29 @@ public class MapGenerator : MonoBehaviour
                 {
                     coords = tileArray[i,j].transform.position;
                     coords.y += 1.5f;
-                    wallArray[i,j] = Instantiate(mapWall, coords, Quaternion.identity, transform);
-                    //wallArray[i,j].GetComponent<NetworkObject>().Spawn();
+                    wallArray[i,j] = InstObj("mapWall", coords);
+                    //wallArray[i,j].GetComponent<NetworkObject>().Spawn(true);
                 } 
-                
             }
         }
     }
+
     //Generate wall placement from worly noise (the cellular function returns a distence to a point in the noise map)
     //if the magnitude of the returend distence exeeds the cutoff a wall is placed at the coresponding location
-    private void WorlyWallGen(float seed){
-        Vector3 coords;
-        Vector2 worly;
-        for (int i = 0; i < mapSize; i++){
-            for (int j = 0; j < mapSize; j++){
-                worly = noise.cellular(new float2(i+seed,j+seed));
-                if(worly.magnitude > wallCutOff){
-                    coords = tileArray[i,j].transform.position;
-                    wallArray[i,j] = Instantiate(mapWall, coords, Quaternion.identity, transform);
-                } 
+    // private void WorlyWallGen(float seed){
+    //     Vector3 coords;
+    //     Vector2 worly;
+    //     for (int i = 0; i < mapSize; i++){
+    //         for (int j = 0; j < mapSize; j++){
+    //             worly = noise.cellular(new float2(i+seed,j+seed));
+    //             if(worly.magnitude > wallCutOff){
+    //                 coords = tileArray[i,j].transform.position;
+    //                 wallArray[i,j] = Instantiate(mapWall, coords, Quaternion.identity, transform);
+    //             } 
                 
-            }
-        }
-    }
+    //         }'
+    //     }
+    // }
 
     //generate a seed based on the privious one by hashing it and saving it
     private float SeedGen(){
@@ -231,30 +275,33 @@ public class MapGenerator : MonoBehaviour
                 //bottom row
                 if(tileArray[i, lavaTileCounter]){
                     coords = tileArray[i, lavaTileCounter].transform.position;
-                    Destroy(tileArray[i, lavaTileCounter]);
-                    tileArray[i,lavaTileCounter] = Instantiate(lavaTile, coords, Quaternion.identity, transform);
+                    tileArray[i, lavaTileCounter].Despawn();
+                    tileArray[i,lavaTileCounter] = InstObj("lavaTile", coords);
+                    
                 }
                 //left col
                 if(tileArray[lavaTileCounter,i]){
                     coords = tileArray[lavaTileCounter, i].transform.position;
-                    Destroy(tileArray[lavaTileCounter, i]);
-                    tileArray[lavaTileCounter,i] = Instantiate(lavaTile, coords, Quaternion.identity, transform);
+                    tileArray[lavaTileCounter, i].Despawn();
+                    tileArray[lavaTileCounter,i] = InstObj("lavaTile", coords);
                 }
                 //right col
                 if(tileArray[mapSize-1-lavaTileCounter,i]){
                     coords = tileArray[mapSize-1-lavaTileCounter,i].transform.position;
-                    Destroy(tileArray[mapSize-1-lavaTileCounter,i].gameObject);
-                    tileArray[mapSize-1-lavaTileCounter,i] = Instantiate(lavaTile, coords, Quaternion.identity, transform);
+                    tileArray[mapSize-1-lavaTileCounter,i].Despawn();
+                    tileArray[mapSize-1-lavaTileCounter,i] = InstObj("lavaTile", coords);
                 }
                 //top row
                 if(tileArray[i,mapSize-1-lavaTileCounter]){
                     coords = tileArray[i,mapSize-1-lavaTileCounter].transform.position;
-                    Destroy(tileArray[i,mapSize-1-lavaTileCounter].gameObject);
-                    tileArray[i,mapSize-1-lavaTileCounter] = Instantiate(lavaTile, coords, Quaternion.identity, transform);
+                    tileArray[i,mapSize-1-lavaTileCounter].Despawn();
+                    tileArray[i,mapSize-1-lavaTileCounter] = InstObj("lavaTile", coords);
                 }
             }
             nextLavaSpawn = lavaSpawnTime;
             lavaTileCounter++;
         }
     }
+
+    
 }
