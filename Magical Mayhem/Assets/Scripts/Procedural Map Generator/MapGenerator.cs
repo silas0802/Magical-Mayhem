@@ -302,6 +302,4 @@ public class MapGenerator : MonoBehaviour
             lavaTileCounter++;
         }
     }
-
-    
 }
