@@ -69,15 +69,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         inventory = new Inventory();
     }
 
-    void Start()
-    {   
-        if (IsLocalPlayer)
-        {
-            SpellShop.instance.ConnectPlayer(this);
-            SpellShop.instance.InitalizePlayerInformation();    
-        }
-        
-    }
+    
 
     void Update()
     {
@@ -375,6 +367,15 @@ public class UnitController : NetworkBehaviour, IDamagable
     public void InitializeBot(Brain brain)
     {
         this.brain = brain;
+    }
+
+    [ClientRpc]
+    public void ConnectUnitToShopClientRPC(){
+        if (IsLocalPlayer)
+        {
+            SpellShop.instance.ConnectPlayer(this);
+            SpellShop.instance.InitalizePlayerInformation();    
+        }
     }
 #if UNITY_EDITOR
     private void OnDrawGizmos()

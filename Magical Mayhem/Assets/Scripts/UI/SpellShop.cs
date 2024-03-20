@@ -113,7 +113,7 @@ public class SpellShop : NetworkBehaviour
             time -= Time.deltaTime;
             if (time < 0 && gameObject.activeSelf)
             {
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
             }
             else
             {
