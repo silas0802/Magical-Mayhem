@@ -110,6 +110,10 @@ public class RoundManager : NetworkBehaviour
     public void StartShoppingPhase()
     {
         if (!IsServer) return;
+        foreach (UnitController unit in units)
+        {
+            unit.ConnectUnitToShopClientRPC();
+        }
         roundIsOngoing = false;
         OpenPlayerShopsClientRPC();
         StartCoroutine(ShoppingPhaseCoroutine());
@@ -162,6 +166,10 @@ public class RoundManager : NetworkBehaviour
         SpellShop.instance.SetTimer(shoppingTime);
         SpellShop.instance.gameObject.SetActive(true);
     }
+    [ClientRpc]
+    private void ClosePlayerShopsClientRPC(){
+        SpellShop.instance.gameObject.SetActive(false);
+    }
     /// <summary>
     /// Waits for some time then starts a new round
     /// </summary>
@@ -170,6 +178,7 @@ public class RoundManager : NetworkBehaviour
     {
 
         yield return new WaitForSeconds(shoppingTime);
+        ClosePlayerShopsClientRPC();
         StartNewRound();
         
     }
@@ -215,12 +224,13 @@ public class RoundManager : NetworkBehaviour
     private void OnStart()
     {
         if (!IsServer) return;
-        foreach (ulong player in NetworkManager.Singleton.ConnectedClientsIds)
+        foreach (ulong player in NetworkManager.Singleton.ConnectedClientsIds) //Spawn player objects
         {
             NetworkObject prefab = Instantiate(playerPrefab,new Vector3 (10f,0,10f),Quaternion.identity);
             prefab.SpawnAsPlayerObject(player, true);
-            units.Add(prefab.GetComponent<UnitController>());
-            prefab.GetComponent<UnitController>().unitMover.canMove = false;
+            UnitController unit = prefab.GetComponent<UnitController>();
+            units.Add(unit);
+            unit.unitMover.canMove = false;
         }
 
         AddBot(botBrain);

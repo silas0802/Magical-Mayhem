@@ -244,7 +244,7 @@ public class MapGenerator : MonoBehaviour
         hash.Dispose();
         newSeed /= 1000;
         PlayerPrefs.SetFloat("Seed", newSeed);
-        print(newSeed);
+        print("Seed:" + newSeed);
         //PlayerPrefs.DeleteAll();
         //newSeed = 180.26f;
         return newSeed;
