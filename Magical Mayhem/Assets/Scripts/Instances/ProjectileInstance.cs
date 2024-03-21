@@ -125,7 +125,7 @@ public class ProjectileInstance : NetworkBehaviour
             }
         }
     }
-    
+    #if UNITY_EDITOR
     void OnDrawGizmos() 
     {   
         Handles.DrawWireDisc(transform.position, Vector3.up, spell.triggerRadius * 2);
@@ -141,5 +141,6 @@ public class ProjectileInstance : NetworkBehaviour
             Gizmos.DrawRay(transform.position, rb.velocity.normalized * 2);
         }
     }
+    #endif
 }
 
