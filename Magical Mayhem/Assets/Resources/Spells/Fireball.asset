@@ -26,7 +26,7 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: 65334ac3fa9bbcf4dbeeb0498c20a852, type: 3}
   Price: 15
   UseType: 0
-  ElementType: 0
+  ElementType: 2
   IsComponentSpell: 0
   Cooldown: 3
   CastTime: 0.27
@@ -36,5 +36,6 @@ MonoBehaviour:
   EndEffect: {fileID: 11400000, guid: 7861af9072e7cc048b109828d9681462, type: 2}
   Speed: 10
   Range: 10
+  MustFlyMaxDistance: 0
   TriggerRadius: 0.5
   HomingForce: 0

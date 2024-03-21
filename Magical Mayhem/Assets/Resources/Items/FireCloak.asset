@@ -27,5 +27,5 @@ MonoBehaviour:
   Health: 1000
   CDReduction: 5
   ElementBoostPercent: 10
-  ItemType: 0
+  ItemType: 1
   ItemElement: 2

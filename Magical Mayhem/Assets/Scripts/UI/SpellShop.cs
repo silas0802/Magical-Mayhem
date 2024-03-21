@@ -32,7 +32,8 @@ public class SpellShop : NetworkBehaviour
     public BuyableIcon[] ownedItems = new BuyableIcon[6];
     public BuyableIcon spellIconTemplate;
     public BuyableIcon selectedSpellicon;
-    public Transform buyables;
+    public Transform[] buyableSlots = new Transform[6];
+    public Transform[] buyableBuyableHolders = new Transform[2];
     public Buyable selectedBuyable;
     public bool buyablePhase = false;
     public Transform selectedSpellSlot;
@@ -66,10 +67,32 @@ public class SpellShop : NetworkBehaviour
         initatedSpells = new BuyableIcon[spells.Length];
         initiatedItems = new BuyableIcon[items.Length];
 
-        for (int i = 0; i < spells.Length; i++)
-        {
+        InitializeBuyableBuyables();
+        LoadSlots();
+        ToggleSpellHolder();
+        // upgradeButton.gameObject.SetActive(false);
+        // sellButton.gameObject.SetActive(false);
 
-            BuyableIcon buyableSpell = Instantiate(spellIconTemplate, buyables);
+
+
+    }
+
+    private void InitializeBuyableBuyables(){
+          for (int i = 0; i < spells.Length; i++)
+        {   
+            BuyableIcon buyableSpell;
+            Debug.Log(spells[i].elementType);
+            if (spells[i].elementType is SpellElementType.Fire)
+            {
+                buyableSpell = Instantiate(spellIconTemplate, buyableSlots[0]);    
+            }else if(spells[i].elementType is SpellElementType.Arcane)
+            {
+                 buyableSpell = Instantiate(spellIconTemplate, buyableSlots[1]);
+            }else
+            {
+                 buyableSpell = Instantiate(spellIconTemplate, buyableSlots[2]);
+            }
+            
             buyableSpell.Initialize(spells[i]);
             buyableSpell.GetComponent<Button>().onClick.AddListener(() => { SelectBuyable(buyableSpell); CancelBuyablePhase(); ActivateSellButton(); });
 
@@ -78,18 +101,22 @@ public class SpellShop : NetworkBehaviour
 
         for (int i = 0; i < items.Length; i++)
         {
-            BuyableIcon buyableItem = Instantiate(spellIconTemplate, buyables);
+            BuyableIcon buyableItem;
+            if (items[i].itemType is ItemType.Offensive)
+            {
+                buyableItem = Instantiate(spellIconTemplate, buyableSlots[3]);    
+            }else if (items[i].itemType is ItemType.Defensive)
+            {
+                buyableItem = Instantiate(spellIconTemplate, buyableSlots[4]);
+            }else
+            {
+                buyableItem = Instantiate(spellIconTemplate, buyableSlots[5]);
+            }
+            
             buyableItem.Initialize(items[i]);
             buyableItem.GetComponent<Button>().onClick.AddListener(() => { SelectBuyable(buyableItem); CancelBuyablePhase(); ActivateSellButton(); });
             initiatedItems[i] = buyableItem;
         }
-        LoadSlots();
-        ToggleSpellHolder();
-        // upgradeButton.gameObject.SetActive(false);
-        // sellButton.gameObject.SetActive(false);
-
-
-
     }
     public void InitalizePlayerInformation()
     {
@@ -108,18 +135,18 @@ public class SpellShop : NetworkBehaviour
     void Update()
     {
 
-        if (!testing)
-        {
-            time -= Time.deltaTime;
-            if (time < 0 && gameObject.activeSelf)
-            {
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                timerText.text = ((int)time).ToString();
-            }
-        }
+        // if (!testing)
+        // {
+        //     time -= Time.deltaTime;
+        //     if (time < 0 && gameObject.activeSelf)
+        //     {
+        //         gameObject.SetActive(false);
+        //     }
+        //     else
+        //     {
+        //         timerText.text = ((int)time).ToString();
+        //     }
+        // }
 
     }
     public void SelectBuyable(BuyableIcon buyableIcon)
@@ -159,20 +186,22 @@ public class SpellShop : NetworkBehaviour
     public void ToggleSpellHolder()
     {
         toggleSpellHolder = !toggleSpellHolder;
+        buyableBuyableHolders[0].gameObject.SetActive(toggleSpellHolder);
+        buyableBuyableHolders[1].gameObject.SetActive(!toggleSpellHolder);
         spellHolder.gameObject.SetActive(toggleSpellHolder);
-
-
-        foreach (BuyableIcon item in initatedSpells)
-        {
-            item.gameObject.SetActive(toggleSpellHolder);
-
-        }
-
-        foreach (BuyableIcon item in initiatedItems)
-        {
-            item.gameObject.SetActive(!toggleSpellHolder);
-        }
         itemHolder.gameObject.SetActive(!toggleSpellHolder);
+
+        // foreach (BuyableIcon item in initatedSpells)
+        // {
+        //     item.gameObject.SetActive(toggleSpellHolder);
+
+        // }
+
+        // foreach (BuyableIcon item in initiatedItems)
+        // {
+        //     item.gameObject.SetActive(!toggleSpellHolder);
+        // }
+        
 
         if (toggleSpellHolder)
         {

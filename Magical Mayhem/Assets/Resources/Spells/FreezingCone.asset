@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43c8973c8190a6f40878c0041c0e0b67, type: 3}
-  m_Name: FireballExplosion
+  m_Name: FreezingCone
   m_EditorClassIdentifier: 
-  ID: 103
+  ID: 111
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 17c630a4cdaba494cae2aeb4bc22dda9, type: 3}
   Price: 0
   UseType: 0
-  ElementType: 2
+  ElementType: 3
   IsComponentSpell: 0
   Cooldown: 3
   CastTime: 0.5
@@ -26,7 +26,6 @@ MonoBehaviour:
   Knockback: 100
   Delay: 0
   LifeTime: 1
-  Radius: 1.17
+  Radius: 0.5
   ExplodeAtTarget: 1
-  Explosion: {fileID: 7396775352713488354, guid: ca4708ed366de8f4a99f94eac270bd09,
-    type: 3}
+  Explosion: {fileID: 0}
