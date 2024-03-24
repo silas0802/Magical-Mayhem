@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -19,6 +20,8 @@ public class SpellShop : NetworkBehaviour
     public Button upgradeButton;
     public Button buyButton;
 
+    bool ascending = false;
+    public Transform glowingAnimation;
     public TMP_Text goldText;
     public TMP_Text healthText;
     public TMP_Text frostMultiplier;
@@ -148,6 +151,11 @@ public class SpellShop : NetworkBehaviour
             }
         }
 
+        if (buyablePhase)
+        {
+            GlowAnimationOnSlots();
+        }
+
     }
     public void SelectBuyable(BuyableIcon buyableIcon)
     {
@@ -161,6 +169,7 @@ public class SpellShop : NetworkBehaviour
                 selectedSpellicon.Initialize(null);
                 buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
                 selectedSpellicon.GetComponent<Image>().color= new Color(0,0,0,255);
+                
             }
             else
             {
@@ -191,16 +200,7 @@ public class SpellShop : NetworkBehaviour
         spellHolder.gameObject.SetActive(toggleSpellHolder);
         itemHolder.gameObject.SetActive(!toggleSpellHolder);
 
-        // foreach (BuyableIcon item in initatedSpells)
-        // {
-        //     item.gameObject.SetActive(toggleSpellHolder);
-
-        // }
-
-        // foreach (BuyableIcon item in initiatedItems)
-        // {
-        //     item.gameObject.SetActive(!toggleSpellHolder);
-        // }
+        
         
 
         if (toggleSpellHolder)
@@ -249,10 +249,16 @@ public class SpellShop : NetworkBehaviour
             {
                 if (item1.buyable == null)
                 {
-                    item1.SetColor(new Color32(40, 255, 0, 255));
+                    item1.SetColor(new Color32(255, 255, 0, 0));
+                    item1.GetComponent<Image>().rectTransform.sizeDelta=new Vector2(0,0);
+
+                    
                 }
 
             }
+
+            
+            
         }
         else
         {
@@ -343,10 +349,12 @@ public class SpellShop : NetworkBehaviour
                 if (item.buyable is not null)
                 {
                     item.SetColor(new Color32(255, 255, 255, 255));
+                    item.GetComponent<Image>().rectTransform.sizeDelta=new Vector2(110,110);
                 }
                 else
                 {
                     item.SetColor(new Color32(0, 0, 0, 0));
+                    item.GetComponent<Image>().rectTransform.sizeDelta=new Vector2(110,110);
                 }
             }
         }
@@ -469,6 +477,83 @@ public class SpellShop : NetworkBehaviour
     }
 
 
+    private void GlowAnimationOnSlots(){
+        if (ascending && ownedSpells[0].GetComponent<Image>().color.a<=0.95)
+        {
+           foreach (BuyableIcon item in ownedSpells)
+           {
+            if (item.buyable is null)
+            {
+                float valueA = item.GetComponent<Image>().color.a+0.005f;
+                float valueR = item.GetComponent<Image>().color.r;
+                float valueG = item.GetComponent<Image>().color.g;
+                float valueB =item.GetComponent<Image>().color.b;
+                item.GetComponent<Image>().color=new Color(valueR,valueG,valueB,valueA);  
+            }
+           }
+           
+           
+            MoveAnimationOnSlot(true);
+            if (ownedSpells[0].GetComponent<Image>().color.a>=0.85)
+            {
+                ascending = false;
+               
+            }
+           
+        }else
+        {
+                
+          foreach (BuyableIcon item in ownedSpells)
+           {
+            if (item.buyable is null)
+            {
+                float valueA = item.GetComponent<Image>().color.a-0.005f;
+                float valueR = item.GetComponent<Image>().color.r;
+                float valueG = item.GetComponent<Image>().color.g;
+                float valueB =item.GetComponent<Image>().color.b;
+                item.GetComponent<Image>().color=new Color(valueR,valueG,valueB,valueA);  
+            }
+           }
+            MoveAnimationOnSlot(false);
+             
+            if (ownedSpells[0].GetComponent<Image>().color.a<=0.05)
+            {
+                ascending = true;
+                
+            }
+        }
 
+    }
+
+    private void MoveAnimationOnSlot(bool ascending){
+
+        if (ascending)
+        {
+            foreach (BuyableIcon item in ownedSpells)
+            {
+                if (item.buyable is null)
+                {
+                Rect rect= item.GetComponent<Image>().rectTransform.rect;
+                float widt=rect.width+0.7f;
+            
+                item.GetComponent<Image>().rectTransform.sizeDelta=new Vector2(widt,widt);
+                }
+            }
+             
+        }else
+        {
+            foreach (BuyableIcon item in ownedSpells)
+            {   
+                if (item.buyable is null)
+                {
+                    Rect rect= item.GetComponent<Image>().rectTransform.rect;
+                    float widt=rect.width-0.7f;
+                
+                    item.GetComponent<Image>().rectTransform.sizeDelta=new Vector2(widt,widt);
+                }
+            }
+        }
+
+    }
 
 }
