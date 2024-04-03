@@ -15,15 +15,24 @@ public class Brain : ScriptableObject
     /// </summary>
     /// <param name="controller"></param>
     public void HandleActions(UnitController controller){
-        UnitController nearestUnit = RoundManager.instance.FindNearestUnit(controller.transform.position, controller);
-        float distanceToNearestUnit = (controller.transform.position - nearestUnit.transform.position).magnitude;
+        try
+        {
+            UnitController nearestUnit = RoundManager.instance.FindNearestUnit(controller.transform.position, controller);
+            float distanceToNearestUnit = (controller.transform.position - nearestUnit.transform.position).magnitude;
         
-        if (distanceToNearestUnit <= 3f) {
-            isNearUnit = true;
-        } else 
+            if (distanceToNearestUnit <= 3f) {
+                isNearUnit = true;
+            } 
+            else 
+            {
+                isNearUnit = false;
+            }
+        }
+        catch (System.Exception)
         {
             isNearUnit = false;
         }
+        
     }
 
     private List<ProjectileInstance> CheckForNearbyProjectiles(UnitController controller)
