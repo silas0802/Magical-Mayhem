@@ -66,7 +66,8 @@ public class SpellShop : NetworkBehaviour
 
 
         MakeMap();
-
+        spells = Resources.LoadAll("Spells",typeof(Spell)).Cast<Spell>().Where(s=>!s.dontShowInShop).ToArray();
+        items = Resources.LoadAll("Items",typeof(Item)).Cast<Item>().ToArray();
         initatedSpells = new BuyableIcon[spells.Length];
         initiatedItems = new BuyableIcon[items.Length];
 
