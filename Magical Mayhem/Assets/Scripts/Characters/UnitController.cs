@@ -211,7 +211,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         if (IsServer)
         {   
             
-           if (inventory.gold>buyable.price&&!inventory.items.Contains(buyable)&&!inventory.spells.Contains(buyable))
+           if (inventory.gold>=buyable.price&&!inventory.items.Contains(buyable)&&!inventory.spells.Contains(buyable))
             {
                 
              SpellShop.instance.BuyBuyable(); 

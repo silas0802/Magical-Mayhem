@@ -71,21 +71,25 @@ public class SpellShop : NetworkBehaviour
         initatedSpells = new BuyableIcon[spells.Length];
         initiatedItems = new BuyableIcon[items.Length];
 
-        InitializeBuyableBuyables();
+        InitializeBuyableBuyables(null);
         LoadSlots();
         ToggleSpellHolder();
-        // upgradeButton.gameObject.SetActive(false);
-        // sellButton.gameObject.SetActive(false);
+        upgradeButton.gameObject.SetActive(false);
+        sellButton.gameObject.SetActive(false);
 
 
 
     }
 
-    private void InitializeBuyableBuyables(){
+    private void InitializeBuyableBuyables(BuyableIcon icon){
+        if (icon is null){}
+        {
+            
+        
           for (int i = 0; i < spells.Length; i++)
         {   
             BuyableIcon buyableSpell;
-            Debug.Log(spells[i].elementType);
+            
             if (spells[i].elementType is SpellElementType.Fire)
             {
                 buyableSpell = Instantiate(spellIconTemplate, buyableSlots[0]);    
@@ -122,18 +126,19 @@ public class SpellShop : NetworkBehaviour
             initiatedItems[i] = buyableItem;
         }
     }
+    }
     public void InitalizePlayerInformation()
     {
         goldText.SetText(localUnitController.inventory.gold.ToString());
         healthText.SetText(localUnitController.GetHealth().ToString());
-        Debug.Log("initializing player information");
+        
 
     }
 
     public void ConnectPlayer(UnitController local)
     {
         localUnitController = local;
-        Debug.Log("unitcontroller initiated with: " + local);
+        
     }
     // Update is called once per frame
     void Update()
@@ -161,8 +166,11 @@ public class SpellShop : NetworkBehaviour
     public void SelectBuyable(BuyableIcon buyableIcon)
     {
         if (!buyablePhase)
-        {
-            selectedSpellicon.GetComponent<Image>().color= new Color(255,255,255,255);
+        {   
+            
+                
+            
+            
             if (buyableIcon == null)
             {
                 descriptionText.text = null;
@@ -170,20 +178,27 @@ public class SpellShop : NetworkBehaviour
                 selectedSpellicon.Initialize(null);
                 buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
                 selectedSpellicon.GetComponent<Image>().color= new Color(0,0,0,255);
+                upgradeButton.gameObject.SetActive(false);
+                sellButton.gameObject.SetActive(false);
                 
             }
             else
             {
-                selectedBuyable = buyableIcon.buyable;
-                selectedSpellicon.Initialize(buyableIcon.buyable);
-                descriptionText.text = selectedBuyable.description;
-                if (localUnitController.inventory.gold < selectedBuyable.price)
+                if (!(buyableIcon.buyable==null))
                 {
-                    buyButton.GetComponent<Image>().color = new Color32(255, 255, 255, 100);
-                }
-                else
-                {
-                    buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+                    selectedSpellicon.GetComponent<Image>().color= new Color(255,255,255,255);        
+                    
+                    selectedBuyable = buyableIcon.buyable;
+                    selectedSpellicon.Initialize(buyableIcon.buyable);
+                    descriptionText.text = selectedBuyable.description;
+                    if (localUnitController.inventory.gold < selectedBuyable.price)
+                    {
+                        buyButton.GetComponent<Image>().color = new Color32(255, 255, 255, 100);
+                    }
+                    else
+                    {
+                        buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+                    }
                 }
             }
         }
@@ -390,9 +405,13 @@ public class SpellShop : NetworkBehaviour
 
     public void ActivateSellButton()
     {
-
+        if (selectedBuyable is not null)
+        {
+            
+        
         if (localUnitController.inventory.items.Contains(selectedBuyable) || localUnitController.inventory.spells.Contains(selectedBuyable))
         {
+            
             upgradeButton.gameObject.SetActive(true);
             sellButton.gameObject.SetActive(true);
 
@@ -402,7 +421,7 @@ public class SpellShop : NetworkBehaviour
             upgradeButton.gameObject.SetActive(false);
             sellButton.gameObject.SetActive(false);
         }
-
+    }
 
     }
 
