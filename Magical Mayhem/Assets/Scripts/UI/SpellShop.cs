@@ -35,7 +35,7 @@ public class SpellShop : NetworkBehaviour
     public BuyableIcon[] ownedItems = new BuyableIcon[6];
     public BuyableIcon spellIconTemplate;
     public BuyableIcon selectedSpellicon;
-    public Transform[] buyableSlots = new Transform[6];
+    public Transform[] buyableSlots = new Transform[7];
     public Transform[] buyableBuyableHolders = new Transform[2];
     public Buyable selectedBuyable;
     public bool buyablePhase = false;
@@ -95,9 +95,12 @@ public class SpellShop : NetworkBehaviour
             }else if(spells[i].elementType is SpellElementType.Arcane)
             {
                  buyableSpell = Instantiate(spellIconTemplate, buyableSlots[1]);
-            }else
+            }else if(spells[i].elementType is SpellElementType.Frost)
             {
                  buyableSpell = Instantiate(spellIconTemplate, buyableSlots[2]);
+            }else
+            {
+                buyableSpell = Instantiate(spellIconTemplate, buyableSlots[3]);
             }
             
             buyableSpell.Initialize(spells[i]);
@@ -111,13 +114,13 @@ public class SpellShop : NetworkBehaviour
             BuyableIcon buyableItem;
             if (items[i].itemType is ItemType.Offensive)
             {
-                buyableItem = Instantiate(spellIconTemplate, buyableSlots[3]);    
+                buyableItem = Instantiate(spellIconTemplate, buyableSlots[4]);    
             }else if (items[i].itemType is ItemType.Defensive)
             {
-                buyableItem = Instantiate(spellIconTemplate, buyableSlots[4]);
+                buyableItem = Instantiate(spellIconTemplate, buyableSlots[5]);
             }else
             {
-                buyableItem = Instantiate(spellIconTemplate, buyableSlots[5]);
+                buyableItem = Instantiate(spellIconTemplate, buyableSlots[6]);
             }
             
             buyableItem.Initialize(items[i]);
