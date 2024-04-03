@@ -74,9 +74,6 @@ public class UnitController : NetworkBehaviour, IDamagable
     void Update()
     {
         if (!IsServer) return;
-        
-            
-        
         brain?.HandleActions(this);
     }
     #endregion

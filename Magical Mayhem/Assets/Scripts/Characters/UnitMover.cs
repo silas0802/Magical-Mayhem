@@ -45,6 +45,7 @@ public class UnitMover : NetworkBehaviour
     /// Sets the velocity of the rigidbody based on the current velocity, position and target position. Can only be called from server.
     /// </summary>
     public void Move(){
+        if (controller.isDead) return;
         //Debug.Log((targetPosition-transform.position).normalized*moveSpeed);
         if ((targetPosition-transform.position).magnitude<acceptingDistance||!canMove){
             if (rb.velocity.magnitude<maxSpeed +0.1f)
@@ -62,6 +63,7 @@ public class UnitMover : NetworkBehaviour
                 rb.velocity = givenVel.magnitude > maxSpeed ? givenVel.normalized*maxSpeed : givenVel;
             }
         }
+        transform.position = new Vector3 (transform.position.x,0,transform.position.z);
         
     }
     private void Update(){
