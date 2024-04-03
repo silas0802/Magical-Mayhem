@@ -20,8 +20,7 @@ public abstract class Buyable : ScriptableObject
     public int price => this.Price;
     public int id => this.ID;
 
-   
-    public int GetID(){
-        return this.ID;
+    public void SetId(int id){
+        ID = id;
     }
 }

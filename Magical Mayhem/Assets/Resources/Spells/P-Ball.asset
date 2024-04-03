@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32bc9b83314621f41a21c6be28f98c92, type: 3}
   m_Name: P-Ball
   m_EditorClassIdentifier: 
-  ID: 105
+  ID: 4
   Description: 'Made from the element of fire. The fire ball is one of the most basic
     of spell known to wizards and is always the first spell young wizards are taught.
 
@@ -23,11 +23,11 @@ MonoBehaviour:
     Range:  100
 
     Type: Fire'
-  Icon: {fileID: 21300000, guid: 65334ac3fa9bbcf4dbeeb0498c20a852, type: 3}
+  Icon: {fileID: 21300000, guid: cbae1c13008555c43a5d9fac6d9b55f7, type: 3}
   Price: 15
-  UseType: 0
-  ElementType: 0
-  IsComponentSpell: 0
+  UseType: 1
+  ElementType: 4
+  DontShowInShop: 0
   Cooldown: 3
   CastTime: 0.27
   CanMoveWhileCasting: 0
@@ -36,5 +36,6 @@ MonoBehaviour:
   EndEffect: {fileID: 11400000, guid: 7861af9072e7cc048b109828d9681462, type: 2}
   Speed: 10
   Range: 10
+  MustFlyMaxDistance: 0
   TriggerRadius: 0.5
   HomingForce: 0

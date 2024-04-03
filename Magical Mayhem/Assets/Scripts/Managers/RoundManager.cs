@@ -12,7 +12,6 @@ using UnityEngine.UI;
 public class RoundManager : NetworkBehaviour
 {
     public static RoundManager instance;
-    public bool isDebugging = false;
     [SerializeField] private Brain botBrain;
     [SerializeField] private int roundNumber = 0;
     [SerializeField] private int shoppingTime = 60;
@@ -101,6 +100,9 @@ public class RoundManager : NetworkBehaviour
                     distance = (unit.transform.position - position).magnitude;
                 }
             }
+        }
+        if (closest == null){
+            throw new NullReferenceException("No units found");
         }
         return closest;
     }
