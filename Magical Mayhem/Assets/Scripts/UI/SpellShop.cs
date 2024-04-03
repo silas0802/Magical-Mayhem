@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.WebSockets;
 using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class SpellShop : NetworkBehaviour
 {
@@ -251,7 +251,7 @@ public class SpellShop : NetworkBehaviour
 
     public void ServerTryBuyBuyable()
     {
-        localUnitController.TryGetItem(NetworkManager.Singleton.LocalClientId, selectedBuyable.GetID());
+        localUnitController.TryGetItem(NetworkManager.Singleton.LocalClientId, selectedBuyable.id);
     }
     public void BuyBuyable()
     {
@@ -287,7 +287,7 @@ public class SpellShop : NetworkBehaviour
 
 
                     localUnitController.inventory.items[i] = item;
-                    localUnitController.TryPlaceBuyable(item.GetID(), i);
+                    localUnitController.TryPlaceBuyable(item.id, i);
                     UpdateVisuals(ownedItems[i]);
                     EndByablePhase();
                     break;
@@ -318,7 +318,7 @@ public class SpellShop : NetworkBehaviour
             localUnitController.inventory.spells[j] = spell;
 
 
-            localUnitController.TryPlaceBuyable(spell.GetID(), j);
+            localUnitController.TryPlaceBuyable(spell.id, j);
             UpdateVisuals(icon);
 
 
@@ -429,16 +429,16 @@ public class SpellShop : NetworkBehaviour
     {
         foreach (Spell item in spells)
         {
-            buyableIDs.Add(item.GetID(), item);
+            buyableIDs.Add(item.id, item);
         }
         foreach (Item item in items)
         {
-            buyableIDs.Add(item.GetID(), item);
+            buyableIDs.Add(item.id, item);
         }
     }
 
     public void TrySellOwnedBuyable(){
-       localUnitController.TrySellItem(NetworkManager.Singleton.LocalClientId,selectedBuyable.GetID());
+       localUnitController.TrySellItem(NetworkManager.Singleton.LocalClientId,selectedBuyable.id);
     }
 
     public void SellOwnedBuyable(){
@@ -575,5 +575,15 @@ public class SpellShop : NetworkBehaviour
         }
 
     }
-
+    [MenuItem("MagicalMayhem/SetIds")]
+    public static void SetSpellItemIds(){
+        Buyable[]  spells = Resources.LoadAll("Spells",typeof(Spell)).Cast<Spell>().Where(s=>!s.dontShowInShop).ToArray();
+        Buyable[] items = Resources.LoadAll("Items",typeof(Item)).Cast<Item>().ToArray();
+        int id = 1;
+        foreach (Buyable item in spells.Concat(items))
+        {
+            item.SetId(id);
+            id++;
+        }
+    }
 }
