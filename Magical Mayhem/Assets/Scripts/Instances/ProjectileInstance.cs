@@ -115,10 +115,10 @@ public class ProjectileInstance : NetworkBehaviour
     {
         if (IsServer)
         {
-            UnitController hit = other.gameObject.GetComponent<UnitController>();
+            IDamagable hit = other.gameObject.GetComponent<IDamagable>();
             if (hit != null)
             {
-                if (hit != owner)
+                if (hit != (IDamagable)owner)
                 {
                     Detonate();
                 }

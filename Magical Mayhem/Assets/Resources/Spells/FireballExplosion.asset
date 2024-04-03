@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43c8973c8190a6f40878c0041c0e0b67, type: 3}
   m_Name: FireballExplosion
   m_EditorClassIdentifier: 
-  ID: 103
+  ID: 3
   Description: 
   Icon: {fileID: 0}
   Price: 0
   UseType: 0
   ElementType: 2
-  IsComponentSpell: 0
+  DontShowInShop: 0
   Cooldown: 3
   CastTime: 0.5
   CanMoveWhileCasting: 0
   Damage: 20
-  Knockback: 100
+  Knockback: 18
   Delay: 0
   LifeTime: 1
   Radius: 1.17

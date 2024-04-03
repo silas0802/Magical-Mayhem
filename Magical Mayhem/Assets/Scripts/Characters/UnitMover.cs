@@ -15,7 +15,10 @@ public class UnitMover : NetworkBehaviour
     private float acceleration = 1f;
 
     [SerializeField, Range(0, 5f), Tooltip("A higher value will slow down the unit quicker.")]
-    private float friction = 2f;
+    private float frictionFlat = 2f;
+
+    [SerializeField, Range(0, 0.6f), Tooltip("A higher value will slow down the unit quicker.")]
+    private float frictionMult = 0.1f;
 
     [SerializeField, Range(0, 10f), Tooltip("The max speed the unit can go by walking. This can be exceeded through knockbacks.")]
     private float maxSpeed = 5f;
@@ -72,7 +75,8 @@ public class UnitMover : NetworkBehaviour
             controller.unitMover.MoveServerRPC();
         }
         if (IsServer){
-            rb.velocity-=rb.velocity.normalized*friction *Time.deltaTime;
+            rb.velocity*=1-frictionMult;
+            rb.velocity-=rb.velocity.normalized*frictionFlat *Time.deltaTime;
         }
     }
     /// <summary>
