@@ -11,7 +11,8 @@ public class GetDropdownValue : MonoBehaviour
 
     public void GetValue(){
         int Pickedindex = drpdwn.value;
-        if(drpdwn.options[0].Equals("Map size")){
+        Debug.Log(drpdwn.options[0].text);
+        if(drpdwn.options[0].text == "Map size" ){
             LobbySystem.mapSize = Pickedindex;
         }
         else{

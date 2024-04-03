@@ -17,8 +17,8 @@ public class MapGenerator : MonoBehaviour
     private int mapType;
     private int lavaTileCounter = 0;
     private readonly float wallHieght = 5f;
-    [SerializeField] private float lavaSpawnTime = 1f;
-    [SerializeField] private float nextLavaSpawn;
+    [SerializeField] private float lavaSpawnTime = 10f;
+    [SerializeField] private float nextLavaSpawn = 20f;
     private NetworkObject[,] tileArray;
     [SerializeField] private float wallCutOff = 0.75f;
     [SerializeField] private float landCutOff = 0.55f;
@@ -28,6 +28,7 @@ public class MapGenerator : MonoBehaviour
     void Start()
     {   
         mapSize = LobbySystem.mapSize;
+        Debug.Log(mapSize);
         mapType = LobbySystem.mapType;
     }
 
@@ -48,6 +49,7 @@ public class MapGenerator : MonoBehaviour
             3 => 40,
             _ => 30,
         };
+        Debug.Log(mapSize);
         //save the floortiles
         tileArray = new NetworkObject[mapSize,mapSize];
         float seed = SeedGen();
@@ -72,7 +74,7 @@ public class MapGenerator : MonoBehaviour
                 break;
             default: TileSpawner();
                 break;
-        }
+        };
         //SetSpawnPoints();
         SetBorderWalls();
     }
@@ -223,23 +225,6 @@ public class MapGenerator : MonoBehaviour
             }
         }
     }
-
-    //Generate wall placement from worly noise (the cellular function returns a distence to a point in the noise map)
-    //if the magnitude of the returend distence exeeds the cutoff a wall is placed at the coresponding location
-    // private void WorlyWallGen(float seed){
-    //     Vector3 coords;
-    //     Vector2 worly;
-    //     for (int i = 0; i < mapSize; i++){
-    //         for (int j = 0; j < mapSize; j++){
-    //             worly = noise.cellular(new float2(i+seed,j+seed));
-    //             if(worly.magnitude > wallCutOff){
-    //                 coords = tileArray[i,j].transform.position;
-    //                 wallArray[i,j] = Instantiate(mapWall, coords, Quaternion.identity, transform);
-    //             } 
-                
-    //         }'
-    //     }
-    // }
 
     //generate a seed based on the privious one by hashing it and saving it
     private float SeedGen(){
