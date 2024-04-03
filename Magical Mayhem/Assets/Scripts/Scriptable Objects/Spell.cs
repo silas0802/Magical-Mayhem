@@ -10,8 +10,8 @@ public abstract class Spell : Buyable
     [SerializeField, Tooltip("The element of the spell.")] 
     private SpellElementType ElementType;
 
-    [SerializeField, Tooltip("Set to true if this is a compnent of another spell. (e.g: The explosion for a projectile spell).")] 
-    private bool IsComponentSpell = false;
+    [SerializeField, Tooltip("Set to true if this is a component of another spell or for any other reason the spell shouldn't be in the shop. (e.g: The explosion for a projectile spell).")] 
+    private bool DontShowInShop = false;
 
     [SerializeField, Range(0,20), Tooltip("The duration you have to wait before, you can use the spell again")] 
     private float Cooldown = 3;
@@ -23,7 +23,7 @@ public abstract class Spell : Buyable
 
     public SpellUseType useType => this.UseType;
     public SpellElementType elementType => this.ElementType;
-    public bool isComponentSpell => this.IsComponentSpell;
+    public bool dontShowInShop => this.DontShowInShop;
     public float cooldown => this.Cooldown;
     public float castTime => this.CastTime;
     public bool canMoveWhileCasting => this.CanMoveWhileCasting;
