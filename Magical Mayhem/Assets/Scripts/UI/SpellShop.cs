@@ -17,7 +17,7 @@ public class SpellShop : NetworkBehaviour
     private bool toggleSpellHolder = false;
     public TMP_Text toggleSpellItemButtonText;
     public Button sellButton;
-    public Button upgradeButton;
+    
     public Button buyButton;
 
     bool ascending = false;
@@ -74,7 +74,7 @@ public class SpellShop : NetworkBehaviour
         InitializeBuyableBuyables(null);
         LoadSlots();
         ToggleSpellHolder();
-        upgradeButton.gameObject.SetActive(false);
+        
         sellButton.gameObject.SetActive(false);
 
 
@@ -181,7 +181,7 @@ public class SpellShop : NetworkBehaviour
                 selectedSpellicon.Initialize(null);
                 buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
                 selectedSpellicon.GetComponent<Image>().color= new Color(0,0,0,255);
-                upgradeButton.gameObject.SetActive(false);
+                
                 sellButton.gameObject.SetActive(false);
                 
             }
@@ -415,13 +415,12 @@ public class SpellShop : NetworkBehaviour
         if (localUnitController.inventory.items.Contains(selectedBuyable) || localUnitController.inventory.spells.Contains(selectedBuyable))
         {
             
-            upgradeButton.gameObject.SetActive(true);
             sellButton.gameObject.SetActive(true);
 
         }
         else
         {
-            upgradeButton.gameObject.SetActive(false);
+            
             sellButton.gameObject.SetActive(false);
         }
     }
