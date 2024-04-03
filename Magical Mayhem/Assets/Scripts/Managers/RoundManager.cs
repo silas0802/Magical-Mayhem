@@ -12,7 +12,6 @@ using UnityEngine.UI;
 public class RoundManager : NetworkBehaviour
 {
     public static RoundManager instance;
-    public bool isDebugging = false;
     [SerializeField] private Brain botBrain;
     [SerializeField] private int roundNumber = 0;
     [SerializeField] private int shoppingTime = 60;
