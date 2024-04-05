@@ -134,7 +134,7 @@ public class RoundManager : NetworkBehaviour
         {
             unit.ResetHealth();
         }
-        MapGenerator.instance.GenerateMap(1,1,"Medium");
+        MapGenerator.instance.GenerateMap();
         PlaceUnits();
         roundIsOngoing = true;
 

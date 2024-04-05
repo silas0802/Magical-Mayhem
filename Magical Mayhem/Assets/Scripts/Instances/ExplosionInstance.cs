@@ -28,7 +28,7 @@ public class ExplosionInstance : NetworkBehaviour
             if (timer<0&& !hasTriggered)
             {
                 hasTriggered = true;
-                ApplyDamage();
+                Detonate();
             }
             if (timer < -spell.lifeTime){
                 GetComponent<NetworkObject>().Despawn();
@@ -36,12 +36,15 @@ public class ExplosionInstance : NetworkBehaviour
             }
         }
     }
-    void ApplyDamage()
+    void Detonate()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, spell.radius);
         foreach (Collider hit in hits)
         {
             hit.GetComponent<IDamagable>()?.ModifyHealth(owner,-spell.damage);
+            Vector3 dir = hit.transform.position-transform.position;
+            dir = new Vector3(dir.x,0,dir.z);
+            hit.GetComponent<UnitController>()?.GetComponent<Rigidbody>().AddForce(dir.normalized*spell.knockback,ForceMode.Impulse);
         }
 
     }

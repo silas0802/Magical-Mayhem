@@ -21,7 +21,7 @@ public class MapWallScript : NetworkBehaviour, IDamagable
     public void takeDmg(int dmg){
         health -= dmg;
         if(health <= 0){
-            Destroy(this.gameObject);
+            GetComponent<NetworkObject>().Despawn();
         }
     }
 

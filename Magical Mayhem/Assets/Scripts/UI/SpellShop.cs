@@ -577,6 +577,7 @@ public class SpellShop : NetworkBehaviour
         }
 
     }
+    #if UNITY_EDITOR
     [MenuItem("MagicalMayhem/SetIds")]
     public static void SetSpellItemIds(){
         Buyable[]  spells = Resources.LoadAll("Spells",typeof(Spell)).Cast<Spell>().Where(s=>!s.dontShowInShop).ToArray();
@@ -588,4 +589,5 @@ public class SpellShop : NetworkBehaviour
             id++;
         }
     }
+    #endif
 }

@@ -12,7 +12,7 @@ public abstract class Buyable : ScriptableObject
     [SerializeField] 
     private Sprite Icon;
     
-    [SerializeField,Range(1,20), Tooltip("The amount of gold required to purchase this spell")] 
+    [SerializeField,Range(1,50), Tooltip("The amount of gold required to purchase this spell")] 
     private int Price;
 
     public string description => this.Description;

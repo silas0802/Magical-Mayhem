@@ -16,6 +16,8 @@ public class LobbySystem : NetworkBehaviour
     [SerializeField] private RectTransform playerInfoSpawnPoint;
     [SerializeField] private Button startLobbyButton;
     [SerializeField] private Button leaveLobbyButton;
+    public static int mapSize = 0;
+    public static int mapType = 0;
     private void Awake()
     {
         if (instance == null){
