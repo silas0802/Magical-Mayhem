@@ -228,17 +228,20 @@ public class UnitController : NetworkBehaviour, IDamagable
         Buyable buyable = SpellShop.instance.buyableIDs[itemID];
          if (inventory.gold>buyable.price&&!inventory.items.Contains(buyable)&&!inventory.spells.Contains(buyable))
             {
-               GetItemClientRpc(clientID);
+               GetItemClientRpc(clientID,itemID);
             }
          
     }
 
     [ClientRpc]
-    void GetItemClientRpc(ulong clientID){
+    void GetItemClientRpc(ulong clientID, int itemid){
         
         if (clientID==NetworkManager.Singleton.LocalClientId)
-        {
-               SpellShop.instance.BuyBuyable();  
+        {   
+            Buyable buyable = SpellShop.instance.buyableIDs[itemid];
+            inventory.gold-=buyable.price;
+            SpellShop.instance.BuyBuyable();  
+
         }
          
     }
