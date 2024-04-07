@@ -88,6 +88,7 @@ public class SpellShop : NetworkBehaviour
         
           for (int i = 0; i < spells.Length; i++)
         {   
+            
             BuyableIcon buyableSpell;
             
             if (spells[i].elementType is SpellElementType.Fire)
@@ -288,10 +289,11 @@ public class SpellShop : NetworkBehaviour
                 if (localUnitController.inventory.items[i] is null)
                 {
 
-
+                    
                     localUnitController.inventory.items[i] = item;
                     localUnitController.TryPlaceBuyable(item.id, i);
                     UpdateVisuals(ownedItems[i]);
+                    RemoveBuyableWhenBought();
                     EndByablePhase();
                     break;
                 }
@@ -324,6 +326,7 @@ public class SpellShop : NetworkBehaviour
             localUnitController.TryPlaceBuyable(spell.id, j);
             UpdateVisuals(icon);
 
+            RemoveBuyableWhenBought();
 
             EndByablePhase();
         }
@@ -495,7 +498,56 @@ public class SpellShop : NetworkBehaviour
             
         }
         UpdateVisuals(null);
+        ReturnItemToShopWhenSold();
         SelectBuyable(null);
+    }
+    private void RemoveBuyableWhenBought(){
+        Debug.Log("i enter the func");
+        if (selectedBuyable is Spell)
+        {
+            Debug.Log("I am in spell");
+            
+            foreach (BuyableIcon item in initatedSpells)
+            {
+                if (item.buyable == selectedBuyable)
+                {
+                    // Debug.Log("I find the item to destroy");
+                    // Destroy(item);
+                    item.gameObject.SetActive(false);
+                }                
+            }
+        }else
+        {
+            foreach (BuyableIcon item in initiatedItems)
+            {
+                if (item.buyable == selectedBuyable)
+                {
+                    item.gameObject.SetActive(false);
+                }                
+            }
+            
+        }
+    }
+    private void ReturnItemToShopWhenSold(){
+        if (selectedBuyable is Spell)
+        {
+            foreach (BuyableIcon item in initatedSpells)
+            {
+                if (item.buyable==selectedBuyable)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }
+        }else
+        {
+            foreach (BuyableIcon item in initiatedItems)
+            {
+                if (item.buyable==selectedBuyable)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }
+        }
     }
 
 
