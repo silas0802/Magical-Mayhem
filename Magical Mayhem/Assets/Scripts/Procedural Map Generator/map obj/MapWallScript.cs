@@ -18,10 +18,10 @@ public class MapWallScript : NetworkBehaviour, IDamagable
         
     }
 
-    public void takeDmg(int dmg){
+    public void TakeDmg(int dmg){
         health -= dmg;
         if(health <= 0){
-            GetComponent<NetworkObject>().Despawn();
+            
         }
     }
 
@@ -44,7 +44,7 @@ public class MapWallScript : NetworkBehaviour, IDamagable
 
     public void Death(UnitController killer)
     {
-        Destroy(this.gameObject);
+        GetComponent<NetworkObject>().Despawn();
     }
     
 }

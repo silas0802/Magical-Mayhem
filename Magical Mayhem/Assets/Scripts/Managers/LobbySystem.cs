@@ -18,6 +18,7 @@ public class LobbySystem : NetworkBehaviour
     [SerializeField] private Button leaveLobbyButton;
     public static int mapSize = 0;
     public static int mapType = 0;
+    public static bool buffs = true;
     private void Awake()
     {
         if (instance == null){
