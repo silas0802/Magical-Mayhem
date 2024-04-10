@@ -11,6 +11,12 @@ public class UnitMover : NetworkBehaviour
 {
     [Header("Movement Statistics")]
 
+    [SerializeField, Range(0, 20f), Tooltip("How quickly the body rotates")]
+    private float rotationSpeed = 1f;
+
+    [SerializeField, Range(0, 20f), Tooltip("How quickly the animation changes")]
+    private float animationLerpSpeed = 4f;
+
     [SerializeField, Range(0, 2f), Tooltip("A higher value will make the unit get up to maxSpeed quicker.")]
     private float acceleration = 1f;
 
@@ -45,7 +51,7 @@ public class UnitMover : NetworkBehaviour
     
 
     /// <summary>
-    /// Sets the velocity of the rigidbody based on the current velocity, position and target position. Can only be called from server.
+    /// Sets the velocity of the rigidbody based on the current velocity, position and target position. Also handles rotation. Can only be called from server.
     /// </summary>
     public void Move(){
         if (controller.isDead) return;
@@ -67,6 +73,23 @@ public class UnitMover : NetworkBehaviour
             }
         }
         transform.position = new Vector3 (transform.position.x,0,transform.position.z);
+
+        if (targetPosition-transform.position != Vector3.zero && canMove) //Handles rotation
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
+
+        if (rb.velocity.magnitude > 0.1f) // if moving do walking animation
+        {
+            float lerpedVal = Mathf.Lerp(controller.animator.GetFloat("MovementValue"),0.5f,Time.deltaTime*animationLerpSpeed);
+            controller.animator.SetFloat("MovementValue",lerpedVal);
+        }
+        else // if not moving do idle animation
+        {
+            float lerpedVal = Mathf.Lerp(controller.animator.GetFloat("MovementValue"), 0f, Time.deltaTime*animationLerpSpeed);
+            controller.animator.SetFloat("MovementValue", lerpedVal);
+        }
         
     }
     private void Update(){

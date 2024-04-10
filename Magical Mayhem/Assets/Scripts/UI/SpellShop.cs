@@ -502,11 +502,8 @@ public class SpellShop : NetworkBehaviour
         SelectBuyable(null);
     }
     private void RemoveBuyableWhenBought(){
-        Debug.Log("i enter the func");
         if (selectedBuyable is Spell)
         {
-            Debug.Log("I am in spell");
-            
             foreach (BuyableIcon item in initatedSpells)
             {
                 if (item.buyable == selectedBuyable)

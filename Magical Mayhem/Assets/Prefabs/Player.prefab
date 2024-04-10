@@ -252,8 +252,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad47e26d2df3f22459fca874ae813701, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSpeed: 11.4
+  animationLerpSpeed: 8
   acceleration: 0.6
-  friction: 2.4
+  frictionFlat: 2
+  frictionMult: 0.1
   maxSpeed: 5.59
   acceptingDistance: 0.201
   slowDownMult: 21.1
