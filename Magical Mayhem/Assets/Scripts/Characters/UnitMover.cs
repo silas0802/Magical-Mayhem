@@ -23,7 +23,7 @@ public class UnitMover : NetworkBehaviour
     [SerializeField, Range(0, 5f), Tooltip("A higher value will slow down the unit quicker.")]
     private float frictionFlat = 2f;
 
-    [SerializeField, Range(0, 0.6f), Tooltip("A higher value will slow down the unit quicker.")]
+    [SerializeField, Range(0, 20f), Tooltip("A higher value will slow down the unit quicker.")]
     private float frictionMult = 0.1f;
 
     [SerializeField, Range(0, 10f), Tooltip("The max speed the unit can go by walking. This can be exceeded through knockbacks.")]
@@ -43,8 +43,10 @@ public class UnitMover : NetworkBehaviour
     public Vector3 targetPosition {get; private set;}
     private Rigidbody rb;
     private UnitController controller;
+    private bool hasReached;
 
-    void Awake(){
+    void Awake()
+    {
         rb = GetComponent<Rigidbody>();
         controller = GetComponent<UnitController>();
     }
@@ -53,43 +55,38 @@ public class UnitMover : NetworkBehaviour
     /// <summary>
     /// Sets the velocity of the rigidbody based on the current velocity, position and target position. Also handles rotation. Can only be called from server.
     /// </summary>
-    public void Move(){
-        if (controller.isDead) return;
-        //Debug.Log((targetPosition-transform.position).normalized*moveSpeed);
-        if ((targetPosition-transform.position).magnitude<acceptingDistance||!canMove){
+    public void Move()
+    {
+        if (controller.isDead) return; //Cant move if dead
+        if ((targetPosition - transform.position).magnitude < acceptingDistance)
+        {
+            hasReached = true;
+        }
+
+        if (hasReached||!canMove) //if we have reached or cant move: apply hard friction 
+        {
             if (rb.velocity.magnitude<maxSpeed +0.1f)
             {
                 rb.velocity*=1-Time.deltaTime*slowDownMult;   
             }
         }
-        else{
+        else{ //if we should move
             Vector3 inputtedVel = (targetPosition-transform.position).normalized*acceleration;
             Vector3 givenVel = rb.velocity+inputtedVel;
-            if (givenVel.magnitude<rb.velocity.magnitude){
+            if (givenVel.magnitude<rb.velocity.magnitude)
+            {
                 rb.velocity = givenVel;
             }
-            else if (rb.velocity.magnitude<maxSpeed){
+            else if (rb.velocity.magnitude<maxSpeed)
+            {
                 rb.velocity = givenVel.magnitude > maxSpeed ? givenVel.normalized*maxSpeed : givenVel;
             }
         }
-        transform.position = new Vector3 (transform.position.x,0,transform.position.z);
+        transform.position = new Vector3 (transform.position.x,0,transform.position.z); //clamp y position to 0
 
-        if (targetPosition-transform.position != Vector3.zero && canMove) //Handles rotation
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-        }
 
-        if (rb.velocity.magnitude > 0.1f) // if moving do walking animation
-        {
-            float lerpedVal = Mathf.Lerp(controller.animator.GetFloat("MovementValue"),0.5f,Time.deltaTime*animationLerpSpeed);
-            controller.animator.SetFloat("MovementValue",lerpedVal);
-        }
-        else // if not moving do idle animation
-        {
-            float lerpedVal = Mathf.Lerp(controller.animator.GetFloat("MovementValue"), 0f, Time.deltaTime*animationLerpSpeed);
-            controller.animator.SetFloat("MovementValue", lerpedVal);
-        }
+        HandleRotation();
+        HandleWalkingAnimation();
         
     }
     private void Update(){
@@ -98,7 +95,7 @@ public class UnitMover : NetworkBehaviour
             controller.unitMover.MoveServerRPC();
         }
         if (IsServer){
-            rb.velocity*=1-frictionMult;
+            rb.velocity*=1-frictionMult*Time.deltaTime;
             rb.velocity-=rb.velocity.normalized*frictionFlat *Time.deltaTime;
         }
     }
@@ -124,7 +121,34 @@ public class UnitMover : NetworkBehaviour
     /// Sets the local target position of the unit to the given Vector3.
     /// </summary>
     /// <param name="targetPosition"></param>
-    public void SetTargetPosition(Vector3 targetPosition){
+    public void SetTargetPosition(Vector3 targetPosition)
+    {
         this.targetPosition = targetPosition;
+        hasReached = false;
+    }
+    private void HandleWalkingAnimation()
+    {
+        if (rb.velocity.magnitude > 0.1f) // if moving do walking animation
+        {
+            float lerpedVal = Mathf.Lerp(controller.animator.GetFloat("MovementValue"), 0.5f, Time.deltaTime * animationLerpSpeed);
+            controller.animator.SetFloat("MovementValue", lerpedVal);
+        }
+        else // if not moving do idle animation
+        {
+            float lerpedVal = Mathf.Lerp(controller.animator.GetFloat("MovementValue"), 0f, Time.deltaTime * animationLerpSpeed);
+            controller.animator.SetFloat("MovementValue", lerpedVal);
+        }
+    }
+    private void HandleRotation()
+    {
+        if (targetPosition - transform.position != Vector3.zero && canMove && !hasReached) //Handles rotation
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
+    }
+    public void ReachTarget()
+    {
+        hasReached = true;
     }
 }

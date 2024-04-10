@@ -65,9 +65,10 @@ public class SpellShop : NetworkBehaviour
 
 
 
-        MakeMap();
+        
         spells = Resources.LoadAll("Spells",typeof(Spell)).Cast<Spell>().Where(s=>!s.dontShowInShop).ToArray();
         items = Resources.LoadAll("Items",typeof(Item)).Cast<Item>().ToArray();
+        MakeMap();
         initatedSpells = new BuyableIcon[spells.Length];
         initiatedItems = new BuyableIcon[items.Length];
 
@@ -432,6 +433,7 @@ public class SpellShop : NetworkBehaviour
 
     private void MakeMap()
     {
+        buyableIDs.Clear();
         foreach (Spell item in spells)
         {
             buyableIDs.Add(item.id, item);
