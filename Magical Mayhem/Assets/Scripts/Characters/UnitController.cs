@@ -388,6 +388,14 @@ public class UnitController : NetworkBehaviour, IDamagable
         this.isDead = isDead;
         GetComponent<Collider>().enabled = !isDead; //Disables Collider on server
         SetDeadClientRPC(isDead); //Disables Collider on clients
+        if (isDead)
+        {
+            animator.SetTrigger("Death");
+        }
+        else
+        {
+            animator.SetTrigger("Respawn");
+        }
     }
     /// <summary>
     /// Disables Colliders on clients
