@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd56fffb0ab098a4fb88ac2a88fbf079, type: 3}
   m_Name: Fire Barrage
   m_EditorClassIdentifier: 
-  ID: 101
+  ID: 1
   Description: 
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: dc87a9085412b3c4ea850ae99f7d966d, type: 3}
   Price: 0
   UseType: 0
   ElementType: 2
-  IsComponentSpell: 0
+  DontShowInShop: 0
   Cooldown: 1
   CastTime: 0.32
   CanMoveWhileCasting: 0
