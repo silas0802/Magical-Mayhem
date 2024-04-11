@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a3bd6397c3de064395b17e85f2ef52d, type: 3}
   m_Name: Blink
   m_EditorClassIdentifier: 
-  ID: 0
+  ID: 1
   Description: Teleports player
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: ed7a41c45ab12dc42805e3d0dec70f4e, type: 3}
   Price: 0
   UseType: 3
   ElementType: 1
@@ -22,6 +22,7 @@ MonoBehaviour:
   Cooldown: 3
   CastTime: 0.5
   CanMoveWhileCasting: 0
-  Range: 10
-  TeleportVFX: {fileID: 5130359589386107100, guid: 79c41887ccf2efa419c09be158ce12e8,
+  Range: 17.3
+  VFXLifetime: 1
+  TeleportVFX: {fileID: 5166545902571734560, guid: 79c41887ccf2efa419c09be158ce12e8,
     type: 3}

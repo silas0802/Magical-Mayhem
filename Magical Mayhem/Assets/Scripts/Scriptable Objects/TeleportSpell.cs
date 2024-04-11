@@ -8,23 +8,24 @@ using UnityEngine;
 public class TeleportSpell : Spell
 {
     [SerializeField,Range(0,30)] private float Range = 10f;
-    [SerializeField] private NetworkObject TeleportVFX;
+    [SerializeField,Range(0,5)] private float VFXLifetime = 1;
+    [SerializeField] private TeleportInstance TeleportVFX;
 
+    public float vfxLifetime => VFXLifetime;
     public float range => this.Range;
-    public NetworkObject teleportVFX => this.TeleportVFX;
+    public TeleportInstance teleportVFX => this.TeleportVFX;
     public override void Activate(UnitController owner, Vector3 target)
     {
-        NetworkObject n1 = Instantiate(teleportVFX, owner.transform.position, Quaternion.identity);
-        NetworkObject n2 = Instantiate(teleportVFX, target, Quaternion.identity);
-        n1.Spawn();
-        n2.Spawn();
+        TeleportInstance n1 = Instantiate(teleportVFX, owner.transform.position, Quaternion.identity);
+        n1.InitializeSpell(this);
         Vector3 distanceVec = target - owner.transform.position;
         if (distanceVec.magnitude > range){
-            owner.transform.position = owner.transform.position + distanceVec.normalized*range;
+            owner.transform.position += distanceVec.normalized*range;
         }
         else{
-            owner.transform.position = owner.transform.position + distanceVec;
+            owner.transform.position = target;
         }
-        owner.transform.position = target;
+        TeleportInstance n2 = Instantiate(teleportVFX, owner.transform.position, Quaternion.identity);
+        n2.InitializeSpell(this);
     }
 }
