@@ -307,6 +307,7 @@ public class UnitController : NetworkBehaviour, IDamagable
 
                 }
                 SpellShop.instance.SellOwnedBuyable();
+                
             }
                
         }

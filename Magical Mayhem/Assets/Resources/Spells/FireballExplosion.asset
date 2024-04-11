@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43c8973c8190a6f40878c0041c0e0b67, type: 3}
   m_Name: FireballExplosion
   m_EditorClassIdentifier: 
-  ID: 3
+  ID: 5
   Description: 
   Icon: {fileID: 0}
   Price: 0

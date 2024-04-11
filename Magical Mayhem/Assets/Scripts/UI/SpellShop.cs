@@ -65,9 +65,10 @@ public class SpellShop : NetworkBehaviour
 
 
 
-        MakeMap();
+        
         spells = Resources.LoadAll("Spells",typeof(Spell)).Cast<Spell>().Where(s=>!s.dontShowInShop).ToArray();
         items = Resources.LoadAll("Items",typeof(Item)).Cast<Item>().ToArray();
+        MakeMap();
         initatedSpells = new BuyableIcon[spells.Length];
         initiatedItems = new BuyableIcon[items.Length];
 
@@ -434,10 +435,12 @@ public class SpellShop : NetworkBehaviour
     {
         foreach (Spell item in spells)
         {
+            
             buyableIDs.Add(item.id, item);
         }
         foreach (Item item in items)
         {
+            
             buyableIDs.Add(item.id, item);
         }
     }
@@ -502,17 +505,17 @@ public class SpellShop : NetworkBehaviour
         SelectBuyable(null);
     }
     private void RemoveBuyableWhenBought(){
-        Debug.Log("i enter the func");
+    
         if (selectedBuyable is Spell)
         {
-            Debug.Log("I am in spell");
+        
             
             foreach (BuyableIcon item in initatedSpells)
             {
                 if (item.buyable == selectedBuyable)
                 {
-                    // Debug.Log("I find the item to destroy");
-                    // Destroy(item);
+                    
+                    
                     item.gameObject.SetActive(false);
                 }                
             }
