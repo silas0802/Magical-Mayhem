@@ -9,24 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43c8973c8190a6f40878c0041c0e0b67, type: 3}
-  m_Name: FireballExplosion
+  m_Script: {fileID: 11500000, guid: 7a3bd6397c3de064395b17e85f2ef52d, type: 3}
+  m_Name: Blink
   m_EditorClassIdentifier: 
-  ID: 3
-  Description: 
+  ID: 0
+  Description: Teleports player
   Icon: {fileID: 0}
   Price: 0
-  UseType: 0
-  ElementType: 2
-  DontShowInShop: 1
+  UseType: 3
+  ElementType: 1
+  DontShowInShop: 0
   Cooldown: 3
   CastTime: 0.5
   CanMoveWhileCasting: 0
-  Damage: 20
-  Knockback: 11
-  Delay: 0
-  LifeTime: 1
-  Radius: 1.17
-  ExplodeAtTarget: 1
-  Explosion: {fileID: 7396775352713488354, guid: ca4708ed366de8f4a99f94eac270bd09,
+  Range: 10
+  TeleportVFX: {fileID: 5130359589386107100, guid: 79c41887ccf2efa419c09be158ce12e8,
     type: 3}
