@@ -18,12 +18,12 @@ MonoBehaviour:
   Price: 0
   UseType: 0
   ElementType: 2
-  DontShowInShop: 0
+  DontShowInShop: 1
   Cooldown: 3
   CastTime: 0.5
   CanMoveWhileCasting: 0
   Damage: 20
-  Knockback: 18
+  Knockback: 11
   Delay: 0
   LifeTime: 1
   Radius: 1.17

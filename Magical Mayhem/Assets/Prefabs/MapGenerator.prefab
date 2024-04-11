@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8312196556836320422
 Transform:
@@ -51,7 +51,13 @@ MonoBehaviour:
     type: 3}
   mapWall: {fileID: -8496662158500160436, guid: 27fa92111435e504e8074e185930db85,
     type: 3}
+  healtCube: {fileID: -1509585741229490810, guid: a91ca8fa79cf36442a2ed321e2ee18b5,
+    type: 3}
+  speedCube: {fileID: -8821014625860884349, guid: b1040f3d13fd04442bc994ab91e804f8,
+    type: 3}
   lavaSpawnTime: 1
   nextLavaSpawn: 0
-  wallCutOff: 0.75
+  wallCutOff: 0.7
   landCutOff: 0.55
+  upperBufs: 0.6
+  lowerBufs: 0.56

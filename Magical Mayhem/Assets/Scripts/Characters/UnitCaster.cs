@@ -64,6 +64,13 @@ public class UnitCaster : NetworkBehaviour
         if (!spell || cooldowns[index]>0) return;
 
         SetCooldown(index, controller.inventory.spells[index].cooldown);
+        controller.unitMover.ReachTarget();
+        transform.LookAt(target);
+        if (spell.castTime <= 1f)
+        {
+            controller.animator.SetTrigger("Cast");
+            
+        }
         StartCoroutine(CastingSpell(spell, target));
         
 

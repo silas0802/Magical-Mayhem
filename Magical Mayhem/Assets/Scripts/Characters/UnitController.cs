@@ -145,6 +145,190 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     #endregion
 
+    #region Shop related
+    [ClientRpc]
+    public void ConnectUnitToShopClientRPC()
+    {
+        if (IsLocalPlayer)
+        {
+            SpellShop.instance.ConnectPlayer(this);
+            SpellShop.instance.InitalizePlayerInformation();
+        }
+    }
+    public void TryPlaceBuyable(int itemId, int index)
+    {
+        if (IsServer)
+        {
+            PlaceBuyable(itemId, index);
+        }
+        else
+        {
+            PlaceBuyableServerRpc(itemId, index);
+        }
+    }
+    [ServerRpc]
+
+    void PlaceBuyableServerRpc(int itemId, int index)
+    {
+
+        PlaceBuyable(itemId, index);
+    }
+
+    void PlaceBuyable(int itemId, int index)
+    {
+        Buyable buyable = SpellShop.instance.buyableIDs[itemId];
+        inventory.gold = inventory.gold - buyable.price;
+        if (buyable is Item)
+        {
+            Item item = buyable as Item;
+            inventory.items[index] = item;
+
+            health = health + item.health;
+            if (item.itemElement is SpellElementType.Frost)
+            {
+                frostDamageMultiplier += item.elementBoostPercent;
+            }
+            else if (item.itemElement is SpellElementType.Arcane)
+            {
+                arcaneMultiplier += item.elementBoostPercent;
+            }
+            else if (item.itemElement is SpellElementType.Fire)
+            {
+                fireDamageMultiplier += item.elementBoostPercent;
+            }
+        }
+        else
+        {
+            Spell spell = buyable as Spell;
+            inventory.spells[index] = spell;
+        }
+    }
+
+
+
+
+    public void TryGetItem(ulong clientID, int itemID)
+    {
+
+        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
+        if (IsServer)
+        {
+
+            if (inventory.gold >= buyable.price && !inventory.items.Contains(buyable) && !inventory.spells.Contains(buyable))
+            {
+
+                SpellShop.instance.BuyBuyable();
+            }
+        }
+        else
+        {
+            GetItemServerRpc(clientID, itemID);
+        }
+    }
+
+    [ServerRpc]
+    void GetItemServerRpc(ulong clientID, int itemID)
+    {
+
+        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
+        if (inventory.gold > buyable.price && !inventory.items.Contains(buyable) && !inventory.spells.Contains(buyable))
+        {
+            GetItemClientRpc(clientID, itemID);
+        }
+
+    }
+
+    [ClientRpc]
+    void GetItemClientRpc(ulong clientID, int itemid)
+    {
+
+        if (clientID == NetworkManager.Singleton.LocalClientId)
+        {
+            Buyable buyable = SpellShop.instance.buyableIDs[itemid];
+            inventory.gold -= buyable.price;
+            SpellShop.instance.BuyBuyable();
+
+        }
+
+    }
+
+    public void TrySellItem(ulong clientID, int itemID)
+    {
+        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
+        if (IsServer)
+        {
+            if (inventory.spells.Contains(buyable) || inventory.items.Contains(buyable))
+            {
+                inventory.gold += buyable.price / 2;
+                if (buyable is Item)
+                {
+                    Item item = buyable as Item;
+                    health -= item.health;
+                    if (item.itemElement is SpellElementType.Frost)
+                    {
+                        frostDamageMultiplier -= item.elementBoostPercent;
+                    }
+                    else if (item.itemElement is SpellElementType.Arcane)
+                    {
+                        arcaneMultiplier -= item.elementBoostPercent;
+                    }
+                    else if (item.itemElement is SpellElementType.Fire)
+                    {
+                        fireDamageMultiplier -= item.elementBoostPercent;
+                    }
+
+                }
+                SpellShop.instance.SellOwnedBuyable();
+            }
+        }
+        else
+        {
+            SellItemServerRPC(clientID, itemID);
+        }
+    }
+
+    [ServerRpc]
+    void SellItemServerRPC(ulong clientID, int itemID)
+    {
+
+        SellItemClientRPC(clientID, itemID);
+    }
+
+    [ClientRpc]
+    void SellItemClientRPC(ulong clientID, int itemID)
+    {
+        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
+        if (clientID == NetworkManager.Singleton.LocalClientId)
+        {
+            if (inventory.spells.Contains(buyable) || inventory.items.Contains(buyable))
+            {
+                inventory.gold += buyable.price / 2;
+                if (buyable is Item)
+                {
+                    Item item = buyable as Item;
+                    health -= item.health;
+                    if (item.itemElement is SpellElementType.Frost)
+                    {
+                        frostDamageMultiplier -= item.elementBoostPercent;
+                    }
+                    else if (item.itemElement is SpellElementType.Arcane)
+                    {
+                        arcaneMultiplier -= item.elementBoostPercent;
+                    }
+                    else if (item.itemElement is SpellElementType.Fire)
+                    {
+                        fireDamageMultiplier -= item.elementBoostPercent;
+                    }
+
+
+                }
+                SpellShop.instance.SellOwnedBuyable();
+            }
+
+        }
+    }
+    #endregion
+
     /// <summary>
     /// Handles input. Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule
     /// </summary>
@@ -160,158 +344,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         }
         
     }
-
-    public void TryPlaceBuyable(int itemId,int index){
-        if (IsServer)
-        {
-            PlaceBuyable(itemId,index);
-        }else
-        {
-            PlaceBuyableServerRpc(itemId,index);
-        }
-    }
-    [ServerRpc]
-
-    void PlaceBuyableServerRpc(int itemId, int index){
-        
-        PlaceBuyable(itemId, index);
-    }
-
-    void PlaceBuyable(int itemId,int index){
-        Buyable buyable = SpellShop.instance.buyableIDs[itemId];
-        inventory.gold = inventory.gold-buyable.price;
-        if (buyable is Item)
-        {
-            Item item = buyable as Item;
-            inventory.items[index]=item;
-            
-            health = health+item.health;
-            if (item.itemElement is SpellElementType.Frost)
-            {
-                frostDamageMultiplier +=item.elementBoostPercent;      
-            }else if(item.itemElement is SpellElementType.Arcane)
-            {
-                arcaneMultiplier +=item.elementBoostPercent;
-            }else if(item.itemElement is SpellElementType.Fire){
-                fireDamageMultiplier += item.elementBoostPercent;
-            }
-        }else
-        {
-            Spell spell = buyable as Spell;
-            inventory.spells[index]=spell;
-        }
-    }
     
-
-    
-
-    public void TryGetItem(ulong clientID,int itemID){
-        
-        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
-        if (IsServer)
-        {   
-            
-           if (inventory.gold>=buyable.price&&!inventory.items.Contains(buyable)&&!inventory.spells.Contains(buyable))
-            {
-                
-             SpellShop.instance.BuyBuyable(); 
-            }
-        }else
-        {   
-             GetItemServerRpc(clientID,itemID);
-        }
-    }
-
-    [ServerRpc]
-    void GetItemServerRpc(ulong clientID,int itemID){
-        
-        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
-         if (inventory.gold>buyable.price&&!inventory.items.Contains(buyable)&&!inventory.spells.Contains(buyable))
-            {
-               GetItemClientRpc(clientID,itemID);
-            }
-         
-    }
-
-    [ClientRpc]
-    void GetItemClientRpc(ulong clientID, int itemid){
-        
-        if (clientID==NetworkManager.Singleton.LocalClientId)
-        {   
-            Buyable buyable = SpellShop.instance.buyableIDs[itemid];
-            inventory.gold-=buyable.price;
-            SpellShop.instance.BuyBuyable();  
-
-        }
-         
-    }
-
-    public void TrySellItem(ulong clientID,int itemID){
-        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
-        if (IsServer)
-        {
-            if (inventory.spells.Contains(buyable)||inventory.items.Contains(buyable))
-            {   
-                inventory.gold+=buyable.price/2;
-                if (buyable is Item)
-                {
-                    Item item = buyable as Item;
-                    health-=item.health;
-                     if (item.itemElement is SpellElementType.Frost)
-                    {
-                        frostDamageMultiplier -=item.elementBoostPercent;      
-                    }else if(item.itemElement is SpellElementType.Arcane)
-                    {
-                        arcaneMultiplier -=item.elementBoostPercent;
-                    }else if(item.itemElement is SpellElementType.Fire){
-                        fireDamageMultiplier -= item.elementBoostPercent;
-                    }
-
-                }
-                SpellShop.instance.SellOwnedBuyable();
-            }
-        }else
-        {
-            SellItemServerRPC(clientID,itemID);
-        }
-    }
-
-    [ServerRpc]
-    void SellItemServerRPC(ulong clientID,int itemID){
-        
-       SellItemClientRPC(clientID,itemID);
-    }
-
-    [ClientRpc]
-    void SellItemClientRPC(ulong clientID,int itemID){
-        Buyable buyable = SpellShop.instance.buyableIDs[itemID];
-         if (clientID==NetworkManager.Singleton.LocalClientId)
-        {
-             if (inventory.spells.Contains(buyable)||inventory.items.Contains(buyable))
-            {
-                inventory.gold+=buyable.price/2;
-                if (buyable is Item)
-                {
-                    Item item = buyable as Item;
-                    health-=item.health;
-                     if (item.itemElement is SpellElementType.Frost)
-                    {
-                        frostDamageMultiplier -=item.elementBoostPercent;      
-                    }else if(item.itemElement is SpellElementType.Arcane)
-                    {
-                        arcaneMultiplier -=item.elementBoostPercent;
-                    }else if(item.itemElement is SpellElementType.Fire){
-                        fireDamageMultiplier -= item.elementBoostPercent;
-                    }
-                    
-
-                }
-                SpellShop.instance.SellOwnedBuyable();
-                
-            }
-               
-        }
-    }
     /// <summary>
     /// Changes the units health and clamps the value between 0 and maxHealth. Calls Death method if health reaches 0. Server Only. - Silas Thule
     /// </summary>
@@ -355,6 +388,14 @@ public class UnitController : NetworkBehaviour, IDamagable
         this.isDead = isDead;
         GetComponent<Collider>().enabled = !isDead; //Disables Collider on server
         SetDeadClientRPC(isDead); //Disables Collider on clients
+        if (isDead)
+        {
+            animator.SetTrigger("Death");
+        }
+        else
+        {
+            animator.SetTrigger("Respawn");
+        }
     }
     /// <summary>
     /// Disables Colliders on clients
@@ -370,14 +411,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         this.brain = brain;
     }
 
-    [ClientRpc]
-    public void ConnectUnitToShopClientRPC(){
-        if (IsLocalPlayer)
-        {
-            SpellShop.instance.ConnectPlayer(this);
-            SpellShop.instance.InitalizePlayerInformation();    
-        }
-    }
+    
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

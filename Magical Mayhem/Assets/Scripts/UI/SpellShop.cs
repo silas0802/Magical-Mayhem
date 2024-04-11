@@ -433,6 +433,7 @@ public class SpellShop : NetworkBehaviour
 
     private void MakeMap()
     {
+        buyableIDs.Clear();
         foreach (Spell item in spells)
         {
             

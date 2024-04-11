@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using System.Security.Cryptography;
-using System;
 using Unity.Netcode;
 
 public class MapGenerator : MonoBehaviour
@@ -11,25 +9,31 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private NetworkObject borderWall;
     [SerializeField] private NetworkObject lavaTile;
     [SerializeField] private NetworkObject mapWall;
+    [SerializeField] private NetworkObject healtCube;
+    [SerializeField] private NetworkObject speedCube;
     public static MapGenerator instance;
     
     private int mapSize;
     private int mapType;
+    private bool buffs;
     private int lavaTileCounter = 0;
     private readonly float wallHieght = 5f;
     [SerializeField] private float lavaSpawnTime = 10f;
     [SerializeField] private float nextLavaSpawn = 20f;
     private NetworkObject[,] tileArray;
-    [SerializeField] private float wallCutOff = 0.75f;
+    private NetworkObject[,] buffArray;
+    [SerializeField] private float wallCutOff = 0.7f;
     [SerializeField] private float landCutOff = 0.55f;
+    [SerializeField] private float upperBufs = 0.6f;
+    [SerializeField] private float lowerBufs = 0.56f;
     private NetworkObject[,] wallArray;
     
     // Start is called before the first frame update
     void Start()
     {   
         mapSize = LobbySystem.mapSize;
-        Debug.Log(mapSize);
         mapType = LobbySystem.mapType;
+        buffs = LobbySystem.buffs;
     }
 
     void Awake(){
@@ -49,10 +53,12 @@ public class MapGenerator : MonoBehaviour
             3 => 40,
             _ => 30,
         };
-        Debug.Log(mapSize);
+        
         //save the floortiles
         tileArray = new NetworkObject[mapSize,mapSize];
-        float seed = SeedGen();
+        SeedGen generator = new();
+        float seed = generator.Seed();
+
         //dropdown menu
         // 1: barren
         // 2: volcano
@@ -75,6 +81,10 @@ public class MapGenerator : MonoBehaviour
             default: TileSpawner();
                 break;
         };
+        if(buffs){
+            buffArray = new NetworkObject[mapSize, mapSize];
+            SimplexBuff(seed);
+        }
         //SetSpawnPoints();
         SetBorderWalls();
     }
@@ -120,52 +130,40 @@ public class MapGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Lava();
+        // Lava();
     }
 
     private NetworkObject InstObj(string type, float x, float y, float z){
         Vector3 vec = new(x,y,z);
-        NetworkObject obj;
-        switch (type)
+        NetworkObject obj = type switch
         {
-            case "tile": obj = Instantiate(tile, vec, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
-            case "borderWall": obj = Instantiate(borderWall, vec, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
-            case "mapWall": obj = Instantiate(mapWall, vec, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
-            case "lavaTile": obj = Instantiate(lavaTile, vec, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
-            default: obj = Instantiate(tile, vec, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
+            "tile" => Instantiate(tile, vec, Quaternion.identity, transform),
+            "borderWall" => Instantiate(borderWall, vec, Quaternion.identity, transform),
+            "mapWall" => Instantiate(mapWall, vec, Quaternion.identity, transform),
+            "lavaTile" => Instantiate(lavaTile, vec, Quaternion.identity, transform),
+            "healthBuff" => Instantiate(healtCube, vec, Quaternion.identity, transform),
+            "speedBuff" => Instantiate(speedCube, vec, Quaternion.identity, transform),
+            _ => Instantiate(tile, vec, Quaternion.identity, transform),
         };
+
+        obj.Spawn(true);
+        return obj;
     }
     private NetworkObject InstObj(string type, Vector3 coords)
     {
-        NetworkObject obj;
-        switch (type)
+        NetworkObject obj = type switch
         {
-            case "tile": obj = Instantiate(tile, coords, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
-            case "borderWall": obj = Instantiate(borderWall, coords, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
-            case "mapWall": obj = Instantiate(mapWall, coords, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
-            case "lavaTile": obj = Instantiate(lavaTile, coords, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
-            default: obj = Instantiate(tile, coords, Quaternion.identity, transform);
-                obj.Spawn(true);
-                return obj;
+            "tile" => Instantiate(tile, coords, Quaternion.identity, transform),
+            "borderWall" => Instantiate(borderWall, coords, Quaternion.identity, transform),
+            "mapWall" => Instantiate(mapWall, coords, Quaternion.identity, transform),
+            "lavaTile" => Instantiate(lavaTile, coords, Quaternion.identity, transform),
+            "healthBuff" => Instantiate(healtCube, coords, Quaternion.identity, transform),
+            "speedBuff" => Instantiate(speedCube, coords, Quaternion.identity, transform),
+            _ => Instantiate(tile, coords, Quaternion.identity, transform),
         };
+
+        obj.Spawn(true);
+        return obj;
     }
 
     //This function transforms the walls to fit the egde of the gamemap and stops the player from falling off
@@ -197,7 +195,7 @@ public class MapGenerator : MonoBehaviour
     private void BrokenWorldGen(float seed){
          for (int i = 0; i < mapSize; i++){
             for (int j = 0; j < mapSize; j++){
-                float perlin  = Mathf.PerlinNoise(i/1.5f+seed, j/1.5f+seed);
+                float perlin  = Mathf.PerlinNoise(i/2.5f+seed, j/2.5f+seed);
                 if(  landCutOff > perlin){
                     tileArray[i,j] = InstObj("tile",i-mapSize/2, -0.05f, j-mapSize/2);   
                 } 
@@ -226,27 +224,27 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    //generate a seed based on the privious one by hashing it and saving it
-    private float SeedGen(){
-        float oldSeed = PlayerPrefs.HasKey("Seed")? PlayerPrefs.GetFloat("Seed") : RandomFloat();
-        MD5 hash = MD5.Create();
-        float newSeed = BitConverter.ToInt16(hash.ComputeHash(BitConverter.GetBytes(oldSeed)));
-        hash.Dispose();
-        newSeed /= 1000;
-        PlayerPrefs.SetFloat("Seed", newSeed);
-        print("Seed:" + newSeed);
-        //PlayerPrefs.DeleteAll();
-        //newSeed = 180.26f;
-        return newSeed;
+    private void SimplexBuff(float seed){
+        Vector3 coords;
+        for (int i = 0; i < mapSize; i++){
+            for (int j = 0; j < mapSize; j++){
+                float Simplex  = noise.snoise(new float2(i+seed,j+seed));
+                if (tileArray[i, j].GetComponent("TileScript") != null )
+                {
+                    coords = tileArray[i,j].transform.position;
+                    if(Simplex > lowerBufs && Simplex < upperBufs){
+                        buffArray[i,j] = InstObj("healthBuff", coords);
+                    }
+                    else if(Simplex > upperBufs && Simplex < wallCutOff){
+                        buffArray[i,j] = InstObj("speedBuff", coords);
+                    }
+                    //wallArray[i,j].GetComponent<NetworkObject>().Spawn(true);
+                } 
+            }
+        }
     }
 
-    private float RandomFloat(){
-        System.Random random = new System.Random();
-        double dub = random.NextDouble();
-        double dub2 = Math.Pow(2, random.Next(0, 8));
-        return (float)(dub*dub2);
-        
-    }
+
     //Resets the map
     public void ResetMap(){
         Transform[] mapChildren = transform.GetComponentsInChildren<Transform>();
