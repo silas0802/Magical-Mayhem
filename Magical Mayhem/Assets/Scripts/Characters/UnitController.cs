@@ -329,22 +329,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     }
     #endregion
 
-    /// <summary>
-    /// Handles input. Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule
-    /// </summary>
-    /// <param name="index"></param>
-    void CastSpell(int index)
-    {
-        if (!IsLocalPlayer || brain) return;
-        bool validTarget;
-        Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
-        if (validTarget)
-        {
-            unitCaster.TryCastSpell(index, pos);
-        }
-        
-    }
-    
+    #region IDamagable
     /// <summary>
     /// Changes the units health and clamps the value between 0 and maxHealth. Calls Death method if health reaches 0. Server Only. - Silas Thule
     /// </summary>
@@ -378,6 +363,23 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         health = unitClass.maxHealth;
         SetDead(false);
+    }
+    #endregion
+    
+    /// <summary>
+    /// Handles input. Tries to cast a spell with given index at the mousePosition in a server authoritative way. - Silas Thule
+    /// </summary>
+    /// <param name="index"></param>
+    void CastSpell(int index)
+    {
+        if (!IsLocalPlayer || brain) return;
+        bool validTarget;
+        Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
+        if (validTarget)
+        {
+            unitCaster.TryCastSpell(index, pos);
+        }
+        
     }
     /// <summary>
     /// Disables Colliders on clients and server.

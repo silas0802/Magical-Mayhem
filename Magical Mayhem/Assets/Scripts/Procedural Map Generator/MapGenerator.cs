@@ -131,6 +131,7 @@ public class MapGenerator : MonoBehaviour
     void Update()
     {
         // Lava();
+     
     }
 
     private NetworkObject InstObj(string type, float x, float y, float z){
