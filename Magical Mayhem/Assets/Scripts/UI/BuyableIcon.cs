@@ -10,7 +10,7 @@ public class BuyableIcon : MonoBehaviour
 {
     private Image image;
     private Sprite defaultImage;
-    private TMP_Text cost;
+    [SerializeField]private TMP_Text cost;
     
     public Buyable buyable {get; private set;}
     public void Initialize(Buyable buyable, bool owned){
