@@ -106,7 +106,7 @@ public class SpellShop : NetworkBehaviour
                 buyableSpell = Instantiate(spellIconTemplate, buyableSlots[3]);
             }
             
-            buyableSpell.Initialize(spells[i]);
+            buyableSpell.Initialize(spells[i],false);
             buyableSpell.GetComponent<Button>().onClick.AddListener(() => { SelectBuyable(buyableSpell); CancelBuyablePhase(); ActivateSellButton(); });
 
             initatedSpells[i] = buyableSpell;
@@ -126,7 +126,7 @@ public class SpellShop : NetworkBehaviour
                 buyableItem = Instantiate(spellIconTemplate, buyableSlots[6]);
             }
             
-            buyableItem.Initialize(items[i]);
+            buyableItem.Initialize(items[i],false);
             buyableItem.GetComponent<Button>().onClick.AddListener(() => { SelectBuyable(buyableItem); CancelBuyablePhase(); ActivateSellButton(); });
             initiatedItems[i] = buyableItem;
         }
@@ -180,7 +180,7 @@ public class SpellShop : NetworkBehaviour
             {
                 descriptionText.text = null;
                 selectedBuyable = null;
-                selectedSpellicon.Initialize(null);
+                selectedSpellicon.Initialize(null,true);
                 buyButton.GetComponent<Image>().color = new Color(255, 255, 255, 255);
                 selectedSpellicon.GetComponent<Image>().color= new Color(0,0,0,255);
                 
@@ -194,7 +194,7 @@ public class SpellShop : NetworkBehaviour
                     selectedSpellicon.GetComponent<Image>().color= new Color(255,255,255,255);        
                     
                     selectedBuyable = buyableIcon.buyable;
-                    selectedSpellicon.Initialize(buyableIcon.buyable);
+                    selectedSpellicon.Initialize(buyableIcon.buyable,true);
                     descriptionText.text = selectedBuyable.description;
                     if (localUnitController.inventory.gold < selectedBuyable.price)
                     {
@@ -241,11 +241,11 @@ public class SpellShop : NetworkBehaviour
 
         foreach (BuyableIcon item in ownedSpells)
         {
-            item.Initialize(item.buyable);
+            item.Initialize(item.buyable,true);
         }
         foreach (BuyableIcon item in ownedItems)
         {
-            item.Initialize(item.buyable);
+            item.Initialize(item.buyable,true);
         }
 
     }
@@ -338,7 +338,7 @@ public class SpellShop : NetworkBehaviour
     {   
         if (icon is not null)
         {
-             icon.Initialize(selectedBuyable);
+             icon.Initialize(selectedBuyable,true);
 
         }
        
@@ -470,7 +470,7 @@ public class SpellShop : NetworkBehaviour
             {
                 if (item.buyable==selectedBuyable)
                 {
-                    item.Initialize(null);
+                    item.Initialize(null,true);
                     item.SetColor(new Color32(0, 0, 0, 0));
                     break;
                 }
@@ -483,7 +483,7 @@ public class SpellShop : NetworkBehaviour
             {
                 if (item.buyable == selectedBuyable)
                 {
-                    item.Initialize(null);
+                    item.Initialize(null,true);
                     item.SetColor(new Color32(0, 0, 0, 0));
                 }
             }
