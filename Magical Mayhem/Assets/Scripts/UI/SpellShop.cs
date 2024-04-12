@@ -436,10 +436,12 @@ public class SpellShop : NetworkBehaviour
         buyableIDs.Clear();
         foreach (Spell item in spells)
         {
+            
             buyableIDs.Add(item.id, item);
         }
         foreach (Item item in items)
         {
+            
             buyableIDs.Add(item.id, item);
         }
     }
@@ -504,14 +506,17 @@ public class SpellShop : NetworkBehaviour
         SelectBuyable(null);
     }
     private void RemoveBuyableWhenBought(){
+    
         if (selectedBuyable is Spell)
         {
+        
+            
             foreach (BuyableIcon item in initatedSpells)
             {
                 if (item.buyable == selectedBuyable)
                 {
-                    // Debug.Log("I find the item to destroy");
-                    // Destroy(item);
+                    
+                    
                     item.gameObject.SetActive(false);
                 }                
             }
