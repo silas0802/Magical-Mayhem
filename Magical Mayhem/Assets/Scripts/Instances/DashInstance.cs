@@ -10,6 +10,8 @@ public class DashInstance : NetworkBehaviour
      Vector3 target;
      Vector3 origin;
      Vector3 direction;
+
+     float acceptingDistance = 0.3f;
     public void Initialize(DashSpell dashSpell,UnitController owner,Vector3 target){
         this.dashSpell = dashSpell;
         this.owner = owner;
@@ -19,6 +21,7 @@ public class DashInstance : NetworkBehaviour
         direction = (target-origin).normalized*dashSpell.maxMoveSpeed;
         owner.GetComponent<Rigidbody>().velocity = direction;
         GetComponent<NetworkObject>().Spawn();
+        transform.parent = owner.transform;
         
     }
     
@@ -29,7 +32,7 @@ public class DashInstance : NetworkBehaviour
     void Update()
     {   owner.GetComponent<Rigidbody>().velocity = direction;
         
-         if ((origin-owner.transform.position).magnitude>dashSpell.range)
+         if ((origin-owner.transform.position).magnitude>dashSpell.range||(target - owner.transform.position).magnitude<acceptingDistance  )
         {
             owner.GetComponent<Rigidbody>().velocity = Vector3.zero;
             owner.unitMover.canMove=true; 
