@@ -22,7 +22,7 @@ MonoBehaviour:
   Cooldown: 3
   CastTime: 0.5
   CanMoveWhileCasting: 0
-  Range: 17.3
+  Range: 3.5
   VFXLifetime: 1
   TeleportVFX: {fileID: 5166545902571734560, guid: 79c41887ccf2efa419c09be158ce12e8,
     type: 3}
