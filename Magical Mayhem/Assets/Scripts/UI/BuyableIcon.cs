@@ -19,19 +19,17 @@ public class BuyableIcon : MonoBehaviour
         if (buyable==null)
         {
             image.sprite=defaultImage;
-            cost.text="";
+            
             
         }
         else
         {
             image.sprite = buyable.icon;
-            if (owned)
+            if (!owned)
             {
-                cost.text ="";    
+                cost.text = buyable.price.ToString();    
             }
-            else{
-                cost.text = buyable.price.ToString();
-            }
+            
         
         }
     
