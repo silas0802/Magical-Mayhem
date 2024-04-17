@@ -16,9 +16,9 @@ public class LobbySystem : NetworkBehaviour
     [SerializeField] private RectTransform playerInfoSpawnPoint;
     [SerializeField] private Button startLobbyButton;
     [SerializeField] private Button leaveLobbyButton;
-    public static int mapSize = 0;
-    public static int mapType = 0;
-    public static bool buffs = true;
+    private static int mapSize = 0;
+    private static int mapType = 0;
+    private static bool buffs = true;
     private void Awake()
     {
         if (instance == null){
@@ -115,4 +115,31 @@ public class LobbySystem : NetworkBehaviour
         }
         NetworkManager.Singleton.SceneManager.LoadScene("GameScreen", UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
+    //geters and seters
+
+    public static void SetBuffs(){
+        buffs = !buffs;
+    }
+
+    public static bool GetBuffs(){
+        return buffs;
+    }
+
+    public static void SetMapType(int x){
+        mapType = x;
+    }
+
+    public static int GetMapType(){
+        return mapType;
+    }
+
+    public static void SetMapSize(int x){
+        mapSize = x;
+    }
+
+    public static int GetMapSize(){
+        return mapSize;
+    }
 }
+
+

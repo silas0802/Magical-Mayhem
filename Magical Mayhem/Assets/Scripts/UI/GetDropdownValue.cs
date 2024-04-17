@@ -12,10 +12,10 @@ public class GetDropdownValue : MonoBehaviour
     public void GetValue(){
         int Pickedindex = drpdwn.value;
         if(drpdwn.options[0].text == "Map size" ){
-            LobbySystem.mapSize = Pickedindex;
+            LobbySystem.SetMapSize(Pickedindex);
         }
         else{
-            LobbySystem.mapType = Pickedindex;
+            LobbySystem.SetMapType(Pickedindex);
         }
     }
 }
