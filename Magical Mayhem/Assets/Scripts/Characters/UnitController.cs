@@ -56,6 +56,9 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         return arcaneMultiplier;
     }
+    [Header("Debugging")]
+    public int threatLevel = 0;
+    public bool isNearUnit = false;
     #endregion
 
 
@@ -74,7 +77,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     void Update()
     {
         if (!IsServer) return;
-        brain?.HandleActions(this);
+        brain?.HandleFightingLogic(this);
     }
     #endregion
     
@@ -413,7 +416,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         this.brain = brain;
     }
 
-    
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
@@ -422,28 +425,29 @@ public class UnitController : NetworkBehaviour, IDamagable
             Gizmos.DrawLine(transform.position, unit.transform.position);
         }
 
-        
-        if (brain && brain.threatLevel >= 0f && brain.threatLevel < 0.25f) 
+
+        if (brain && threatLevel >= 0f && threatLevel < 0.25f)
         {
             Handles.color = Color.green;
             Handles.DrawWireDisc(transform.position, Vector3.up, 0.5f);
-        } 
-        else if (brain && brain.threatLevel >= 0.25f && brain.threatLevel < 0.5f) 
+        }
+        else if (brain && threatLevel >= 0.25f && threatLevel < 0.5f)
         {
             Handles.color = Color.yellow;
             Handles.DrawWireDisc(transform.position, Vector3.up, 0.5f);
         }
-        else 
+        else
         {
             Handles.color = Color.red;
             Handles.DrawWireDisc(transform.position, Vector3.up, 0.5f);
         }
 
-        if (brain && brain.isNearUnit) {
+        if (brain && isNearUnit)
+        {
             Handles.color = Color.red;
             Handles.DrawWireDisc(transform.position, Vector3.up, 3f);
-        } 
-        else 
+        }
+        else
         {
             Handles.color = Color.green;
             Handles.DrawWireDisc(transform.position, Vector3.up, 3f);
