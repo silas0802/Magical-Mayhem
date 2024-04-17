@@ -257,7 +257,7 @@ public class MapGenerator : NetworkBehaviour
     public void ResetMap(){
         Transform[] mapChildren = transform.GetComponentsInChildren<Transform>();
         for(int i = 1; i < mapChildren.Length; i++){
-            Destroy(mapChildren[i].gameObject);
+            DestObj(mapChildren[i].GetComponent<NetworkObject>());
         }
     }
 
