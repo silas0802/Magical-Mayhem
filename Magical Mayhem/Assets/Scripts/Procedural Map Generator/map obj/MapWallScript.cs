@@ -45,6 +45,7 @@ public class MapWallScript : NetworkBehaviour, IDamagable
     public void Death(UnitController killer)
     {
         GetComponent<NetworkObject>().Despawn();
+        Destroy(GetComponent<GameObject>());
     }
     
 }

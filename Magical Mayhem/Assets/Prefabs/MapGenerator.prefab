@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8312196556836320422}
+  - component: {fileID: 4158914309652504628}
   - component: {fileID: 4833888014805066576}
   m_Layer: 0
   m_Name: MapGenerator
@@ -32,6 +33,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4158914309652504628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4755806075565373906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &4833888014805066576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,9 +76,9 @@ MonoBehaviour:
     type: 3}
   speedCube: {fileID: -8821014625860884349, guid: b1040f3d13fd04442bc994ab91e804f8,
     type: 3}
-  lavaSpawnTime: 1
-  nextLavaSpawn: 0
+  lavaSpawnTime: 10
+  nextLavaSpawn: 20
   wallCutOff: 0.7
   landCutOff: 0.55
-  upperBufs: 0.6
-  lowerBufs: 0.56
+  upperBufs: 0.69
+  lowerBufs: 0.68
