@@ -9,24 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43c8973c8190a6f40878c0041c0e0b67, type: 3}
-  m_Name: FireballExplosion
+  m_Script: {fileID: 11500000, guid: 8d2b5f098f93422489390f3d55b6472d, type: 3}
+  m_Name: EFFECT BlackHole
   m_EditorClassIdentifier: 
-  ID: 5
-  Description: fireball explosion
-  Icon: {fileID: 0}
+  ID: 678
+  Description: effect black hole
+  Icon: {fileID: 21300000, guid: 5397f9e458471454bbf3e860eb5d3e51, type: 3}
   Price: 0
   UseType: 0
-  ElementType: 2
+  ElementType: 0
   DontShowInShop: 1
   Cooldown: 3
   CastTime: 0.5
   CanMoveWhileCasting: 0
-  Damage: 20
-  Knockback: 11
-  Delay: 0
-  LifeTime: 1
-  Radius: 1.17
-  ExplodeAtTarget: 1
-  Explosion: {fileID: 7396775352713488354, guid: ca4708ed366de8f4a99f94eac270bd09,
+  AreaSize: 9
+  Duration: 5
+  Suction: 5
+  Range: 10
+  BlackHoleInstance: {fileID: 6615849325887903361, guid: 97f798f5b8629f04daa79754b49a3b52,
     type: 3}
