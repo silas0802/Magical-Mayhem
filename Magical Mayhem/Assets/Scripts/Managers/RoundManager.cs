@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
+
 /// <summary>
 /// A Singleton class that controls the game flow. - Silas Thule
 /// </summary>
@@ -18,6 +16,7 @@ public class RoundManager : NetworkBehaviour
 
     public bool roundIsOngoing { get; private set; }
     [SerializeField] private List<UnitController> units = new List<UnitController>();
+    [SerializeField] private List<UnitController> aliveUnits = new List<UnitController>();
     [SerializeField] private List<KillData> kills = new List<KillData>();
     [Header("References")]
     [SerializeField] private NetworkObject playerPrefab;
@@ -128,10 +127,12 @@ public class RoundManager : NetworkBehaviour
 
         if (!IsServer) return;
         MapGenerator.instance.ResetMap();
-        kills.Clear();
+        aliveUnits.Clear();
+        ResetKills();
         roundNumber++;
         foreach (UnitController unit in units)
         {
+            aliveUnits.Add(unit);
             unit.ResetHealth();
         }
         MapGenerator.instance.GenerateMap();
@@ -200,10 +201,12 @@ public class RoundManager : NetworkBehaviour
     public void OnUnitDeath(KillData kill)
     {
         if (!IsServer) return;
+        aliveUnits.Remove(kill.deadUnit);
         kills.Add(kill);
 
         if (units.Count-kills.Count<=1) // If there is only one unit left
         {
+            GiveOutGold();
             StartCoroutine(BeforeShopPhase());
         }
 
@@ -238,4 +241,21 @@ public class RoundManager : NetworkBehaviour
         AddBot(botBrain);
     }
 
+    private void GiveOutGold(){
+        int goldAmount = 20;
+        
+        foreach (KillData kill in kills)
+        {
+            kill.deadUnit.inventory.gold+=goldAmount;
+            goldAmount+=5;
+        }
+
+        foreach (UnitController unit in aliveUnits) 
+        {
+            unit.inventory.gold += goldAmount;
+        }
+    }
+    private void ResetKills(){
+        kills.Clear();
+    }
 }

@@ -212,7 +212,7 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     spells:
-    - {fileID: 0}
+    - {fileID: 11400000, guid: c5d2430883271c840a808ec7e5516c76, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
@@ -221,6 +221,8 @@ MonoBehaviour:
   unitCaster: {fileID: 0}
   animator: {fileID: 0}
   unitMover: {fileID: 0}
+  threatLevel: 0
+  isNearUnit: 0
 --- !u!114 &1761311485135442400
 MonoBehaviour:
   m_ObjectHideFlags: 0
