@@ -8,6 +8,7 @@ using UnityEngine.XR;
 public class BlackHoleInstance : MonoBehaviour
 {
     private float timeLeft;
+    public float accteptingDistance=0.3f;
     BlackHoleSpell blackHoleSpell;
     // Start is called before the first frame update
     public void Initialize(BlackHoleSpell blackHoleSpell,UnitController owner){
@@ -32,20 +33,22 @@ public class BlackHoleInstance : MonoBehaviour
         }
     }
 
-    #if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {   
-        Handles.color = Color.red;
-        Handles.DrawWireDisc(transform.position, Vector3.up, blackHoleSpell.areaSize);
-       
-    }
-    #endif
+  
 
     public void SuckingCommenced(){
 
         Collider[] hits = Physics.OverlapSphere(transform.position, blackHoleSpell.areaSize);
         foreach (Collider victim in hits)
-        {
+        {   
+            if (victim.GetComponent<UnitController>()!=null)
+            {
+                
+            
+            if ((transform.position-victim.transform.position).magnitude>accteptingDistance)
+            {
+                victim.GetComponent<Rigidbody>().velocity+=(transform.position-victim.transform.position).normalized*blackHoleSpell.suction*Time.deltaTime;
+            }
+            }
             
         }
     }

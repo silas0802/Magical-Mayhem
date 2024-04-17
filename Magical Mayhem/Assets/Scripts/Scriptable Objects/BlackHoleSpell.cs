@@ -9,13 +9,13 @@ public class BlackHoleSpell : Spell
     
 
     // Start is called before the first frame update
-    [SerializeField,Range(1,10),Tooltip("The size of the black hole")] 
-    private float AreaSize = 10;
+    [SerializeField,Range(1,5),Tooltip("The size of the black hole")] 
+    private float AreaSize = 4;
 
     [SerializeField,Range(1,10),Tooltip("the duration the spell will stay")] 
     private float Duration = 10;
 
-    [SerializeField,Range(1,5),Tooltip("How fast player caught in it will be sucked into the middle")] 
+    [SerializeField,Range(1,50),Tooltip("How fast player caught in it will be sucked into the middle")] 
     private float Suction = 10;
 
     [SerializeField,Range(1,10),Tooltip("how far away from target the player can cast the spell")] 
