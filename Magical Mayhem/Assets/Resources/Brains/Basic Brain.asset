@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac02e01119671724195fe637d6c3d6d2, type: 3}
   m_Name: Basic Brain
   m_EditorClassIdentifier: 
-  buyingLogic: {fileID: 0}
-  fightingLogic: {fileID: 0}
+  buyingLogic: {fileID: 11400000, guid: 1b459d0a28db17046aeeb992da061c35, type: 2}
+  fightingLogic: {fileID: 11400000, guid: d69f75255fc01fe4084998b8bea30635, type: 2}
