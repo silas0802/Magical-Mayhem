@@ -24,7 +24,7 @@ MonoBehaviour:
   CanMoveWhileCasting: 0
   AreaSize: 5
   Duration: 7.03
-  Suction: 12
+  Suction: 10
   Range: 10
   BlackHoleInstance: {fileID: 6615849325887903361, guid: 97f798f5b8629f04daa79754b49a3b52,
     type: 3}
