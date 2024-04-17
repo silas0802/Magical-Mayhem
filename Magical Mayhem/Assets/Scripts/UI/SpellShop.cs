@@ -195,7 +195,7 @@ public class SpellShop : NetworkBehaviour
                     
                     selectedBuyable = buyableIcon.buyable;
                     selectedSpellicon.Initialize(buyableIcon.buyable,true);
-                    descriptionText.text = selectedBuyable.description;
+                    descriptionText.text = selectedBuyable.name+"\n"+selectedBuyable.description;
                     if (localUnitController.inventory.gold < selectedBuyable.price)
                     {
                         buyButton.GetComponent<Image>().color = new Color32(255, 255, 255, 100);
