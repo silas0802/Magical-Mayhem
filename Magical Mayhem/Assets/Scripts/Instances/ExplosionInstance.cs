@@ -44,7 +44,7 @@ public class ExplosionInstance : NetworkBehaviour
             hit.GetComponent<IDamagable>()?.ModifyHealth(owner,-spell.damage);
             Vector3 dir = hit.transform.position-transform.position;
             dir = new Vector3(dir.x,0,dir.z);
-            hit.GetComponent<UnitController>()?.GetComponent<Rigidbody>().AddForce(dir.normalized*spell.knockback,ForceMode.Impulse);
+            hit.GetComponent<UnitController>()?.unitMover.ApplyKnockBack(dir.normalized * spell.knockback);
         }
 
     }

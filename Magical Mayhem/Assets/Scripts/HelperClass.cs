@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,5 +25,11 @@ public class HelperClass
         
         return target;
     }
+
     
+}
+public class NotServerException : Exception 
+{
+    public NotServerException() { }
+    public NotServerException(string message) : base(message) { }
 }

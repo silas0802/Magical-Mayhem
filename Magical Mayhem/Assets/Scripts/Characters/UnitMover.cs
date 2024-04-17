@@ -17,14 +17,17 @@ public class UnitMover : NetworkBehaviour
     [SerializeField, Range(0, 20f), Tooltip("How quickly the animation changes")]
     private float animationLerpSpeed = 4f;
 
-    [SerializeField, Range(0, 2f), Tooltip("A higher value will make the unit get up to maxSpeed quicker.")]
+    [SerializeField, Range(0, 10f), Tooltip("A higher value will make the unit get up to maxSpeed quicker.")]
     private float acceleration = 1f;
 
-    [SerializeField, Range(0, 5f), Tooltip("A higher value will slow down the unit quicker.")]
-    private float frictionFlat = 2f;
+    [SerializeField, Range(0, 10f), Tooltip("A higher value will make the unit slow down quicker when reaching it's target.")]
+    private float decceleration = 1f;
 
-    [SerializeField, Range(0, 20f), Tooltip("A higher value will slow down the unit quicker.")]
-    private float frictionMult = 0.1f;
+    //[SerializeField, Range(0, 5f), Tooltip("A higher value will slow down the unit quicker.")]
+    //private float frictionFlat = 2f;
+
+    //[SerializeField, Range(0, 20f), Tooltip("A higher value will slow down the unit quicker.")]
+    //private float frictionMult = 0.1f;
 
     [SerializeField, Range(0, 10f), Tooltip("The max speed the unit can go by walking. This can be exceeded through knockbacks.")]
     private float maxSpeed = 5f;
@@ -32,18 +35,19 @@ public class UnitMover : NetworkBehaviour
     [SerializeField, Range(0, 1f), Tooltip("The distance from target position that the unit accepts as close enough")]
     private float acceptingDistance = 0.1f;
     [SerializeField, Range(0, 30f), Tooltip("A higher value makes the unit stop quicker when within acceptingDistance")]
-    private float slowDownMult = 10f;
+    private float knockBackDecceleration = 2f;
 
-    [SerializeField]public bool canMove = true;
+    [SerializeField] public bool canMove = true;
+    [SerializeField] private bool hasReached = true;
+    [SerializeField] private bool isKnockedBack = false;
 
 
-    
 
 
     public Vector3 targetPosition {get; private set;}
     private Rigidbody rb;
     private UnitController controller;
-    private bool hasReached;
+    
 
     void Awake()
     {
@@ -57,55 +61,68 @@ public class UnitMover : NetworkBehaviour
     /// </summary>
     public void Move()
     {
-        if (controller.isDead) return; //Cant move if dead
-        if ((targetPosition - transform.position).magnitude < acceptingDistance)
+        if (!IsServer) { throw new NotServerException("Can't Apply Knockback if not Server"); }
+        if (controller.isDead) { rb.velocity = Vector3.zero; return; } //Cant move if dead
+        Vector3 direction = targetPosition - transform.position;
+        float distance = direction.magnitude;
+        direction = direction.normalized;
+        float currentVel = rb.velocity.magnitude;
+        if (distance < acceptingDistance)
         {
-            hasReached = true;
+            ReachTarget();
         }
-
-        if (hasReached||!canMove) //if we have reached or cant move: apply hard friction 
+        if (!isKnockedBack)
         {
-            if (rb.velocity.magnitude<maxSpeed +0.1f)
+            //Normal Movement
+            if (!hasReached)    
             {
-                rb.velocity*=1-Time.deltaTime*slowDownMult;   
+                //walking
+                rb.velocity = Vector3.Lerp(rb.velocity, direction * maxSpeed, acceleration / 60);
+            }
+            else
+            {
+                //slowing down
+                rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, decceleration / 60);
             }
         }
-        else{ //if we should move
-            Vector3 inputtedVel = (targetPosition-transform.position).normalized*acceleration;
-            Vector3 givenVel = rb.velocity+inputtedVel;
-            if (givenVel.magnitude<rb.velocity.magnitude)
+        else
+        {
+            //Knockback Movement
+            if (currentVel < 1f)
             {
-                rb.velocity = givenVel;
+                isKnockedBack = false;
             }
-            else if (rb.velocity.magnitude<maxSpeed)
-            {
-                rb.velocity = givenVel.magnitude > maxSpeed ? givenVel.normalized*maxSpeed : givenVel;
-            }
+            rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, knockBackDecceleration / 60);
+            
         }
-        transform.position = new Vector3 (transform.position.x,0,transform.position.z); //clamp y position to 0
+        
 
 
+
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z); //clamp y position to 0
         HandleRotation();
         HandleWalkingAnimation();
         
     }
-    private void Update(){
-        if (controller.IsClient && controller.IsLocalPlayer)   //Ask server to move your unit if you are client
-        {
-            controller.unitMover.MoveServerRPC();
-        }
+    private void FixedUpdate(){
+        //if (controller.IsClient && controller.IsLocalPlayer)   //Ask server to move your unit if you are client
+        //{
+        //    controller.unitMover.MoveServerRPC();
+        //}
         if (IsServer){
-            rb.velocity*=1-frictionMult*Time.deltaTime;
-            rb.velocity-=rb.velocity.normalized*frictionFlat *Time.deltaTime;
+            Move();
         }
+        
     }
     /// <summary>
-    /// Requests server to move this character for client.
+    /// Applies Knockback to unit. Must only be called from server
     /// </summary>
-    [ServerRpc]
-    public void MoveServerRPC()
+    public void ApplyKnockBack(Vector3 forceVector)
     {
-        Move();
+        if (!IsServer) { throw new NotServerException("Can't Apply Knockback if not Server"); }
+        rb.velocity += forceVector;
+        //rb.AddForce(ForceVector,ForceMode.Impulse);
+        isKnockedBack = true;
     }
 
     /// <summary>
@@ -123,6 +140,7 @@ public class UnitMover : NetworkBehaviour
     /// <param name="targetPosition"></param>
     public void SetTargetPosition(Vector3 targetPosition)
     {
+        if (!IsServer) { throw new NotServerException("Can't Apply Knockback if not Server"); }
         this.targetPosition = targetPosition;
         hasReached = false;
     }
