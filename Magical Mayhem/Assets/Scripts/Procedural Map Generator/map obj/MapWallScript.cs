@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MapWallScript : NetworkBehaviour, IDamagable
 {
-    private int health = 100;
+    [SerializeField]private int health = 20;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +45,7 @@ public class MapWallScript : NetworkBehaviour, IDamagable
     public void Death(UnitController killer)
     {
         GetComponent<NetworkObject>().Despawn();
-        Destroy(GetComponent<GameObject>());
+        Destroy(this);
     }
     
 }
