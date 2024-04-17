@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Unity.Netcode;
 
-public class MapGenerator : MonoBehaviour
+public class MapGenerator : NetworkBehaviour
 {
     [SerializeField] private NetworkObject tile;
     [SerializeField] private NetworkObject borderWall;
@@ -24,8 +24,8 @@ public class MapGenerator : MonoBehaviour
     private NetworkObject[,] buffArray;
     [SerializeField] private float wallCutOff = 0.7f;
     [SerializeField] private float landCutOff = 0.55f;
-    [SerializeField] private float upperBufs = 0.6f;
-    [SerializeField] private float lowerBufs = 0.56f;
+    [SerializeField] private float upperBufs = 0.69f;
+    [SerializeField] private float lowerBufs = 0.68f;
     private NetworkObject[,] wallArray;
     
     // Start is called before the first frame update
@@ -118,11 +118,13 @@ public class MapGenerator : MonoBehaviour
     //if the floor is lava change it to floortile and if there is a wall delete it
     private void PlaceSpawnTile(int x, int y){
         if(tileArray[x,y].GetComponent<LavaTileScript>()){
-            tileArray[x,y].Despawn();
+            DestObj(tileArray[x,y]);
             tileArray[x,y] = InstObj("tile",x, -0.05f, y);
         }
+
         if(wallArray[x,y]){
-            wallArray[x,y].Despawn();
+            DestObj(wallArray[x,y]);
+
         }
     }
     
@@ -132,6 +134,11 @@ public class MapGenerator : MonoBehaviour
     {
         // Lava();
      
+    }
+
+    private void DestObj(NetworkObject obj){
+        obj.Despawn();
+        Destroy(obj.GetComponent<GameObject>());
     }
 
     private NetworkObject InstObj(string type, float x, float y, float z){
@@ -250,7 +257,7 @@ public class MapGenerator : MonoBehaviour
     public void ResetMap(){
         Transform[] mapChildren = transform.GetComponentsInChildren<Transform>();
         for(int i = 1; i < mapChildren.Length; i++){
-            DestroyImmediate(mapChildren[i].gameObject);
+            DestObj(mapChildren[i].GetComponent<NetworkObject>());
         }
     }
 
@@ -264,26 +271,26 @@ public class MapGenerator : MonoBehaviour
                 //bottom row
                 if(tileArray[i, lavaTileCounter]){
                     coords = tileArray[i, lavaTileCounter].transform.position;
-                    tileArray[i, lavaTileCounter].Despawn();
+                    DestObj(tileArray[i, lavaTileCounter]);
                     tileArray[i,lavaTileCounter] = InstObj("lavaTile", coords);
                     
                 }
                 //left col
                 if(tileArray[lavaTileCounter,i]){
                     coords = tileArray[lavaTileCounter, i].transform.position;
-                    tileArray[lavaTileCounter, i].Despawn();
+                    DestObj(tileArray[lavaTileCounter, i]);
                     tileArray[lavaTileCounter,i] = InstObj("lavaTile", coords);
                 }
                 //right col
                 if(tileArray[mapSize-1-lavaTileCounter,i]){
                     coords = tileArray[mapSize-1-lavaTileCounter,i].transform.position;
-                    tileArray[mapSize-1-lavaTileCounter,i].Despawn();
+                    DestObj(tileArray[mapSize-1-lavaTileCounter,i]);
                     tileArray[mapSize-1-lavaTileCounter,i] = InstObj("lavaTile", coords);
                 }
                 //top row
                 if(tileArray[i,mapSize-1-lavaTileCounter]){
                     coords = tileArray[i,mapSize-1-lavaTileCounter].transform.position;
-                    tileArray[i,mapSize-1-lavaTileCounter].Despawn();
+                    DestObj(tileArray[i,mapSize-1-lavaTileCounter]);
                     tileArray[i,mapSize-1-lavaTileCounter] = InstObj("lavaTile", coords);
                 }
             }

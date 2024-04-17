@@ -29,7 +29,7 @@ public class MultiCastSpell : Spell
             Vector3 dir = target - owner.transform.position;
             float rotation = Random.Range(-spray, spray);
             dir = Quaternion.AngleAxis(rotation, Vector3.up) * dir;
-            spellToCast.Activate(owner, dir);
+            spellToCast.Activate(owner, dir + owner.transform.position);
             yield return new WaitForSeconds(timeInterval);
         }
     }
