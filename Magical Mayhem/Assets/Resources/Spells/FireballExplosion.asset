@@ -23,10 +23,10 @@ MonoBehaviour:
   CastTime: 0.5
   CanMoveWhileCasting: 0
   Damage: 20
-  Knockback: 11
+  Knockback: 12
   Delay: 0
   LifeTime: 1
-  Radius: 1.17
+  Radius: 1.92
   ExplodeAtTarget: 1
   Explosion: {fileID: 7396775352713488354, guid: ca4708ed366de8f4a99f94eac270bd09,
     type: 3}

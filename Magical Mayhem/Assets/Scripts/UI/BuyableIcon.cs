@@ -11,6 +11,7 @@ public class BuyableIcon : MonoBehaviour
     private Image image;
     private Sprite defaultImage;
     [SerializeField]private TMP_Text cost;
+    [SerializeField] private Transform costPanel;
     
     public Buyable buyable {get; private set;}
     public void Initialize(Buyable buyable, bool owned){
@@ -19,18 +20,25 @@ public class BuyableIcon : MonoBehaviour
         if (buyable==null)
         {
             image.sprite=defaultImage;
-            
-            
+            if (cost) cost.text = "";
+            if (costPanel) costPanel.gameObject.SetActive(false);
         }
         else
         {
             image.sprite = buyable.icon;
             if (!owned)
             {
-                cost.text = buyable.price.ToString();    
+                if (cost) cost.text = buyable.price.ToString(); 
+                if (costPanel) costPanel.gameObject.SetActive(true);
+
             }
-            
-        
+            else
+            {
+                if (cost) cost.text = "";
+                if (costPanel) costPanel.gameObject.SetActive(false);
+            }
+
+
         }
     
 
