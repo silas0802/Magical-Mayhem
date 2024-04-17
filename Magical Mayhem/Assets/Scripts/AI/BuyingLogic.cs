@@ -5,5 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="New Buying Logic", menuName = "Game/AI/Buying Logic")]
 public class BuyingLogic : ScriptableObject
 {
-    
+    public void HandleShoppingLogic()
+    {
+        throw new System.NotImplementedException();
+    }
 }

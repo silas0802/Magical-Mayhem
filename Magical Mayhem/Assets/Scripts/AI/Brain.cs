@@ -16,6 +16,10 @@ public class Brain : ScriptableObject
     public void HandleFightingLogic(UnitController controller){
         fightingLogic.HandleFightingLogic(controller);
     }
+    public void HandleShoppingLogic()
+    {
+        buyingLogic.HandleShoppingLogic();
+    }
 
     
 }
