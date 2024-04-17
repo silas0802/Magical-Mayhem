@@ -39,6 +39,7 @@ public class DashInstance : NetworkBehaviour
             Debug.Log(owner.unitMover.canMove); 
             owner.unitMover.ReachTarget();
             Destroy(gameObject);
+            GetComponent<NetworkObject>().Despawn();
         }
         
     }
