@@ -31,9 +31,9 @@ public class MapGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {   
-        mapSize = LobbySystem.mapSize;
-        mapType = LobbySystem.mapType;
-        buffs = LobbySystem.buffs;
+        mapSize = LobbySystem.GetMapSize();
+        mapType = LobbySystem.GetMapType();
+        buffs = LobbySystem.GetBuffs();
     }
 
     void Awake(){

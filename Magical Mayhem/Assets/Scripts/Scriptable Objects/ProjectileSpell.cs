@@ -11,7 +11,7 @@ public class ProjectileSpell : Spell
     [SerializeField] private ProjectileInstance Projectile;
 
     [SerializeField, Tooltip("What effect that happens when the projectile hits")]
-    private ExplosionSpell EndEffect;
+    private Spell EndEffect;
 
     [SerializeField,Range(1,30),Tooltip("How fast the projectile moves")] 
     private float Speed = 10;
@@ -34,7 +34,7 @@ public class ProjectileSpell : Spell
     public float triggerRadius => this.TriggerRadius;
     public float homingForce => this.HomingForce;
     public ProjectileInstance projectile => this.Projectile;
-    public ExplosionSpell endEffect => this.EndEffect;
+    public Spell endEffect => this.EndEffect;
 
     public override void Activate(UnitController owner, Vector3 target)
     {

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32bc9b83314621f41a21c6be28f98c92, type: 3}
+  m_Name: BlackHoleSphere
+  m_EditorClassIdentifier: 
+  ID: 254
+  Description: 
+  Icon: {fileID: 21300000, guid: be27c4905c06a374dbfd6f0e166c58ad, type: 3}
+  Price: 0
+  UseType: 0
+  ElementType: 0
+  DontShowInShop: 0
+  Cooldown: 3
+  CastTime: 0.5
+  CanMoveWhileCasting: 0
+  Projectile: {fileID: 3257114547246139475, guid: f17561f759f361a4e999a2fb2a24ab81,
+    type: 3}
+  EndEffect: {fileID: 11400000, guid: 621c4e1e23983894ea454054bc0b5d4b, type: 2}
+  Speed: 10
+  Range: 10
+  MustFlyMaxDistance: 0
+  TriggerRadius: 0.5
+  HomingForce: 0

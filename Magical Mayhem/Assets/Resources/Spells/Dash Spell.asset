@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 27
   Description: 
-  Icon: {fileID: 21300000, guid: be27c4905c06a374dbfd6f0e166c58ad, type: 3}
+  Icon: {fileID: 21300000, guid: 9d8d503b32e883d47b29caa16bb55b6b, type: 3}
   Price: 0
   UseType: 0
   ElementType: 0
