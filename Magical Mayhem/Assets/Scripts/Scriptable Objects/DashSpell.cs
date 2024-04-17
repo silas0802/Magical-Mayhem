@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Dash Spell", menuName = "Game/Spells/Dash Spell")]
