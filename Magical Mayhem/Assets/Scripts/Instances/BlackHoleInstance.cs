@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class BlackHoleInstance : MonoBehaviour
+public class BlackHoleInstance : NetworkBehaviour
 {
     private float timeLeft;
     public float accteptingDistance=0.5f;
@@ -26,13 +26,16 @@ public class BlackHoleInstance : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        timeLeft-=Time.deltaTime;
-        SuckingCommenced();
-        if (timeLeft<0)
+    {   
+        if (IsServer)
         {
-            Destroy(gameObject);
-            GetComponent<NetworkObject>().Despawn();
+            timeLeft-=Time.deltaTime;
+            SuckingCommenced();
+            if (timeLeft<0)
+            {
+                Destroy(gameObject);
+                GetComponent<NetworkObject>().Despawn();
+            }
         }
     }
 
