@@ -38,4 +38,4 @@ MonoBehaviour:
   Range: 10.6
   MustFlyMaxDistance: 0
   TriggerRadius: 0.5
-  HomingForce: 0
+  HomingForce: 32.9
