@@ -35,7 +35,7 @@ MonoBehaviour:
     type: 3}
   EndEffect: {fileID: 11400000, guid: 7861af9072e7cc048b109828d9681462, type: 2}
   Speed: 10
-  Range: 10
+  Range: 10.6
   MustFlyMaxDistance: 0
   TriggerRadius: 0.5
-  HomingForce: 0
+  HomingForce: 32.9

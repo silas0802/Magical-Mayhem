@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e47b8225318d86042bfed9d2ad92e582, type: 3}
   m_Name: Basic Fighting
   m_EditorClassIdentifier: 
+  Aggresiveness: 70
+  Safety: 20

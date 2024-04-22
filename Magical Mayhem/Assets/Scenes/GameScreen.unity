@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1333,6 +1333,33 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MapGenerator
+      objectReference: {fileID: 0}
+    - target: {fileID: 4755806075565373906, guid: 46feb32702d72964f9ce299bef6b32a8,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833888014805066576, guid: 46feb32702d72964f9ce299bef6b32a8,
+        type: 3}
+      propertyPath: healtCube
+      value: 
+      objectReference: {fileID: -1509585741229490810, guid: a91ca8fa79cf36442a2ed321e2ee18b5,
+        type: 3}
+    - target: {fileID: 4833888014805066576, guid: 46feb32702d72964f9ce299bef6b32a8,
+        type: 3}
+      propertyPath: speedCube
+      value: 
+      objectReference: {fileID: -8821014625860884349, guid: b1040f3d13fd04442bc994ab91e804f8,
+        type: 3}
+    - target: {fileID: 4833888014805066576, guid: 46feb32702d72964f9ce299bef6b32a8,
+        type: 3}
+      propertyPath: lavaSpawnTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833888014805066576, guid: 46feb32702d72964f9ce299bef6b32a8,
+        type: 3}
+      propertyPath: nextLavaSpawn
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8312196556836320422, guid: 46feb32702d72964f9ce299bef6b32a8,
         type: 3}
