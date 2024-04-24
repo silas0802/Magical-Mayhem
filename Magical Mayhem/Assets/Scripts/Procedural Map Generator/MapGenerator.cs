@@ -31,14 +31,15 @@ public class MapGenerator : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {   
-        mapSize = LobbySystem.GetMapSize();
-        mapType = LobbySystem.GetMapType();
-        buffs = LobbySystem.GetBuffs();
+        
     }
 
     void Awake(){
         if(instance == null){
             instance = this;
+            mapSize = LobbySystem.GetMapSize();
+            mapType = LobbySystem.GetMapType();
+            buffs = LobbySystem.GetBuffs();
         }
         else{
             Destroy(gameObject);
@@ -255,9 +256,12 @@ public class MapGenerator : NetworkBehaviour
 
     //Resets the map
     public void ResetMap(){
-        Transform[] mapChildren = transform.GetComponentsInChildren<Transform>();
-        for(int i = 1; i < mapChildren.Length; i++){
-            DestObj(mapChildren[i].GetComponent<NetworkObject>());
+        for (int i = 0; i < mapSize;i++){
+            for(int j = 0; j < mapSize; j++){
+                if((mapType == 3 || mapType == 4) && wallArray[i,j]) DestObj(wallArray[i,j]);
+                if(tileArray[i,j]) DestObj(tileArray[i,j]);
+                if(buffs && buffArray[i,j]) DestObj(buffArray[i,j]);
+            }
         }
     }
 

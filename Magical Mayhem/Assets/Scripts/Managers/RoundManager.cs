@@ -126,7 +126,7 @@ public class RoundManager : NetworkBehaviour
     {
 
         if (!IsServer) return;
-        MapGenerator.instance.ResetMap();
+        if (roundNumber != 0) MapGenerator.instance.ResetMap();
         aliveUnits.Clear();
         ResetKills();
         roundNumber++;
