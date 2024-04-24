@@ -158,6 +158,15 @@ public class UnitController : NetworkBehaviour, IDamagable
             SpellShop.instance.InitalizePlayerInformation();
         }
     }
+
+    [ClientRpc]
+    public void ConnectUnitToHUDClientRPC()
+    {
+        if (IsLocalPlayer)
+        {
+            HUDScript.instance.ConnectPlayer(this);
+        }
+    }
     public void TryPlaceBuyable(int itemId, int index)
     {
         if (IsServer)

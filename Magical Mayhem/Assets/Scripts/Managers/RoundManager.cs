@@ -114,6 +114,7 @@ public class RoundManager : NetworkBehaviour
         foreach (UnitController unit in units)
         {
             unit.ConnectUnitToShopClientRPC();
+            unit.ConnectUnitToHUDClientRPC();
         }
         roundIsOngoing = false;
         OpenPlayerShopsClientRPC();
