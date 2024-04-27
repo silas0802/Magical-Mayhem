@@ -114,6 +114,7 @@ public class RoundManager : NetworkBehaviour
         foreach (UnitController unit in units)
         {
             unit.ConnectUnitToShopClientRPC();
+            unit.ConnectUnitToHUDClientRPC();
         }
         roundIsOngoing = false;
         OpenPlayerShopsClientRPC();
@@ -126,7 +127,7 @@ public class RoundManager : NetworkBehaviour
     {
 
         if (!IsServer) return;
-        MapGenerator.instance.ResetMap();
+        if (roundNumber != 0) MapGenerator.instance.ResetMap();
         aliveUnits.Clear();
         ResetKills();
         roundNumber++;
