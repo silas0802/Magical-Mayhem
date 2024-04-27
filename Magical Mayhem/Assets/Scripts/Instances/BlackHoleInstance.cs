@@ -22,6 +22,7 @@ public class BlackHoleInstance : NetworkBehaviour
 
         Collider[] hits = Physics.OverlapSphere(transform.position, blackHoleSpell.areaSize);
         GetComponent<NetworkObject>().Spawn();
+        
     }
 
     // Update is called once per frame

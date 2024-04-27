@@ -9,22 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 859d46e54ad3cf4469aef6896d22e9fb, type: 3}
-  m_Name: LaserBeam
+  m_Script: {fileID: 11500000, guid: 5f1bd81269b30604e8994ecd6badebb7, type: 3}
+  m_Name: IcePrison
   m_EditorClassIdentifier: 
-  ID: 683
+  ID: 897
   Description: 
-  Icon: {fileID: 21300000, guid: 0e1aa00f28d54784d88aec8236cdd4e4, type: 3}
+  Icon: {fileID: 21300000, guid: 70afac062af677d4980cf352e7305511, type: 3}
   Price: 0
-  UseType: 1
-  ElementType: 1
+  UseType: 0
+  ElementType: 3
   DontShowInShop: 0
   Cooldown: 3
   CastTime: 0.5
   CanMoveWhileCasting: 0
-  Lenght: 14
-  Width: 1.5
-  Duration: 3
-  DamagePerSecond: 1
-  LaserBeamInstance: {fileID: 4033222315178459903, guid: 8349accdc272ba944a780f6983865643,
+  Radius: 4
+  RootDuration: 4
+  Damage: 5
+  ActivationTime: 1.5
+  Range: 4
+  IcePrisonInstance: {fileID: -1984709592618449648, guid: 32a6445f295efeb42b597f94014cc11e,
     type: 3}

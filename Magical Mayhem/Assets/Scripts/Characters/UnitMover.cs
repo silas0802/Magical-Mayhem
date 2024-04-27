@@ -62,7 +62,7 @@ public class UnitMover : NetworkBehaviour
     public void Move()
     {
         if (!IsServer) { throw new NotServerException("Can't Apply Knockback if not Server"); }
-        if (controller.isDead) { rb.velocity = Vector3.zero; return; } //Cant move if dead
+        if (controller.isDead || !canMove) { rb.velocity = Vector3.zero; return; } //Cant move if dead
         Vector3 direction = targetPosition - transform.position;
         float distance = direction.magnitude;
         direction = direction.normalized;

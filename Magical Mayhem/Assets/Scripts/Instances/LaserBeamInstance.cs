@@ -20,6 +20,8 @@ public class LaserBeamInstance : NetworkBehaviour
         //Collider[] hits = Physics.OverlapBox(owner.transform.position, box, owner.transform.rotation);
         //Collider[] hits = Physics.SphereCast(owner.transform.position,laser.width,(target-owner.transform.position).normalized);
         GetComponent<NetworkObject>().Spawn();
+        owner.unitMover.canMove = false;
+        
        
         
     }
@@ -30,23 +32,42 @@ public class LaserBeamInstance : NetworkBehaviour
         if (IsServer)
         {
             timeLeft-=Time.deltaTime;
-            if (timeLeft<0)
-            {
-                Destroy(gameObject);
-                GetComponent<NetworkObject>().Despawn();
-            }
+            
 
             AttackRay();
+            
+            if (timeLeft<0)
+            {
+                
+                Destroy(gameObject);
+                GetComponent<NetworkObject>().Despawn();
+                owner.unitMover.canMove=true;
+                
+            }
         }
     }
-    public void OnDrawGizmos(){
-    
+    void OnDrawGizmos(){
+        bool validTarget;
+        Vector3 newTarget = HelperClass.GetMousePosInWorld(out validTarget);
+        Gizmos.color = Color.red;
+        Vector3 direction = (newTarget-owner.transform.position).normalized * laser.lenght;
+        
+        // Draw the starting sphere
+        Gizmos.DrawWireSphere(transform.position, laser.width/2);
+        
+        // Draw the ending sphere
+        Gizmos.DrawWireSphere(transform.position + direction, laser.width/2);
+        
+        // Optionally draw a line between the start and the end point
+        Gizmos.DrawLine(transform.position, transform.position + direction);
+   
     }
 
     private void AttackRay(){
         bool validTarget;
         Vector3 newTarget = HelperClass.GetMousePosInWorld(out validTarget);
-        RaycastHit[] rayHits = Physics.SphereCastAll(owner.transform.position,laser.width,(newTarget-owner.transform.position).normalized,laser.lenght);
+        
+        RaycastHit[] rayHits = Physics.SphereCastAll(owner.transform.position,laser.width/2,(newTarget-owner.transform.position).normalized,laser.lenght);
         transform.rotation = Quaternion.LookRotation((newTarget-owner.transform.position).normalized);
         //RaycastHit[] rayHits = Physics.SphereCastAll(owner.transform.position,laser.width,(target-owner.transform.position).normalized,laser.lenght);
         //transform.rotation = Quaternion.LookRotation((target-owner.transform.position).normalized);
@@ -65,7 +86,7 @@ public class LaserBeamInstance : NetworkBehaviour
             UnitController hit = victim.GetComponent<UnitController>();
             if (hit!=null&&hit!=owner)
             {
-
+                //Debug.Log("hit");
                 victim.GetComponent<IDamagable>().ModifyHealth(owner,-laser.damagePerSecond);
             }
             
