@@ -31,7 +31,10 @@ public class SpellShop : NetworkBehaviour
     public Item[] items;
     public BuyableIcon[] initatedSpells;
     public BuyableIcon[] initiatedItems;
+
+    
     public BuyableIcon[] ownedSpells = new BuyableIcon[6];
+    public BuyableIcon testingForBuyAnimation;
     public BuyableIcon[] ownedItems = new BuyableIcon[6];
     public BuyableIcon spellIconTemplate;
     public BuyableIcon selectedSpellicon;
@@ -63,7 +66,7 @@ public class SpellShop : NetworkBehaviour
     void Start()
     {
 
-
+        
 
         
         spells = Resources.LoadAll("Spells",typeof(Spell)).Cast<Spell>().Where(s=>!s.dontShowInShop).ToArray();
@@ -77,8 +80,8 @@ public class SpellShop : NetworkBehaviour
         ToggleSpellHolder();
         
         sellButton.gameObject.SetActive(false);
-
-
+        
+        testingForBuyAnimation.Initialize(null,false);
 
     }
 
@@ -166,6 +169,7 @@ public class SpellShop : NetworkBehaviour
         {
             GlowAnimationOnSlots();
         }
+        Debug.Log(buyablePhase);
 
     }
     public void SelectBuyable(BuyableIcon buyableIcon)
@@ -256,7 +260,11 @@ public class SpellShop : NetworkBehaviour
 
     public void ServerTryBuyBuyable()
     {
-        localUnitController.TryGetItem(NetworkManager.Singleton.LocalClientId, selectedBuyable.id);
+        if (selectedBuyable is not null)
+        {
+             localUnitController.TryGetItem(NetworkManager.Singleton.LocalClientId, selectedBuyable.id);
+        }
+       
     }
     public void BuyBuyable()
     {
@@ -272,11 +280,14 @@ public class SpellShop : NetworkBehaviour
                 {
                     item1.SetColor(new Color32(255, 255, 0, 0));
                     item1.GetComponent<Image>().rectTransform.sizeDelta=new Vector2(0,0);
-
+                    
                     
                 }
+                
 
             }
+            testingForBuyAnimation.SetColor(new Color32(255, 255, 0, 0));
+            testingForBuyAnimation.GetComponent<Image>().rectTransform.sizeDelta=new Vector2(0,0);
 
             
             
@@ -396,7 +407,7 @@ public class SpellShop : NetworkBehaviour
 
             }
         }
-
+        
         SelectBuyable(null);
 
     }
@@ -556,23 +567,32 @@ public class SpellShop : NetworkBehaviour
 
 
     private void GlowAnimationOnSlots(){
-        if (ascending && ownedSpells[0].GetComponent<Image>().color.a<=0.95)
+        
+        if (ascending && testingForBuyAnimation.GetComponent<Image>().color.a<=0.95)
         {
+            
            foreach (BuyableIcon item in ownedSpells)
            {
             if (item.buyable is null)
             {
+                
                 float valueA = item.GetComponent<Image>().color.a+0.005f;
                 float valueR = item.GetComponent<Image>().color.r;
                 float valueG = item.GetComponent<Image>().color.g;
                 float valueB =item.GetComponent<Image>().color.b;
-                item.GetComponent<Image>().color=new Color(valueR,valueG,valueB,valueA);  
+                item.GetComponent<Image>().color=new Color(valueR,valueG,valueB,valueA);
+                
+                 
             }
            }
-           
+                float valueAt = testingForBuyAnimation.GetComponent<Image>().color.a+0.005f;
+                float valueRt = testingForBuyAnimation.GetComponent<Image>().color.r;
+                float valueGt = testingForBuyAnimation.GetComponent<Image>().color.g;
+                float valueBt =testingForBuyAnimation.GetComponent<Image>().color.b;
+                testingForBuyAnimation.GetComponent<Image>().color=new Color(valueRt,valueGt,valueBt,valueAt);
            
             MoveAnimationOnSlot(true);
-            if (ownedSpells[0].GetComponent<Image>().color.a>=0.85)
+            if (testingForBuyAnimation.GetComponent<Image>().color.a>=0.85)
             {
                 ascending = false;
                
@@ -592,9 +612,15 @@ public class SpellShop : NetworkBehaviour
                 item.GetComponent<Image>().color=new Color(valueR,valueG,valueB,valueA);  
             }
            }
-            MoveAnimationOnSlot(false);
+                float valueAt = testingForBuyAnimation.GetComponent<Image>().color.a-0.005f;
+                float valueRt = testingForBuyAnimation.GetComponent<Image>().color.r;
+                float valueGt = testingForBuyAnimation.GetComponent<Image>().color.g;
+                float valueBt =testingForBuyAnimation.GetComponent<Image>().color.b;
+                testingForBuyAnimation.GetComponent<Image>().color=new Color(valueRt,valueGt,valueBt,valueAt);
+           
+            MoveAnimationOnSlot(false); 
              
-            if (ownedSpells[0].GetComponent<Image>().color.a<=0.05)
+            if (testingForBuyAnimation.GetComponent<Image>().color.a<=0.05)
             {
                 ascending = true;
                 
@@ -607,6 +633,7 @@ public class SpellShop : NetworkBehaviour
 
         if (ascending)
         {
+            
             foreach (BuyableIcon item in ownedSpells)
             {
                 if (item.buyable is null)

@@ -26,6 +26,6 @@ MonoBehaviour:
   RootDuration: 4
   Damage: 5
   ActivationTime: 1.5
-  Range: 4
+  Range: 10
   IcePrisonInstance: {fileID: -1984709592618449648, guid: 32a6445f295efeb42b597f94014cc11e,
     type: 3}

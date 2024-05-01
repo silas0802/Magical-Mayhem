@@ -19,7 +19,7 @@ public class IcePrisonSpell : Spell
     [SerializeField,Range(1,5),Tooltip("The second it takes from the initial shown area until the blast hits")]
     private float ActivationTime =1f;
 
-    [SerializeField,Range(1,5),Tooltip("The range the the person can cast it from ")]
+    [SerializeField,Range(1,10),Tooltip("The range the the person can cast it from ")]
     private float Range =4f;
 
     [SerializeField,Tooltip("IcePrisonInstance")] private IcePrisonInstance IcePrisonInstance;
@@ -32,9 +32,15 @@ public class IcePrisonSpell : Spell
     public IcePrisonInstance icePrisonInstance=> this.IcePrisonInstance;
     public override void Activate(UnitController owner, Vector3 target)
     {
+        if ((target-owner.transform.position).magnitude > range)
+        {
+            IcePrisonInstance iPS = Instantiate(IcePrisonInstance,(target-owner.transform.position).normalized*range,quaternion.identity);
+            iPS.Initialize(this,owner,(target-owner.transform.position).normalized*range);
+        }else{
+            IcePrisonInstance iPS = Instantiate(IcePrisonInstance,target,quaternion.identity);
+            iPS.Initialize(this,owner,target);
+        }
         
-        IcePrisonInstance iPS = Instantiate(IcePrisonInstance,target,quaternion.identity);
-        iPS.Initialize(this,owner,target);
     }
 
     
