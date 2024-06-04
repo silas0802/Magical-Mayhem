@@ -88,7 +88,7 @@ public class LobbySystem : NetworkBehaviour
         player.SpawnAsPlayerObject(clientId, true);
         player.TrySetParent(playerInfoSpawnPoint, false);
 
-        UpdateNamesClientRPC();
+        //UpdateNamesClientRPC();
         // units.Add(unit);
         // if (units.Count > 1)
         // {
