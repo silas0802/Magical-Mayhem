@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class LobbySystem : NetworkBehaviour
 {
     public static LobbySystem instance;
-    public Dictionary<ulong,string> names = new Dictionary<ulong, string>();
+    public static Dictionary<ulong,string> names = new Dictionary<ulong, string>();
     [SerializeField] private NetworkObject playerTemplate;
     [SerializeField] private TMP_Text ipText;
     [SerializeField] private RectTransform playerInfoSpawnPoint;
@@ -41,6 +41,9 @@ public class LobbySystem : NetworkBehaviour
             NetworkObject t = Instantiate(playerTemplate);
             t.SpawnAsPlayerObject(0, true);
             t.TrySetParent(playerInfoSpawnPoint, false);
+            string name;
+            names.TryGetValue(99,out name);
+            t.GetComponent<LobbyPlayerInfo>().SetName(name);
             ipText.text = ConnectionHUD.GetLocalIPv4();
         }
         else
@@ -56,6 +59,14 @@ public class LobbySystem : NetworkBehaviour
         
     }
 
+    [ClientRpc]
+    private void UpdateNamesClientRPC(){
+        foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClientsList){
+            string name;
+            names.TryGetValue(player.ClientId,out name);
+            player.PlayerObject.GetComponent<LobbyPlayerInfo>().SetName(name);
+        }
+    }
     /// <summary>
     /// Is called when a client connects. It spawns the playerprefab for them and gets the reference to their UnitController. Server Only. - Silas Thule
     /// </summary>
@@ -65,9 +76,13 @@ public class LobbySystem : NetworkBehaviour
         if (!IsServer) return;
         Debug.Log("PlayerId: " + clientId + " has joined");
         NetworkObject player = Instantiate(playerTemplate,playerInfoSpawnPoint);
-        //player.GetComponent<LobbyPlayerInfo>().SetName(names.TryGetValue());
+        string name;
+        names.TryGetValue(clientId,out name);
+        player.GetComponent<LobbyPlayerInfo>().SetName(name);
         player.SpawnAsPlayerObject(clientId, true);
         player.TrySetParent(playerInfoSpawnPoint, false);
+
+        UpdateNamesClientRPC();
         // units.Add(unit);
         // if (units.Count > 1)
         // {
