@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
-public class BorderWallScript : NetworkBehaviour
+public class FloorScript : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -16,5 +15,4 @@ public class BorderWallScript : NetworkBehaviour
     {
         
     }
-
 }

@@ -10,6 +10,7 @@ public class LaserBeamInstance : NetworkBehaviour
     UnitController owner;
     Vector3 target;
     float timeLeft;
+    float ticktimer;
     // Start is called before the first frame update
     public void Initialize(LaserBeamSpell laser,UnitController owner,Vector3 target){
         this.laser = laser;
@@ -21,7 +22,7 @@ public class LaserBeamInstance : NetworkBehaviour
         //Collider[] hits = Physics.SphereCast(owner.transform.position,laser.width,(target-owner.transform.position).normalized);
         GetComponent<NetworkObject>().Spawn();
         owner.unitMover.canMove = false;
-        
+        ticktimer = 0;
        
         
     }
@@ -33,8 +34,13 @@ public class LaserBeamInstance : NetworkBehaviour
         {
             timeLeft-=Time.deltaTime;
             
-
-            AttackRay();
+            ticktimer-=Time.deltaTime;
+            if (ticktimer<0)
+            {
+                AttackRay();
+                ticktimer+=1/laser.tickrate;     
+            }
+           
             
             if (timeLeft<0)
             {

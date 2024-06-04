@@ -118,7 +118,7 @@ public class MapGenerator : NetworkBehaviour
     }
     //if the floor is lava change it to floortile and if there is a wall delete it
     private void PlaceSpawnTile(int x, int y){
-        if(tileArray[x,y].GetComponent<LavaTileScript>()){
+        if(tileArray[x,y].GetComponent<LavaScript>()){
             DestObj(tileArray[x,y]);
             tileArray[x,y] = InstObj("tile",x, -0.05f, y);
         }
@@ -222,7 +222,7 @@ public class MapGenerator : NetworkBehaviour
         for (int i = 0; i < mapSize; i++){
             for (int j = 0; j < mapSize; j++){
                 float Simplex  = noise.snoise(new float2(i+seed,j+seed));
-                if (Simplex > wallCutOff && tileArray[i, j].GetComponent("TileScript") != null )
+                if (Simplex > wallCutOff && tileArray[i, j].GetComponent<FloorScript>() )
                 {
                     coords = tileArray[i,j].transform.position;
                     coords.y += 1.5f;
@@ -238,7 +238,7 @@ public class MapGenerator : NetworkBehaviour
         for (int i = 0; i < mapSize; i++){
             for (int j = 0; j < mapSize; j++){
                 float Simplex  = noise.snoise(new float2(i+seed,j+seed));
-                if (tileArray[i, j].GetComponent("TileScript") != null )
+                if (tileArray[i, j].GetComponent<FloorScript>())
                 {
                     coords = tileArray[i,j].transform.position;
                     if(Simplex > lowerBufs && Simplex < upperBufs){

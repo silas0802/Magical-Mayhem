@@ -40,7 +40,11 @@ public class HUDScript : MonoBehaviour
         {
             if (unitController.inventory.spells[i])
             {
+                spellIcon.color=new Color(255,255,255,255);
                 spellIcon.sprite = unitController.inventory.spells[i].icon;
+            }else
+            {
+                spellIcon.color = new Color(0, 0,0,0);
             }
             
             i++;

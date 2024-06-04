@@ -16,6 +16,9 @@ public class LobbySystem : NetworkBehaviour
     [SerializeField] private RectTransform playerInfoSpawnPoint;
     [SerializeField] private Button startLobbyButton;
     [SerializeField] private Button leaveLobbyButton;
+    [SerializeField] private TMP_Dropdown mapSizeDrop;
+    [SerializeField] private TMP_Dropdown mapTypeDrop;
+    [SerializeField] private Toggle buffsToggle;
     private static int mapSize = 0;
     private static int mapType = 0;
     private static bool buffs = true;
@@ -50,6 +53,9 @@ public class LobbySystem : NetworkBehaviour
         {
             print("Joined successfully");
             startLobbyButton.gameObject.SetActive(false);
+            mapSizeDrop.gameObject.SetActive(false);
+            mapTypeDrop.gameObject.SetActive(false);
+            buffsToggle.gameObject.SetActive(false);
         }
     }
 
