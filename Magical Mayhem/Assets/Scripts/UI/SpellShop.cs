@@ -95,6 +95,7 @@ public class SpellShop : NetworkBehaviour
             
             BuyableIcon buyableSpell;
             
+            
             if (spells[i].elementType is SpellElementType.Fire)
             {
                 buyableSpell = Instantiate(spellIconTemplate, buyableSlots[0]);    
@@ -113,6 +114,7 @@ public class SpellShop : NetworkBehaviour
             buyableSpell.GetComponent<Button>().onClick.AddListener(() => { SelectBuyable(buyableSpell); CancelBuyablePhase(); ActivateSellButton(); });
 
             initatedSpells[i] = buyableSpell;
+           
         }
 
         for (int i = 0; i < items.Length; i++)
