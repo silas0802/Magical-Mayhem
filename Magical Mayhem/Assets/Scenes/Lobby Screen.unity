@@ -2195,6 +2195,9 @@ MonoBehaviour:
   playerInfoSpawnPoint: {fileID: 1170154547}
   startLobbyButton: {fileID: 2051419457}
   leaveLobbyButton: {fileID: 318083538}
+  mapSizeDrop: {fileID: 976247947}
+  mapTypeDrop: {fileID: 2091800329}
+  buffsToggle: {fileID: 812880764}
 --- !u!114 &1080097515
 MonoBehaviour:
   m_ObjectHideFlags: 0

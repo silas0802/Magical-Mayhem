@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7023263768789436637}
   - component: {fileID: 3547234625844499574}
   - component: {fileID: 5669874045063092746}
-  - component: {fileID: -188394445177389737}
+  - component: {fileID: -4738005082774324703}
   m_Layer: 0
   m_Name: LavaTile
   m_TagString: Untagged
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2095705802
+  GlobalObjectIdHash: 779592304
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -127,7 +127,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &-188394445177389737
+--- !u!114 &-4738005082774324703
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -136,6 +136,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1976333778091470370}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae1bea3ada1b1b34b9c20c6769532aad, type: 3}
+  m_Script: {fileID: 11500000, guid: a0ac988b0b4de8645a752db85218ee47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
