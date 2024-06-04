@@ -170,4 +170,9 @@ public class UnitMover : NetworkBehaviour
         hasReached = true;
     }
 
+    public void BuffSpeed(float speed, float acc){
+        acceleration += acc;
+        maxSpeed += speed;
+    }
+
 }
