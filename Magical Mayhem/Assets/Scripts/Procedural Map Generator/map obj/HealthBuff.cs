@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class HealthBuff : NetworkBehaviour
 {   
-    private int health = 10;
-    private float cooldown = 0;
+    private readonly int health = 10;
+    private readonly int cd = 7;
 
     // Start is called before the first frame update
     void Start()
@@ -17,20 +17,22 @@ public class HealthBuff : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(cooldown <= 0){
-            GetComponent<MeshRenderer>().enabled = true;
-            GetComponent<BoxCollider>().enabled = true;
-        }   
-        cooldown -= Time.deltaTime;
+       
+    }
+
+    private IEnumerator Cooldown(int cd){
+        yield return new WaitForSeconds(cd);
+        GetComponent<MeshRenderer>().enabled = true;
+        GetComponent<BoxCollider>().enabled = true;
     }
 
     private void OnTriggerEnter(Collider other){
         if(IsServer){
             IDamagable player = other.gameObject.GetComponent<IDamagable>();
             if(player != null){
-                cooldown = 7f;
                 GetComponent<MeshRenderer>().enabled = false;
                 GetComponent<BoxCollider>().enabled = false;
+                StartCoroutine(Cooldown(cd));
                 player.ModifyHealth(other.GetComponent<UnitController>(), health);
             }
         }
