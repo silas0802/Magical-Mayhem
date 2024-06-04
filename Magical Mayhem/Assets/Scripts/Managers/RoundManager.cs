@@ -10,6 +10,7 @@ using UnityEngine;
 public class RoundManager : NetworkBehaviour
 {
     public static RoundManager instance;
+    //[SerializeField] public HUDScript HUD;
     [SerializeField] private Brain botBrain;
     [SerializeField] private int roundNumber = 0;
     [SerializeField] private int shoppingTime = 60;
@@ -169,10 +170,15 @@ public class RoundManager : NetworkBehaviour
     {
         SpellShop.instance.SetTimer(shoppingTime);
         SpellShop.instance.gameObject.SetActive(true);
+        HUDScript.instance.gameObject.SetActive(false);
+        
     }
     [ClientRpc]
     private void ClosePlayerShopsClientRPC(){
         SpellShop.instance.gameObject.SetActive(false);
+        HUDScript.instance.LoadImages();
+        HUDScript.instance.gameObject.SetActive(true);
+
     }
     /// <summary>
     /// Waits for some time then starts a new round
