@@ -20,6 +20,9 @@ public class LaserBeamSpell : Spell
     [SerializeField,Range(1,5),Tooltip("Damage per second")]
     private int DamagePerSecond = 10;
 
+    [SerializeField,Range(1,5),Tooltip("How often it damages, the smaller the number here the less time it damages")]
+    private float Tickrate = 10f;
+
     [SerializeField] private LaserBeamInstance LaserBeamInstance;
 
        
@@ -27,6 +30,8 @@ public class LaserBeamSpell : Spell
     public float width => this.Width;
     public float duration => this.Duration;
     public int damagePerSecond => this.DamagePerSecond;
+
+    public float tickrate => this.Tickrate;
     public LaserBeamInstance laserBeamInstance => this.LaserBeamInstance;
 
 
