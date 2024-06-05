@@ -15,4 +15,15 @@ public class LavaScript : MonoBehaviour
     {
         
     }
+
+    public void OnTriggerEnter(Collider player){
+        if(player.gameObject.GetComponent<IDamagable>() != null){
+            player.gameObject.GetComponent<UnitController>().SetInLavaBool(true);
+        }
+    }
+    public void OnTriggerExit(Collider player){
+        if(player.gameObject.GetComponent<IDamagable>() != null){
+            player.gameObject.GetComponent<UnitController>().SetInLavaBool(false);
+        }
+    }
 }

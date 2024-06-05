@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GetDropdownValue : MonoBehaviour
 {
@@ -14,8 +11,11 @@ public class GetDropdownValue : MonoBehaviour
         if(drpdwn.options[0].text == "Map size" ){
             LobbySystem.SetMapSize(Pickedindex);
         }
-        else{
+        else if(drpdwn.options[0].text == "Map type"){
             LobbySystem.SetMapType(Pickedindex);
+        }
+        else{
+            LobbySystem.SetNumOfRounds(Pickedindex + 4);
         }
     }
 }

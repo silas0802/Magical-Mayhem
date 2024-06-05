@@ -18,6 +18,9 @@ public class UnitController : NetworkBehaviour, IDamagable
     [SerializeField] private int arcaneMultiplier =0;
     [SerializeField] private int fireDamageMultiplier=0;
     [SerializeField] private int frostDamageMultiplier=0;
+    [SerializeField] private bool inLava = false;
+    private int lavaDMG = 5;
+    private float lavaTick = 1f;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
     private Brain brain;
 
@@ -58,6 +61,9 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         return arcaneMultiplier;
     }
+    public void SetInLavaBool(bool x){
+        inLava = x;
+    }
     [Header("Debugging")]
     public int threatLevel = 0;
     public bool isNearUnit = false;
@@ -80,6 +86,17 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         if (!IsServer) return;
         brain?.HandleFightingLogic(this);
+
+        if(inLava){
+
+            if (lavaTick > 0){
+                lavaTick -= Time.deltaTime;
+            }
+            else{
+                ModifyHealth(this, -lavaDMG);
+                lavaTick = 1;
+            }
+        }
     }
     #endregion
     

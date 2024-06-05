@@ -22,6 +22,7 @@ public class LobbySystem : NetworkBehaviour
     private static int mapSize = 0;
     private static int mapType = 0;
     private static bool buffs = true;
+    private static int numOfRounds = 4;
     private void Awake()
     {
         if (instance == null){
@@ -160,6 +161,14 @@ public class LobbySystem : NetworkBehaviour
 
     public static int GetMapSize(){
         return mapSize;
+    }
+
+    public static void SetNumOfRounds(int x){
+        numOfRounds = x;
+    }
+
+    public static int GetNumOfRounds(){
+        return numOfRounds;
     }
 }
 
