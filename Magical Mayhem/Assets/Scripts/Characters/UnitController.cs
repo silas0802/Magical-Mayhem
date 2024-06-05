@@ -36,6 +36,8 @@ public class UnitController : NetworkBehaviour, IDamagable
     [HideInInspector]
     public UnitMover unitMover;
 
+    public int frameCounter;
+
     public static KillEvent OnUnitDeath;
     public bool isDead { get; private set; }
 
