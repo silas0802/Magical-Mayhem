@@ -87,6 +87,7 @@ public class ConnectionHUD : MonoBehaviour
         SetConnectionData("");
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
         NetworkManager.Singleton.StartHost();
+        LobbySystem.names.Add(99,userNameField.text);
         NetworkManager.Singleton.SceneManager.LoadScene("Lobby Screen",UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
@@ -96,7 +97,7 @@ public class ConnectionHUD : MonoBehaviour
 
         // Additional connection data defined by user code
         string connectionData = System.Text.Encoding.UTF8.GetString(request.Payload);
-        LobbySystem.instance.names.Add(clientId,connectionData);
+        LobbySystem.names.Add(clientId,connectionData);
 
         // Your approval logic determines the following values
         response.Approved = true;

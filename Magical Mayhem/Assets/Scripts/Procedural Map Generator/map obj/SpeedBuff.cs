@@ -6,9 +6,10 @@ using UnityEngine.UIElements;
 
 public class SpeedBuff : NetworkBehaviour
 {
-    private float speed = 0;
-    private float cooldown = 0;
-    private float activetime = 3; 
+    private readonly float speed = 2.5f;
+    private readonly float acceleration = 1.5f;
+    private readonly int cd = 7;
+    private readonly int activetime = 2; 
     // Start is called before the first frame update
     void Start()
     {
@@ -18,16 +19,28 @@ public class SpeedBuff : NetworkBehaviour
     // Update is called once per frame
      void Update()
     {
-        if(cooldown <= 0){
-            GetComponent<MeshRenderer>().enabled = true;
-            GetComponent<BoxCollider>().enabled = true;
-        }   
-        cooldown -= Time.deltaTime;
+    }
+
+    private IEnumerator Cooldown(int cd){
+        yield return new WaitForSeconds(cd);
+        GetComponent<MeshRenderer>().enabled = true;
+        GetComponent<BoxCollider>().enabled = true;
+    }
+
+    private IEnumerator SetMaxSpeedback(float speed, int activetime, Collider player){
+        yield return new WaitForSeconds(activetime);
+        player.GetComponent<UnitMover>().BuffSpeed(-speed, -acceleration);
     }
 
     private void OnTriggerEnter(Collider other){
-        if(IsServer){
-            //other.gameObject.
+       if(IsServer){
+            if(other != null){
+                GetComponent<MeshRenderer>().enabled = false;
+                GetComponent<BoxCollider>().enabled = false;
+                StartCoroutine(Cooldown(cd));
+                other.GetComponent<UnitMover>().BuffSpeed(speed, acceleration);
+                StartCoroutine(SetMaxSpeedback(speed, activetime, other));
+            }
         }
     }
 }
