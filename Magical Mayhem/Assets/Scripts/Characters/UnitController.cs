@@ -14,7 +14,7 @@ using UnityEngine.InputSystem;
 public class UnitController : NetworkBehaviour, IDamagable
 {
     #region Fields
-    [SerializeField] private int health;
+    [SerializeField] NetworkVariable<int> health = new NetworkVariable<int>();
     [SerializeField] private int arcaneMultiplier =0;
     [SerializeField] private int fireDamageMultiplier=0;
     [SerializeField] private int frostDamageMultiplier=0;
@@ -36,12 +36,14 @@ public class UnitController : NetworkBehaviour, IDamagable
     [HideInInspector]
     public UnitMover unitMover;
 
+    public int frameCounter;
+
     public static KillEvent OnUnitDeath;
     public bool isDead { get; private set; }
 
     public int GetHealth()
     {
-        return health;
+        return health.Value;
     }
     public int GetFrostMult(){
         return frostDamageMultiplier;
@@ -68,7 +70,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         unitCaster = GetComponent<UnitCaster>();
         unitMover = GetComponent<UnitMover>();
         animator = GetComponentInChildren<Animator>();
-        health = unitClass.maxHealth;
+        health.Value = unitClass.maxHealth;
         inventory = new Inventory();
     }
 
@@ -165,6 +167,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         if (IsLocalPlayer)
         {
             HUDScript.instance.ConnectPlayer(this);
+            
         }
     }
     public void TryPlaceBuyable(int itemId, int index)
@@ -195,7 +198,7 @@ public class UnitController : NetworkBehaviour, IDamagable
             Item item = buyable as Item;
             inventory.items[index] = item;
 
-            health = health + item.health;
+            health.Value += item.health;
             if (item.itemElement is SpellElementType.Frost)
             {
                 frostDamageMultiplier += item.elementBoostPercent;
@@ -275,7 +278,7 @@ public class UnitController : NetworkBehaviour, IDamagable
                 if (buyable is Item)
                 {
                     Item item = buyable as Item;
-                    health -= item.health;
+                    health.Value -= item.health;
                     if (item.itemElement is SpellElementType.Frost)
                     {
                         frostDamageMultiplier -= item.elementBoostPercent;
@@ -318,7 +321,7 @@ public class UnitController : NetworkBehaviour, IDamagable
                 if (buyable is Item)
                 {
                     Item item = buyable as Item;
-                    health -= item.health;
+                    health.Value -= item.health;
                     if (item.itemElement is SpellElementType.Frost)
                     {
                         frostDamageMultiplier -= item.elementBoostPercent;
@@ -351,8 +354,8 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
-        health = Mathf.Clamp(health+amount,0,unitClass.maxHealth);
-        if (health == 0)
+        health.Value = Mathf.Clamp(health.Value+amount,0,unitClass.maxHealth);
+        if (health.Value == 0)
         {
             Death(dealer);
         }
@@ -373,7 +376,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     /// </summary>
     public void ResetHealth()
     {
-        health = unitClass.maxHealth;
+        health.Value = unitClass.maxHealth;
         SetDead(false);
     }
     #endregion

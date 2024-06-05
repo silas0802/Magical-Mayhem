@@ -7,10 +7,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+using System.Xml.Schema;
 
 public class SpellShop : NetworkBehaviour
 {
     public static SpellShop instance;
+    
     public UnitController localUnitController;
     public bool testing = true;
     public Dictionary<int, Buyable> buyableIDs = new Dictionary<int, Buyable>();
@@ -35,6 +37,7 @@ public class SpellShop : NetworkBehaviour
     
     public BuyableIcon[] ownedSpells = new BuyableIcon[6];
     public BuyableIcon testingForBuyAnimation;
+    
     public BuyableIcon[] ownedItems = new BuyableIcon[6];
     public BuyableIcon spellIconTemplate;
     public BuyableIcon selectedSpellicon;
@@ -67,7 +70,6 @@ public class SpellShop : NetworkBehaviour
     {
 
         
-
         
         spells = Resources.LoadAll("Spells",typeof(Spell)).Cast<Spell>().Where(s=>!s.dontShowInShop).ToArray();
         items = Resources.LoadAll("Items",typeof(Item)).Cast<Item>().ToArray();
@@ -171,11 +173,12 @@ public class SpellShop : NetworkBehaviour
         {
             GlowAnimationOnSlots();
         }
-        Debug.Log(buyablePhase);
+        
 
     }
     public void SelectBuyable(BuyableIcon buyableIcon)
     {
+        
         if (!buyablePhase)
         {   
             
@@ -197,6 +200,7 @@ public class SpellShop : NetworkBehaviour
             {
                 if (!(buyableIcon.buyable==null))
                 {
+                    Debug.Log("in selectBuyable");
                     selectedSpellicon.GetComponent<Image>().color= new Color(255,255,255,255);        
                     
                     selectedBuyable = buyableIcon.buyable;
@@ -411,7 +415,8 @@ public class SpellShop : NetworkBehaviour
         }
         
         SelectBuyable(null);
-
+        testingForBuyAnimation.SetColor(new Color(255,255,255,255));
+        testingForBuyAnimation.GetComponent<Image>().rectTransform.sizeDelta=new Vector2(110,110);  
     }
 
     public void CancelBuyablePhase()
@@ -578,7 +583,7 @@ public class SpellShop : NetworkBehaviour
             if (item.buyable is null)
             {
                 
-                float valueA = item.GetComponent<Image>().color.a+0.005f;
+                float valueA = item.GetComponent<Image>().color.a+0.5f*Time.deltaTime;
                 float valueR = item.GetComponent<Image>().color.r;
                 float valueG = item.GetComponent<Image>().color.g;
                 float valueB =item.GetComponent<Image>().color.b;
@@ -587,7 +592,7 @@ public class SpellShop : NetworkBehaviour
                  
             }
            }
-                float valueAt = testingForBuyAnimation.GetComponent<Image>().color.a+0.005f;
+                float valueAt = testingForBuyAnimation.GetComponent<Image>().color.a+0.5f*Time.deltaTime;
                 float valueRt = testingForBuyAnimation.GetComponent<Image>().color.r;
                 float valueGt = testingForBuyAnimation.GetComponent<Image>().color.g;
                 float valueBt =testingForBuyAnimation.GetComponent<Image>().color.b;
@@ -607,20 +612,20 @@ public class SpellShop : NetworkBehaviour
            {
             if (item.buyable is null)
             {
-                float valueA = item.GetComponent<Image>().color.a-0.005f;
+                float valueA = item.GetComponent<Image>().color.a-0.5f*Time.deltaTime;
                 float valueR = item.GetComponent<Image>().color.r;
                 float valueG = item.GetComponent<Image>().color.g;
-                float valueB =item.GetComponent<Image>().color.b;
-                item.GetComponent<Image>().color=new Color(valueR,valueG,valueB,valueA);  
+                float valueB =item.GetComponent<Image>().color.b;  
+                item.SetColor(new Color(valueR,valueG,valueB,valueA));
             }
            }
-                float valueAt = testingForBuyAnimation.GetComponent<Image>().color.a-0.005f;
+                float valueAt = testingForBuyAnimation.GetComponent<Image>().color.a-0.5f*Time.deltaTime;
                 float valueRt = testingForBuyAnimation.GetComponent<Image>().color.r;
                 float valueGt = testingForBuyAnimation.GetComponent<Image>().color.g;
                 float valueBt =testingForBuyAnimation.GetComponent<Image>().color.b;
-                testingForBuyAnimation.GetComponent<Image>().color=new Color(valueRt,valueGt,valueBt,valueAt);
-           
-            MoveAnimationOnSlot(false); 
+                
+                testingForBuyAnimation.SetColor(new Color(valueRt,valueGt,valueBt,valueAt));
+                MoveAnimationOnSlot(false); 
              
             if (testingForBuyAnimation.GetComponent<Image>().color.a<=0.05)
             {
