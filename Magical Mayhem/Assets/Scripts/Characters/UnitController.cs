@@ -19,6 +19,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     [SerializeField] private int fireDamageMultiplier=0;
     [SerializeField] private int frostDamageMultiplier=0;
     [SerializeField] private bool inLava = false;
+
     private int lavaDMG = 5;
     private float lavaTick = 1f;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
@@ -64,6 +65,12 @@ public class UnitController : NetworkBehaviour, IDamagable
     public void SetInLavaBool(bool x){
         inLava = x;
     }
+
+    public bool GetInLavaBool()
+    {
+        return inLava;
+    }
+    
     [Header("Debugging")]
     public int threatLevel = 0;
     public bool isNearUnit = false;

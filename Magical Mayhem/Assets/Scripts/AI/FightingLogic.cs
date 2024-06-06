@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Fighting Logic", menuName = "Game/AI/Fighting Logic")]
 public class FightingLogic : ScriptableObject
 {
-    [SerializeField] private bool Aggressiveness;
+    [SerializeField] private float Aggressiveness;
     [SerializeField] private bool Safety;
     [SerializeField] private float roamingSpeed = 1.0f;
     [SerializeField] private float roamingInterval = 2.0f;
@@ -20,13 +20,10 @@ public class FightingLogic : ScriptableObject
 
         if (controller.frameCounter % 10 == 0)
         {
-            // Get list of nearby projectiles. If this list is not empty, check danger from each projectile. We also need some way to combine the dangers into one unified decision of what to do.
-            // This problem will be solved later.
             List<ProjectileInstance> nearbyProjectiles = DetectNearbyProjectiles(controller);
             if (nearbyProjectiles != null && nearbyProjectiles.Count > 0)
             {
                 Vector3 dodgeDirection = EvaluateNearbyProjectiles(controller, nearbyProjectiles);
-                // ^ Dodgedirection is zeroVector if we don't want the bot to dodge anything.
 
                 if (dodgeDirection != Vector3.zero) 
                 {
@@ -48,25 +45,29 @@ public class FightingLogic : ScriptableObject
             // If there's no danger we roam randomly. Improve later if good idea
             if (Safety)
             {
-                Debug.Log("Roaming");
-
                 roamingTimer -= 0.1f;
+                Aggressiveness += 0.1f;
 
                 if (roamingTimer <= 0)
                 {
                     roamingTimer = roamingInterval;
                     float randomAngle = Random.Range(0, 360);
                     roamingDirection = new Vector3(Mathf.Cos(randomAngle * Mathf.Deg2Rad), 0, Mathf.Sin(randomAngle * Mathf.Deg2Rad)).normalized;
-                    Debug.Log("New roaming direction: " + roamingDirection);
+
+                    // We will try to get the bot towards the center:
+                    float centerWeight = 0.5f;
+                    Vector3 centerDirection = (Vector3.zero - controller.transform.position).normalized;
+                    Vector3 combinedDirection = (roamingDirection + centerDirection * centerWeight).normalized;
+                    roamingDirection = combinedDirection;
                 }
 
                 Vector3 targetPosition = controller.transform.position + roamingDirection * roamingSpeed;
                 controller.unitMover.SetTargetPosition(targetPosition);
-                Debug.Log("Moving to position: " + targetPosition);
             }
 
             controller.frameCounter = 0; // Just so that numbers don't get too large.
         }
+
 
         try
         {
@@ -74,7 +75,6 @@ public class FightingLogic : ScriptableObject
             if (nearestUnit != null)
             {
                 float distanceToNearestUnit = (controller.transform.position - nearestUnit.transform.position).magnitude;
-
                 controller.isNearUnit = distanceToNearestUnit <= 3f;
             }
             else
@@ -91,11 +91,6 @@ public class FightingLogic : ScriptableObject
 
     private List<ProjectileInstance> DetectNearbyProjectiles(UnitController controller)
     {
-        if (controller == null || controller.transform == null)
-        {
-            Debug.LogError("Controller or its transform is null in DetectNearbyProjectiles");
-            return null;
-        }
 
         float size = 10f;
         Collider[] detected = new Collider[20];
@@ -129,30 +124,15 @@ public class FightingLogic : ScriptableObject
                 continue;
             }
 
-            // Get the projectile's velocity
             Vector3 projVelocity = projectile.GetComponent<Rigidbody>().velocity;
-
-            // https://www.reddit.com/r/summonerschool/comments/y751c3/how_to_get_good_at_dodging_spells/
-            // Says "Dodge at 90 degrees to the angle the spell is coming from"
-
-            // Let's first find a way to decide if the spell is actually approaching us. Else we should look to dodge.
-            // Calculate the angle between the projectile's velocity and the direction to the controller
             Vector3 directionToController = controller.transform.position - projectile.transform.position;
             float angle = Vector3.Angle(projVelocity, directionToController);
 
-            // Check if the projectile is headed towards the controller within the angle threshold
             if (angle > 30)
             {
-                // If the angle is greater than the threshold, continue
-                Debug.Log("Projectile angle " + angle + " is too wide. Not dodging...");
                 continue;
             }
-            else
-            {
-                Debug.Log("Nearing me");
-            }
 
-            // So the idea we will use is to take the BEST perpendicular direction. This should make the bot not run into the projectile..
             Vector3 perpendicularDirection1 = Vector3.Cross(projVelocity.normalized, Vector3.up).normalized;
             Vector3 perpendicularDirection2 = -perpendicularDirection1;
             Vector3 futurePosition1 = controller.transform.position + perpendicularDirection1;
@@ -161,10 +141,7 @@ public class FightingLogic : ScriptableObject
             float distanceToProjectile1 = (futurePosition1 - projectile.transform.position).magnitude;
             float distanceToProjectile2 = (futurePosition2 - projectile.transform.position).magnitude;
 
-            // We choose the direction that maximizes distance from the projectile
             Vector3 bestDodgeDirection = distanceToProjectile1 > distanceToProjectile2 ? perpendicularDirection1 : perpendicularDirection2;
-
-            // Accumulate the direction to move away from each projectile - In my mind this should allow us one direction that helps dodging ALL nearby spells?
             dodgeDirection += bestDodgeDirection / (controller.transform.position - projectile.transform.position).magnitude;
         }
 
