@@ -5,17 +5,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Fighting Logic", menuName = "Game/AI/Fighting Logic")]
 public class FightingLogic : ScriptableObject
 {
-    [SerializeField] private bool Aggresiveness;
+    [SerializeField] private bool Aggressiveness;
     [SerializeField] private bool Safety;
+    [SerializeField] private float roamingSpeed = 1.0f;
+    [SerializeField] private float roamingInterval = 2.0f;
+
+    private Vector3 roamingDirection;
+    private float roamingTimer;
 
     public void HandleFightingLogic(UnitController controller)
     {
-        if (controller == null)
-        {
-            Debug.LogError("Controller is null in HandleFightingLogic");
-            return;
-        }
-
         controller.frameCounter++;
         // Every 10th frame we check for nearby projectiles and try to dodge them. This only affects movement.
 
@@ -34,23 +33,40 @@ public class FightingLogic : ScriptableObject
                     Safety = false;
                     Vector3 targetPosition = controller.transform.position + dodgeDirection;
                     controller.unitMover.SetTargetPosition(targetPosition);
-                } else {
+                    Debug.Log("Dodging to position: " + targetPosition);
+                }
+                else
+                {
                     Safety = true;
                 }
             }
-            
+            else
+            {
+                Safety = true;
+            }
+
             // If there's no danger we roam randomly. Improve later if good idea
-            if (Safety) {
-                float randomAngle = Random.Range(0, 360);
-                Vector3 randomRoamingDirection = new Vector3(Mathf.Cos(randomAngle), 0, Mathf.Sin(randomAngle)).normalized;
-                Vector3 targetPosition = controller.transform.position + randomRoamingDirection * 3f;
+            if (Safety)
+            {
+                Debug.Log("Roaming");
+
+                roamingTimer -= 0.1f;
+
+                if (roamingTimer <= 0)
+                {
+                    roamingTimer = roamingInterval;
+                    float randomAngle = Random.Range(0, 360);
+                    roamingDirection = new Vector3(Mathf.Cos(randomAngle * Mathf.Deg2Rad), 0, Mathf.Sin(randomAngle * Mathf.Deg2Rad)).normalized;
+                    Debug.Log("New roaming direction: " + roamingDirection);
+                }
+
+                Vector3 targetPosition = controller.transform.position + roamingDirection * roamingSpeed;
                 controller.unitMover.SetTargetPosition(targetPosition);
+                Debug.Log("Moving to position: " + targetPosition);
             }
 
             controller.frameCounter = 0; // Just so that numbers don't get too large.
         }
-
-        
 
         try
         {
@@ -90,7 +106,7 @@ public class FightingLogic : ScriptableObject
         {
             if (detected[i] == null)
             {
-                continue; // Skip null detected objects
+                continue; // Skip null detected objects??
             }
 
             ProjectileInstance projectile = detected[i].GetComponent<ProjectileInstance>();
@@ -121,7 +137,7 @@ public class FightingLogic : ScriptableObject
 
             // Let's first find a way to decide if the spell is actually approaching us. Else we should look to dodge.
             // Calculate the angle between the projectile's velocity and the direction to the controller
-             Vector3 directionToController = controller.transform.position - projectile.transform.position;
+            Vector3 directionToController = controller.transform.position - projectile.transform.position;
             float angle = Vector3.Angle(projVelocity, directionToController);
 
             // Check if the projectile is headed towards the controller within the angle threshold
@@ -130,10 +146,12 @@ public class FightingLogic : ScriptableObject
                 // If the angle is greater than the threshold, continue
                 Debug.Log("Projectile angle " + angle + " is too wide. Not dodging...");
                 continue;
-            } else {
+            }
+            else
+            {
                 Debug.Log("Nearing me");
             }
-            
+
             // So the idea we will use is to take the BEST perpendicular direction. This should make the bot not run into the projectile..
             Vector3 perpendicularDirection1 = Vector3.Cross(projVelocity.normalized, Vector3.up).normalized;
             Vector3 perpendicularDirection2 = -perpendicularDirection1;
