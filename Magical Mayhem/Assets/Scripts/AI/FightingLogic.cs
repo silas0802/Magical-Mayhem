@@ -9,9 +9,14 @@ public class FightingLogic : ScriptableObject
     [SerializeField] private bool Safety;
     [SerializeField] private float roamingSpeed = 1.0f;
     [SerializeField] private float roamingInterval = 2.0f;
+    [SerializeField] private float shootingMean = 3.5f;
+    [SerializeField] private float shootingStdDev = 0.7f;
 
     private Vector3 roamingDirection;
     private float roamingTimer;
+    private float shootingTimer;
+
+    private System.Random random = new System.Random();
 
     public void HandleFightingLogic(UnitController controller)
     {
@@ -68,6 +73,16 @@ public class FightingLogic : ScriptableObject
             controller.frameCounter = 0; // Just so that numbers don't get too large.
         }
 
+        // For the shooting logic
+        shootingTimer -= Time.deltaTime;
+
+        if (shootingTimer <= 0 && ShouldShoot(controller))
+        {
+            //Shoot(controller);
+
+            // Reset shooting timer with a new normal distributed cooldown
+            shootingTimer = GetNormalRandomValue(shootingMean, shootingStdDev); // Reset shooting timer with a new normal distributed cooldown
+        }
 
         try
         {
@@ -82,16 +97,14 @@ public class FightingLogic : ScriptableObject
                 controller.isNearUnit = false;
             }
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
-            Debug.LogError("Exception in finding nearest unit: " + ex.Message);
-            controller.isNearUnit = false;
+            
         }
     }
 
     private List<ProjectileInstance> DetectNearbyProjectiles(UnitController controller)
     {
-
         float size = 10f;
         Collider[] detected = new Collider[20];
         List<ProjectileInstance> projectiles = new List<ProjectileInstance>();
@@ -146,5 +159,30 @@ public class FightingLogic : ScriptableObject
         }
 
         return dodgeDirection.normalized;
+    }
+
+    private bool ShouldShoot(UnitController controller)
+    {
+        float randomValue = Random.Range(0f, 1f);
+        if (Aggressiveness > 1.5f && randomValue < Aggressiveness / 2.0f)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /*private void Shoot(UnitController controller)
+    {
+        Debug.Log("Bot is shooting");
+    }*/
+
+    private float GetNormalRandomValue(float mean, float stdDev)
+    {
+        double u1 = 1.0 - random.NextDouble(); // Uniform
+        double u2 = 1.0 - random.NextDouble();
+        double randStdNormal = System.Math.Sqrt(-2.0 * System.Math.Log(u1)) * System.Math.Sin(2.0 * System.Math.PI * u2); // Random normal(0,1)
+        float randNormal = mean + stdDev * (float)randStdNormal;
+
+        return Mathf.Max(0.1f, randNormal);
     }
 }
