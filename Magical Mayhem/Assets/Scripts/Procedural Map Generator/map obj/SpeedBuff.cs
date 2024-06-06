@@ -23,8 +23,7 @@ public class SpeedBuff : NetworkBehaviour
 
     private IEnumerator Cooldown(int cd){
         yield return new WaitForSeconds(cd);
-        GetComponent<MeshRenderer>().enabled = true;
-        GetComponent<BoxCollider>().enabled = true;
+        NowYouSeeMeClientRPC();
     }
 
     private IEnumerator SetMaxSpeedback(float speed, int activetime, Collider player){
@@ -35,12 +34,22 @@ public class SpeedBuff : NetworkBehaviour
     private void OnTriggerEnter(Collider other){
        if(IsServer){
             if(other != null){
-                GetComponent<MeshRenderer>().enabled = false;
-                GetComponent<BoxCollider>().enabled = false;
-                StartCoroutine(Cooldown(cd));
+                NowYouDontClientRPC();
                 other.GetComponent<UnitMover>().BuffSpeed(speed, acceleration);
+                StartCoroutine(Cooldown(cd));
                 StartCoroutine(SetMaxSpeedback(speed, activetime, other));
             }
         }
+    }
+
+    [ClientRpc]
+    private void NowYouDontClientRPC(){
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
+    }
+    [ClientRpc]
+    private void NowYouSeeMeClientRPC(){
+        GetComponent<MeshRenderer>().enabled = true;
+        GetComponent<BoxCollider>().enabled = true;
     }
 }

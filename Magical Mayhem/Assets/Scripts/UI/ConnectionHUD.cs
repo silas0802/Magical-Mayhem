@@ -24,6 +24,26 @@ public class ConnectionHUD : MonoBehaviour
         joinServer.onClick.AddListener(JoinServer);
         host.onClick.AddListener(HostGame);
         join.onClick.AddListener(JoinGame);
+
+        string[] args = System.Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length; i++)
+        {
+            switch (args[i])
+            {
+                case "launch-server":
+                    SetConnectionData("");
+                    break;
+                case "launch-client":
+                    if (args.Length > i + 1)
+                    {
+                        string ip = args[i + 1];
+                        SetConnectionData(ip);
+                        JoinGame();
+                    }
+                    
+                    break;
+            }
+        }
     }
 
     public void SetConnectionData(string IP)
@@ -64,7 +84,7 @@ public class ConnectionHUD : MonoBehaviour
     private void HostGame()
     {
         print(GetLocalIPv4());
-        SetConnectionData(LOCALHOST);
+        SetConnectionData("");
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
         NetworkManager.Singleton.StartHost();
         LobbySystem.names.Add(99,userNameField.text);

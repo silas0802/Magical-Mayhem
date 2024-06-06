@@ -22,19 +22,28 @@ public class HealthBuff : NetworkBehaviour
 
     private IEnumerator Cooldown(int cd){
         yield return new WaitForSeconds(cd);
-        GetComponent<MeshRenderer>().enabled = true;
-        GetComponent<BoxCollider>().enabled = true;
+        NowYouSeeMeClientRPC();
     }
 
     private void OnTriggerEnter(Collider other){
         if(IsServer){
             IDamagable player = other.gameObject.GetComponent<IDamagable>();
             if(player != null){
-                GetComponent<MeshRenderer>().enabled = false;
-                GetComponent<BoxCollider>().enabled = false;
-                StartCoroutine(Cooldown(cd));
+                NowYouDontClientRPC();
                 player.ModifyHealth(other.GetComponent<UnitController>(), health);
+                StartCoroutine(Cooldown(cd));
             }
         }
+    }
+
+    [ClientRpc]
+    private void NowYouDontClientRPC(){
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
+    }
+    [ClientRpc]
+    private void NowYouSeeMeClientRPC(){
+        GetComponent<MeshRenderer>().enabled = true;
+        GetComponent<BoxCollider>().enabled = true;
     }
 }
