@@ -4,102 +4,107 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Fighting Logic", menuName = "Game/AI/Fighting Logic")]
 public class FightingLogic : ScriptableObject
-{
+{   
+    [SerializeField] private bool isOn = false;
+
     [SerializeField] private float Aggressiveness;
     [SerializeField] private bool Safety;
     [SerializeField] private float roamingSpeed = 1.0f;
     [SerializeField] private float roamingInterval = 2.0f;
-    [SerializeField] private float shootingMean = 3.5f;
-    [SerializeField] private float shootingStdDev = 0.7f;
+    [SerializeField] private float shootingMean = 6.0f;
+    [SerializeField] private float shootingStdDev = 1.0f;
 
     private Vector3 roamingDirection;
     private float roamingTimer;
     private float shootingTimer;
 
-    private System.Random random = new System.Random();
+    private readonly System.Random random = new();
+
 
     public void HandleFightingLogic(UnitController controller)
     {
-        controller.frameCounter++;
-        // Every 10th frame we check for nearby projectiles and try to dodge them. This only affects movement.
-
-        if (controller.frameCounter % 10 == 0)
+        if (isOn)
         {
-            List<ProjectileInstance> nearbyProjectiles = DetectNearbyProjectiles(controller);
-            if (nearbyProjectiles != null && nearbyProjectiles.Count > 0)
-            {
-                Vector3 dodgeDirection = EvaluateNearbyProjectiles(controller, nearbyProjectiles);
+            controller.frameCounter++;
 
-                if (dodgeDirection != Vector3.zero) 
+            // Every 10th frame we check for nearby projectiles and try to dodge them. This only affects movement.
+            if (controller.frameCounter % 10 == 0)
+            {
+                List<ProjectileInstance> nearbyProjectiles = DetectNearbyProjectiles(controller);
+                if (nearbyProjectiles != null && nearbyProjectiles.Count > 0)
                 {
-                    Safety = false;
-                    Vector3 targetPosition = controller.transform.position + dodgeDirection;
-                    controller.unitMover.SetTargetPosition(targetPosition);
-                    Debug.Log("Dodging to position: " + targetPosition);
+                    Vector3 dodgeDirection = EvaluateNearbyProjectiles(controller, nearbyProjectiles);
+
+                    if (dodgeDirection != Vector3.zero) 
+                    {
+                        Safety = false;
+                        Vector3 targetPosition = controller.transform.position + dodgeDirection;
+                        controller.unitMover.SetTargetPosition(targetPosition);
+                    }
+                    else
+                    {
+                        Safety = true;
+                    }
                 }
                 else
                 {
                     Safety = true;
                 }
-            }
-            else
-            {
-                Safety = true;
-            }
 
-            // If there's no danger we roam randomly. Improve later if good idea
-            if (Safety)
-            {
-                roamingTimer -= 0.1f;
-                Aggressiveness += 0.1f;
-
-                if (roamingTimer <= 0)
+                // If there's no danger we roam randomly. Improve later if good idea
+                if (Safety)
                 {
-                    roamingTimer = roamingInterval;
-                    float randomAngle = Random.Range(0, 360);
-                    roamingDirection = new Vector3(Mathf.Cos(randomAngle * Mathf.Deg2Rad), 0, Mathf.Sin(randomAngle * Mathf.Deg2Rad)).normalized;
+                    roamingTimer -= 0.1f;
+                    Aggressiveness += 0.1f;
 
-                    // We will try to get the bot towards the center:
-                    float centerWeight = 0.5f;
-                    Vector3 centerDirection = (Vector3.zero - controller.transform.position).normalized;
-                    Vector3 combinedDirection = (roamingDirection + centerDirection * centerWeight).normalized;
-                    roamingDirection = combinedDirection;
+                    if (roamingTimer <= 0)
+                    {
+                        roamingTimer = roamingInterval;
+                        float randomAngle = Random.Range(0, 360);
+                        roamingDirection = new Vector3(Mathf.Cos(randomAngle * Mathf.Deg2Rad), 0, Mathf.Sin(randomAngle * Mathf.Deg2Rad)).normalized;
+
+                        // We will try to get the bot towards the center:
+                        float centerWeight = 0.7f;
+                        Vector3 centerDirection = (Vector3.zero - controller.transform.position).normalized;
+                        Vector3 combinedDirection = (roamingDirection + centerDirection * centerWeight).normalized;
+                        roamingDirection = combinedDirection;
+                    }
+
+                    Vector3 targetPosition = controller.transform.position + roamingDirection * roamingSpeed;
+                    controller.unitMover.SetTargetPosition(targetPosition);
                 }
 
-                Vector3 targetPosition = controller.transform.position + roamingDirection * roamingSpeed;
-                controller.unitMover.SetTargetPosition(targetPosition);
+                controller.frameCounter = 0; // Just so that numbers don't get too large.
             }
 
-            controller.frameCounter = 0; // Just so that numbers don't get too large.
-        }
+            // For the shooting logic
+            shootingTimer -= Time.deltaTime;
 
-        // For the shooting logic
-        shootingTimer -= Time.deltaTime;
-
-        if (shootingTimer <= 0 && ShouldShoot(controller))
-        {
-            //Shoot(controller);
-
-            // Reset shooting timer with a new normal distributed cooldown
-            shootingTimer = GetNormalRandomValue(shootingMean, shootingStdDev); // Reset shooting timer with a new normal distributed cooldown
-        }
-
-        try
-        {
-            UnitController nearestUnit = RoundManager.instance.FindNearestUnit(controller.transform.position, controller);
-            if (nearestUnit != null)
+            if (shootingTimer <= 0 && ShouldCastSpell(controller))
             {
-                float distanceToNearestUnit = (controller.transform.position - nearestUnit.transform.position).magnitude;
-                controller.isNearUnit = distanceToNearestUnit <= 3f;
+                CastSpell(controller);
+
+                // We reset shooting timer with a new normal distributed cooldown
+                shootingTimer = GetNormalRandomValue(shootingMean, shootingStdDev); // Reset shooting timer with a new normal distributed cooldown
             }
-            else
+
+            try
             {
-                controller.isNearUnit = false;
+                UnitController nearestUnit = RoundManager.instance.FindNearestUnit(controller.transform.position, controller);
+                if (nearestUnit != null)
+                {
+                    float distanceToNearestUnit = (controller.transform.position - nearestUnit.transform.position).magnitude;
+                    controller.isNearUnit = distanceToNearestUnit <= 3f;
+                }
+                else
+                {
+                    controller.isNearUnit = false;
+                }
             }
-        }
-        catch (System.Exception)
-        {
-            
+            catch (System.Exception)
+            {
+                
+            }
         }
     }
 
@@ -161,20 +166,21 @@ public class FightingLogic : ScriptableObject
         return dodgeDirection.normalized;
     }
 
-    private bool ShouldShoot(UnitController controller)
+    private void CastSpell(UnitController controller)
     {
-        float randomValue = Random.Range(0f, 1f);
-        if (Aggressiveness > 1.5f && randomValue < Aggressiveness / 2.0f)
+            // Debug.Log("Casting Spell");
+            controller.unitCaster.TryCastSpell(RoundManager.instance.roundNumber,  new Vector3(0,0,0));
+    }
+    
+    private bool ShouldCastSpell(UnitController controller)
+    {
+        float randomValue = Random.Range(0f, 2f);
+        if (Aggressiveness > 1.5f && randomValue < Aggressiveness / 2)
         {
             return true;
         }
         return false;
     }
-
-    /*private void Shoot(UnitController controller)
-    {
-        Debug.Log("Bot is shooting");
-    }*/
 
     private float GetNormalRandomValue(float mean, float stdDev)
     {

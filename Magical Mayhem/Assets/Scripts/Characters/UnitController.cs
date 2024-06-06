@@ -70,7 +70,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         return inLava;
     }
-    
+
     [Header("Debugging")]
     public int threatLevel = 0;
     public bool isNearUnit = false;
@@ -86,8 +86,6 @@ public class UnitController : NetworkBehaviour, IDamagable
         health.Value = unitClass.maxHealth;
         inventory = new Inventory();
     }
-
-    
 
     void Update()
     {

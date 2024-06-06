@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 918846748
+  GlobalObjectIdHash: 1094945218
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -65,11 +65,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fd6524bb7c340145be102574f1ee7bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDebugging: 1
   botBrain: {fileID: 11400000, guid: 39bec31604f3a6d4ebcb7539fd7b1363, type: 2}
   roundNumber: 0
+  numOfRounds: 0
   shoppingTime: 5
   units: []
+  aliveUnits: []
   kills: []
   playerPrefab: {fileID: 3340376680651131690, guid: 01d63193087cdb542a00ab7bca0656dd,
     type: 3}

@@ -12,7 +12,7 @@ public class RoundManager : NetworkBehaviour
     public static RoundManager instance;
     //[SerializeField] public HUDScript HUD;
     [SerializeField] private Brain botBrain;
-    [SerializeField] private int roundNumber = 0;
+    [SerializeField] public int roundNumber = 0;
     [SerializeField] private int numOfRounds = 0;
     [SerializeField] private int shoppingTime = 60;
 
