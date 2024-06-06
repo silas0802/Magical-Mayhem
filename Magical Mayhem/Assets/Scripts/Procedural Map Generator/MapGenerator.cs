@@ -13,9 +13,9 @@ public class MapGenerator : NetworkBehaviour
     [SerializeField] private NetworkObject speedCube;
     public static MapGenerator instance;
     
-    private int mapSize;
-    private int mapType;
-    private bool buffs;
+    private static int mapSize;
+    private static int mapType;
+    private static bool buffs;
     private int lavaTileCounter = 0;
     private readonly float wallHieght = 5f;
     [SerializeField] private float lavaSpawnTime = 10f;
@@ -37,9 +37,7 @@ public class MapGenerator : NetworkBehaviour
     void Awake(){
         if(instance == null){
             instance = this;
-            mapSize = LobbySystem.GetMapSize();
-            mapType = LobbySystem.GetMapType();
-            buffs = LobbySystem.GetBuffs();
+            
         }
         else{
             Destroy(gameObject);
@@ -47,6 +45,9 @@ public class MapGenerator : NetworkBehaviour
     }
 
     public void GenerateMap(){
+        mapSize = LobbySystem.GetMapSize();
+        mapType = LobbySystem.GetMapType();
+        buffs = LobbySystem.GetBuffs();
         mapSize = mapSize switch
         {
             1 => 20,
@@ -133,7 +134,7 @@ public class MapGenerator : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Lava();
+        Lava();
      
     }
 
@@ -263,6 +264,8 @@ public class MapGenerator : NetworkBehaviour
                 if(buffs && buffArray[i,j]) DestObj(buffArray[i,j]);
             }
         }
+        lavaSpawnTime = 20;
+        lavaTileCounter = 0;
     }
 
     //This function converts the outemost layer of the map to lavaTiles at a preset rate(nextlavaSpawn)

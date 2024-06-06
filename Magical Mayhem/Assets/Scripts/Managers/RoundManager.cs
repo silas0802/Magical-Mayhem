@@ -13,6 +13,7 @@ public class RoundManager : NetworkBehaviour
     //[SerializeField] public HUDScript HUD;
     [SerializeField] private Brain botBrain;
     [SerializeField] private int roundNumber = 0;
+    [SerializeField] private int numOfRounds = 0;
     [SerializeField] private int shoppingTime = 60;
 
     public bool roundIsOngoing { get; private set; }
@@ -28,6 +29,7 @@ public class RoundManager : NetworkBehaviour
         if (instance == null)
         {
             instance = this;
+            numOfRounds = LobbySystem.GetNumOfRounds();
             
             if (UnitController.OnUnitDeath == null)
             {
@@ -190,7 +192,12 @@ public class RoundManager : NetworkBehaviour
 
         yield return new WaitForSeconds(shoppingTime);
         ClosePlayerShopsClientRPC();
-        StartNewRound();
+        if(roundNumber != numOfRounds){
+            StartNewRound();
+        }
+        else{
+            //end game logic
+        }
         
     }
     /// <summary>
