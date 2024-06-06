@@ -1,14 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+
+using TMPro;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUDScript : MonoBehaviour
+public class HUDScript : NetworkBehaviour
 {
     public static HUDScript instance;
     public UnitController unitController;
     public Image[] spellIcons;
+    public TMP_Text healthText;
+    public Transform healthbar;
+    
+    public Image[] cooldowntemplates = new Image[6];
+    private float maxHealthBarLenght;
 
+    private float maxHealth;
+    float[] totalCooldowns;
+    
     
     void Awake()
     {
@@ -19,18 +31,50 @@ public class HUDScript : MonoBehaviour
     void Start()
     {
         
+        foreach (Image item in cooldowntemplates)
+        {
+            item.gameObject.SetActive(false);           
+        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+       // CooldownInitiator();
     }
 
     public void ConnectPlayer(UnitController local)
     {
         unitController = local;
         LoadImages();
+        maxHealth = unitController.GetHealth();
+        ModyfyHealthbarClientRPC();
+    }
+
+    [ClientRpc]
+    public void ModyfyHealthbarClientRPC(){
+       
+        healthText.SetText(unitController.GetHealth()+"/"+maxHealth);
+        float percentageHealthMissing = unitController.GetHealth()/maxHealth;
+        
+        healthbar.GetComponent<Image>().fillAmount = percentageHealthMissing;
+
+    }
+
+    public void GetTotalCooldowns(){
+        totalCooldowns = unitController.unitCaster.getCooldowns();
+        Debug.Log(totalCooldowns[0]);
+    }
+
+    public void CooldownInitiator(){
+        float[] cooldowns = unitController.unitCaster.getCooldowns();
+
+        for (int i = 0; i < cooldowns.Length; i++)
+        {
+            cooldowntemplates[i].fillAmount=cooldowns[i]/totalCooldowns[i];
+            
+        }
     }
 
     public void LoadImages() 

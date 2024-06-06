@@ -353,6 +353,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
         health.Value = Mathf.Clamp(health.Value+amount,0,unitClass.maxHealth);
+        HUDScript.instance.ModyfyHealthbarClientRPC();
         if (health.Value == 0)
         {
             Death(dealer);
@@ -426,6 +427,8 @@ public class UnitController : NetworkBehaviour, IDamagable
         this.brain = brain;
     }
 
+
+    
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()

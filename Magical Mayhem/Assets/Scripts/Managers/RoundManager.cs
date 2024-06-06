@@ -177,6 +177,7 @@ public class RoundManager : NetworkBehaviour
     private void ClosePlayerShopsClientRPC(){
         SpellShop.instance.gameObject.SetActive(false);
         HUDScript.instance.LoadImages();
+        HUDScript.instance.GetTotalCooldowns();
         HUDScript.instance.gameObject.SetActive(true);
 
     }

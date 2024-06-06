@@ -20,6 +20,10 @@ public class UnitCaster : NetworkBehaviour
         HandleCooldowns();
     }
 
+    public float[] getCooldowns(){
+        return cooldowns;
+    }
+
     /// <summary>
     /// Is called locally and determines how to cast depending on user being server or client.
     /// </summary>
