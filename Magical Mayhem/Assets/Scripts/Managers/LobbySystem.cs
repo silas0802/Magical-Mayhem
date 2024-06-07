@@ -47,7 +47,7 @@ public class LobbySystem : NetworkBehaviour
             t.TrySetParent(playerInfoSpawnPoint, false);
             string name;
             names.TryGetValue(99,out name);
-            t.GetComponent<LobbyPlayerInfo>().SetName(name);
+            t.GetComponent<LobbyPlayerInfo>().uName.Value = name;
             ipText.text = ConnectionHUD.GetLocalIPv4();
         }
         else
@@ -71,7 +71,7 @@ public class LobbySystem : NetworkBehaviour
         foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClientsList){
             string name;
             names.TryGetValue(player.ClientId,out name);
-            player.PlayerObject.GetComponent<LobbyPlayerInfo>().SetName(name);
+            //player.PlayerObject.GetComponent<LobbyPlayerInfo>().uName.Value = name;
         }
     }
     /// <summary>
@@ -85,7 +85,7 @@ public class LobbySystem : NetworkBehaviour
         NetworkObject player = Instantiate(playerTemplate,playerInfoSpawnPoint);
         string name;
         names.TryGetValue(clientId,out name);
-        player.GetComponent<LobbyPlayerInfo>().SetName(name);
+        player.GetComponent<LobbyPlayerInfo>().uName.Value = name;
         player.SpawnAsPlayerObject(clientId, true);
         player.TrySetParent(playerInfoSpawnPoint, false);
 
