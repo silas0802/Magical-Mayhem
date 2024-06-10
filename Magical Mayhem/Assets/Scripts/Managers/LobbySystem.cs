@@ -67,19 +67,7 @@ public class LobbySystem : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (!IsServer) return;
-        //if (updateNameTimer <= 0)
-        //{
-        //    foreach (LobbyPlayerInfo player in playerList)
-        //    {
-        //        player.SetNameClientRPC(player.sName);
-        //    }
-        //    updateNameTimer = 3;
-        //}
-        //else
-        //{
-        //    updateNameTimer -= Time.deltaTime;
-        //}
+        
         
     }
 
