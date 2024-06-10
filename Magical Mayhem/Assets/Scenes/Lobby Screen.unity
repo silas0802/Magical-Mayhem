@@ -2752,7 +2752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eaeb902d54a57746b3356b6a976e724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTemplate: {fileID: 3227371765406175267, guid: 65645ce00105dec4eac711c0196923b8,
+  playerTemplate: {fileID: 3227371765406175267, guid: 1a9a37e4a99a38c429ded9f7ac08937d,
     type: 3}
   ipText: {fileID: 1455300868}
   playerInfoSpawnPoint: {fileID: 1170154547}
@@ -2760,6 +2760,7 @@ MonoBehaviour:
   leaveLobbyButton: {fileID: 318083538}
   mapSizeDrop: {fileID: 976247947}
   mapTypeDrop: {fileID: 2091800329}
+  NumOfRoundsDrop: {fileID: 1572872698}
   buffsToggle: {fileID: 812880764}
 --- !u!114 &1080097515
 MonoBehaviour:

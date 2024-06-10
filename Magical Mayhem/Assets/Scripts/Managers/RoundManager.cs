@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -20,6 +21,7 @@ public class RoundManager : NetworkBehaviour
     [SerializeField] private List<UnitController> units = new List<UnitController>();
     [SerializeField] private List<UnitController> aliveUnits = new List<UnitController>();
     [SerializeField] private List<KillData> kills = new List<KillData>();
+    private static List<UnitController> placement = new();
     [Header("References")]
     [SerializeField] private NetworkObject playerPrefab;
     
@@ -189,15 +191,10 @@ public class RoundManager : NetworkBehaviour
     private IEnumerator ShoppingPhaseCoroutine()
     {
 
+        StartNewRound();
+
         yield return new WaitForSeconds(shoppingTime);
-        ClosePlayerShopsClientRPC();
-        if(roundNumber != numOfRounds){
-            StartNewRound();
-        }
-        else{
-            //end game logic
-        }
-        
+        ClosePlayerShopsClientRPC();        
     }
     /// <summary>
     /// Waits for some time then starts the shopping phase
@@ -205,8 +202,20 @@ public class RoundManager : NetworkBehaviour
     /// <returns></returns>
     private IEnumerator BeforeShopPhase()
     {
-        yield return new WaitForSeconds(2);
-        StartShoppingPhase();
+        if(roundNumber < numOfRounds){
+            yield return new WaitForSeconds(2);
+            StartShoppingPhase();
+        }
+        else{
+            foreach (KillData kill in kills){
+                placement.Add(kill.deadUnit);
+            }
+            foreach (UnitController unit in aliveUnits){
+                placement.Add(unit);
+            }
+            NetworkManager.Singleton.SceneManager.LoadScene("EndGameScreen", UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
+
     }
     /// <summary>
     /// Event that is called on every kill. Handles ending the round.
@@ -225,6 +234,12 @@ public class RoundManager : NetworkBehaviour
         }
 
     }
+
+
+    public static List<UnitController> getPlacement(){
+        return placement;
+    }
+
     /// <summary>
     /// Adds a bot with a given brain to the game
     /// </summary>

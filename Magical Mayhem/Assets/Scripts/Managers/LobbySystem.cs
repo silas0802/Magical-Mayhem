@@ -18,11 +18,15 @@ public class LobbySystem : NetworkBehaviour
     [SerializeField] private Button leaveLobbyButton;
     [SerializeField] private TMP_Dropdown mapSizeDrop;
     [SerializeField] private TMP_Dropdown mapTypeDrop;
+     [SerializeField] private TMP_Dropdown NumOfRoundsDrop;
+
     [SerializeField] private Toggle buffsToggle;
+    List<LobbyPlayerInfo> playerList = new List<LobbyPlayerInfo>();
     private static int mapSize = 0;
     private static int mapType = 0;
     private static bool buffs = true;
     private static int numOfRounds = 4;
+    private float updateNameTimer;
     private void Awake()
     {
         if (instance == null){
@@ -47,8 +51,10 @@ public class LobbySystem : NetworkBehaviour
             t.TrySetParent(playerInfoSpawnPoint, false);
             string name;
             names.TryGetValue(99,out name);
-            t.GetComponent<LobbyPlayerInfo>().uName.Value = name;
+            t.GetComponent<LobbyPlayerInfo>().sName = name;
             ipText.text = ConnectionHUD.GetLocalIPv4();
+            playerList.Add(t.GetComponent<LobbyPlayerInfo>());
+            SetPlayersNames();
         }
         else
         {
@@ -57,6 +63,7 @@ public class LobbySystem : NetworkBehaviour
             mapSizeDrop.gameObject.SetActive(false);
             mapTypeDrop.gameObject.SetActive(false);
             buffsToggle.gameObject.SetActive(false);
+            NumOfRoundsDrop.gameObject.SetActive(false);
         }
     }
 
@@ -64,16 +71,9 @@ public class LobbySystem : NetworkBehaviour
     void Update()
     {
         
+        
     }
 
-    [ClientRpc]
-    private void UpdateNamesClientRPC(){
-        foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClientsList){
-            string name;
-            names.TryGetValue(player.ClientId,out name);
-            //player.PlayerObject.GetComponent<LobbyPlayerInfo>().uName.Value = name;
-        }
-    }
     /// <summary>
     /// Is called when a client connects. It spawns the playerprefab for them and gets the reference to their UnitController. Server Only. - Silas Thule
     /// </summary>
@@ -85,16 +85,21 @@ public class LobbySystem : NetworkBehaviour
         NetworkObject player = Instantiate(playerTemplate,playerInfoSpawnPoint);
         string name;
         names.TryGetValue(clientId,out name);
-        player.GetComponent<LobbyPlayerInfo>().uName.Value = name;
         player.SpawnAsPlayerObject(clientId, true);
         player.TrySetParent(playerInfoSpawnPoint, false);
 
-        //UpdateNamesClientRPC();
-        // units.Add(unit);
-        // if (units.Count > 1)
-        // {
-        //     startButton.gameObject.SetActive(true);
-        // }
+        player.GetComponent<LobbyPlayerInfo>().sName = name;
+        playerList.Add(player.GetComponent<LobbyPlayerInfo>());
+
+        SetPlayersNames();
+    }
+
+    void SetPlayersNames()
+    {
+        foreach (LobbyPlayerInfo p in playerList)
+        {
+            p.SetNameClientRPC(p.sName);
+        }
     }
     /// <summary>
     /// Is called when a client disconnects. It despawns the playerprefab for them and removes the reference to their UnitController. Server Only. - Silas Thule
@@ -105,6 +110,7 @@ public class LobbySystem : NetworkBehaviour
         
         if (!IsServer) return;
         NetworkObject player = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
+        playerList.Remove(player.GetComponent<LobbyPlayerInfo>());
         player.Despawn(true);
         Destroy(player.gameObject);
         // units.Remove(unit);
