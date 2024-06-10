@@ -52,6 +52,7 @@ public class LobbySystem : NetworkBehaviour
             t.GetComponent<LobbyPlayerInfo>().sName = name;
             ipText.text = ConnectionHUD.GetLocalIPv4();
             playerList.Add(t.GetComponent<LobbyPlayerInfo>());
+            SetPlayersNames();
         }
         else
         {
@@ -66,19 +67,19 @@ public class LobbySystem : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!IsServer) return;
-        if (updateNameTimer <= 0)
-        {
-            foreach (LobbyPlayerInfo player in playerList)
-            {
-                player.SetNameClientRPC(player.sName);
-            }
-            updateNameTimer = 3;
-        }
-        else
-        {
-            updateNameTimer -= Time.deltaTime;
-        }
+        //if (!IsServer) return;
+        //if (updateNameTimer <= 0)
+        //{
+        //    foreach (LobbyPlayerInfo player in playerList)
+        //    {
+        //        player.SetNameClientRPC(player.sName);
+        //    }
+        //    updateNameTimer = 3;
+        //}
+        //else
+        //{
+        //    updateNameTimer -= Time.deltaTime;
+        //}
         
     }
 
@@ -99,12 +100,15 @@ public class LobbySystem : NetworkBehaviour
         player.GetComponent<LobbyPlayerInfo>().sName = name;
         playerList.Add(player.GetComponent<LobbyPlayerInfo>());
 
-        //UpdateNamesClientRPC();
-        // units.Add(unit);
-        // if (units.Count > 1)
-        // {
-        //     startButton.gameObject.SetActive(true);
-        // }
+        SetPlayersNames();
+    }
+
+    void SetPlayersNames()
+    {
+        foreach (LobbyPlayerInfo p in playerList)
+        {
+            p.SetNameClientRPC(p.sName);
+        }
     }
     /// <summary>
     /// Is called when a client disconnects. It despawns the playerprefab for them and removes the reference to their UnitController. Server Only. - Silas Thule
