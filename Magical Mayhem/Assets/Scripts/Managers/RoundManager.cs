@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// A Singleton class that controls the game flow. - Silas Thule
@@ -94,7 +95,7 @@ public class RoundManager : NetworkBehaviour
     {
         UnitController closest = null;
         float distance = 1000;
-        foreach (UnitController unit in units)
+        foreach (UnitController unit in aliveUnits)
         {
             if (unit != self)
             {
@@ -121,7 +122,6 @@ public class RoundManager : NetworkBehaviour
             unit.ConnectUnitToShopClientRPC();
             unit.ConnectUnitToHUDClientRPC();
         }
-        roundIsOngoing = false;
         OpenPlayerShopsClientRPC();
         StartCoroutine(ShoppingPhaseCoroutine());
     }
@@ -143,7 +143,6 @@ public class RoundManager : NetworkBehaviour
         }
         MapGenerator.instance.GenerateMap();
         PlaceUnits();
-        roundIsOngoing = true;
 
     }
     /// <summary>
@@ -195,6 +194,7 @@ public class RoundManager : NetworkBehaviour
 
         yield return new WaitForSeconds(shoppingTime);
         ClosePlayerShopsClientRPC();        
+        roundIsOngoing = true;
     }
     /// <summary>
     /// Waits for some time then starts the shopping phase
@@ -203,6 +203,7 @@ public class RoundManager : NetworkBehaviour
     private IEnumerator BeforeShopPhase()
     {
         if(roundNumber < numOfRounds){
+            roundIsOngoing = false;
             yield return new WaitForSeconds(2);
             StartShoppingPhase();
         }
@@ -213,10 +214,20 @@ public class RoundManager : NetworkBehaviour
             foreach (UnitController unit in aliveUnits){
                 placement.Add(unit);
             }
-            NetworkManager.Singleton.SceneManager.LoadScene("EndGameScreen", UnityEngine.SceneManagement.LoadSceneMode.Single);
+            EndGameScreenClientRPC();
+            NetworkManager.Singleton.Shutdown();
+            SceneManager.LoadScene("EndGameScreen", LoadSceneMode.Single);
         }
 
     }
+
+    [ClientRpc]
+    public void EndGameScreenClientRPC(/*List<UnitController> p*/){
+        //placement = p;
+        NetworkManager.Singleton.Shutdown();
+        SceneManager.LoadScene("EndGameScreen", LoadSceneMode.Single);
+    }
+
     /// <summary>
     /// Event that is called on every kill. Handles ending the round.
     /// </summary>

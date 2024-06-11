@@ -32,7 +32,6 @@ public class EndScreen : MonoBehaviour
         
     }
     private void LeaveButton(){
-        NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("Connection Screen");
     }
 }

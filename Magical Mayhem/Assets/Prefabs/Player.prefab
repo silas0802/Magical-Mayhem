@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 119731904
+  GlobalObjectIdHash: 2111426720
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -196,10 +196,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 276fc7ef598338649a8f6a28f546bbb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
+  health:
+    m_InternalValue: 0
   arcaneMultiplier: 0
   fireDamageMultiplier: 0
   frostDamageMultiplier: 0
+  inLava: 0
+  bodyMesh: {fileID: 7226464870888104287}
   brain: {fileID: 0}
   unitClass: {fileID: 11400000, guid: befbd27881e787e438d181a27256f47a, type: 2}
   inventory:
@@ -221,6 +224,7 @@ MonoBehaviour:
   unitCaster: {fileID: 0}
   animator: {fileID: 0}
   unitMover: {fileID: 0}
+  frameCounter: 0
   threatLevel: 0
   isNearUnit: 0
 --- !u!114 &1761311485135442400
@@ -322,6 +326,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1029926494092608303, guid: 72f7215e5caab024dbf4f53040d51d3e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 72f7215e5caab024dbf4f53040d51d3e,
         type: 3}
       propertyPath: m_Name
@@ -408,3 +417,9 @@ MonoBehaviour:
     TriggerNameHash: 657687027
     TransitionIndex: 0
   m_Animator: {fileID: 4959414789732882992}
+--- !u!4 &7226464870888104287 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -2903012834366121310, guid: 72f7215e5caab024dbf4f53040d51d3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3746962686410947581}
+  m_PrefabAsset: {fileID: 0}
