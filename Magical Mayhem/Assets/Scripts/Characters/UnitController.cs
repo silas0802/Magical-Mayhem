@@ -93,6 +93,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         if (!IsServer) return;
         brain?.HandleFightingLogic(this);
+        brain?.HandleShoppingLogic(this);
 
         if(inLava){
 
