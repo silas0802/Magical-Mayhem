@@ -7,7 +7,6 @@ public class Brain : ScriptableObject
 {
     public BuyingLogic buyingLogic;
     public FightingLogic fightingLogic;
-    
 
     /// <summary>
     /// Handles the decisions that the AI or player makes
@@ -16,6 +15,7 @@ public class Brain : ScriptableObject
     public void HandleFightingLogic(UnitController controller){
         fightingLogic.HandleFightingLogic(controller);
     }
+
     public void HandleShoppingLogic(UnitController controller)
     {
         buyingLogic.HandleShoppingLogic(controller);

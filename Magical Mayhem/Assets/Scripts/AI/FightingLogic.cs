@@ -17,7 +17,6 @@ public class FightingLogic : ScriptableObject
     private Vector3 roamingDirection;
     private float roamingTimer;
     private float shootingTimer;
-
     private readonly System.Random random = new();
 
 
@@ -166,10 +165,10 @@ public class FightingLogic : ScriptableObject
         return dodgeDirection.normalized;
     }
 
+    // This needs to be smart: Which spell to use, when, how?
     private void CastSpell(UnitController controller)
     {
-            // Debug.Log("Casting Spell");
-            controller.unitCaster.TryCastSpell(RoundManager.instance.roundNumber,  new Vector3(0,0,0));
+        controller.unitCaster.TryCastSpell(0,  new Vector3(0,0,0));
     }
     
     private bool ShouldCastSpell(UnitController controller)
