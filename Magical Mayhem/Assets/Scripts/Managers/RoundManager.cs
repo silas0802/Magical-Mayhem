@@ -18,7 +18,7 @@ public class RoundManager : NetworkBehaviour
     [SerializeField] private int numOfRounds = 0;
     [SerializeField] private int shoppingTime = 60;
 
-    public NetworkVariable<bool> roundIsOngoing { get; private set; }
+    public NetworkVariable<bool> roundIsOngoing { get; private set; } = new NetworkVariable<bool>(false);
     [SerializeField] private List<UnitController> units = new List<UnitController>();
     [SerializeField] private List<UnitController> aliveUnits = new List<UnitController>();
     [SerializeField] private List<KillData> kills = new List<KillData>();
