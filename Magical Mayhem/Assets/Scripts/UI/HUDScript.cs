@@ -71,7 +71,6 @@ public class HUDScript : NetworkBehaviour
         float percentageHealthMissing = currentHealth/maxHealth;
         
         healthbar.GetComponent<Image>().fillAmount = percentageHealthMissing;
-        
     }
 
     public void GetTotalCooldowns(){

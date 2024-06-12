@@ -170,7 +170,10 @@ public class FightingLogic : ScriptableObject
     private void CastSpell(UnitController controller)
     {
         UnitController nearestOpponent = RoundManager.instance.FindNearestUnit(controller.transform.position, controller);
-        controller.unitCaster.TryCastSpell(0,  nearestOpponent.transform.position);
+        if (nearestOpponent != null)
+        {
+            controller.unitCaster.TryCastSpell(0,  nearestOpponent.transform.position);
+        }
     }
     
     private bool ShouldCastSpell(UnitController controller)
