@@ -389,7 +389,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
         health.Value = Mathf.Clamp(health.Value+amount,0,unitClass.maxHealth);
-        ModifyHealthBarClientRPC(amount);
+        ModifyHealthBarClientRPC(health.Value);
         if (health.Value == 0)
         {
             Death(dealer);    

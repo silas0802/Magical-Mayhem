@@ -62,10 +62,10 @@ public class HUDScript : NetworkBehaviour
     }
 
     
-    public void ModyfyHealthbar(int modifiyingHealth){
+    public void ModyfyHealthbar(int currentHealth){
        
             
-        currentHealth+=modifiyingHealth;
+        
        Debug.Log(unitController);
         healthText.SetText(currentHealth+"/"+maxHealth);
         float percentageHealthMissing = currentHealth/maxHealth;
