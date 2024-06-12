@@ -18,7 +18,7 @@ public class RoundManager : NetworkBehaviour
     [SerializeField] private int numOfRounds = 0;
     [SerializeField] private int shoppingTime = 60;
 
-    public bool roundIsOngoing { get; private set; }
+    public NetworkVariable<bool> roundIsOngoing { get; private set; }
     [SerializeField] private List<UnitController> units = new List<UnitController>();
     [SerializeField] private List<UnitController> aliveUnits = new List<UnitController>();
     [SerializeField] private List<KillData> kills = new List<KillData>();
@@ -203,7 +203,7 @@ public class RoundManager : NetworkBehaviour
 
         yield return new WaitForSeconds(shoppingTime);
         ClosePlayerShopsClientRPC();        
-        roundIsOngoing = true;
+        roundIsOngoing.Value = true;
     }
     /// <summary>
     /// Waits for some time then starts the shopping phase
@@ -212,7 +212,7 @@ public class RoundManager : NetworkBehaviour
     private IEnumerator BeforeShopPhase()
     {
         if(roundNumber < numOfRounds){
-            roundIsOngoing = false;
+            roundIsOngoing.Value = false;
             yield return new WaitForSeconds(2);
             StartShoppingPhase();
         }
