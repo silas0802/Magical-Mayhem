@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Basic Fighting
   m_EditorClassIdentifier: 
   isOn: 0
-  Aggressiveness: 1629.5492
+  Aggressiveness: 1778.5128
   Safety: 1
   roamingSpeed: 1
   roamingInterval: 2

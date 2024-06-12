@@ -21,7 +21,7 @@ public class LobbySystem : NetworkBehaviour
      [SerializeField] private TMP_Dropdown NumOfRoundsDrop;
 
     [SerializeField] private Toggle buffsToggle;
-    List<LobbyPlayerInfo> playerList = new List<LobbyPlayerInfo>();
+    public static List<LobbyPlayerInfo> playerList = new List<LobbyPlayerInfo>();
     private static int mapSize = 0;
     private static int mapType = 0;
     private static bool buffs = true;
@@ -54,6 +54,7 @@ public class LobbySystem : NetworkBehaviour
             names.TryGetValue(99,out name);
             t.GetComponent<LobbyPlayerInfo>().sName = name;
             ipText.text = ConnectionHUD.GetLocalIPv4();
+            playerList = new List<LobbyPlayerInfo>();
             playerList.Add(t.GetComponent<LobbyPlayerInfo>());
             SetPlayersNames();
         }
@@ -99,7 +100,7 @@ public class LobbySystem : NetworkBehaviour
     {
         foreach (LobbyPlayerInfo p in playerList)
         {
-            p.SetNameClientRPC(p.sName);
+            p?.SetNameClientRPC(p.sName);
         }
     }
     /// <summary>

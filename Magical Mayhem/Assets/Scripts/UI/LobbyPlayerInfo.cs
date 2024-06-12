@@ -20,6 +20,10 @@ public class LobbyPlayerInfo : NetworkBehaviour
 
     [ClientRpc]
     public void SetNameClientRPC(string name){
-        userName.text = name;
+        if (userName!= null){
+            userName.text = name;
+
+        }
+
     }
 }

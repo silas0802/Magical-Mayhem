@@ -65,7 +65,7 @@ public class RoundManager : NetworkBehaviour
         if (!IsServer) return;
         
         NetworkObject player = Instantiate(playerPrefab);
-        player.SpawnAsPlayerObject(clientId, false);
+        player.SpawnAsPlayerObject(clientId, true);
         UnitController unit = player.GetComponent<UnitController>();
         units.Add(unit);
     }

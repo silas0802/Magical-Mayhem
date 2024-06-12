@@ -42,7 +42,7 @@ public class HUDScript : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SceneManager.GetActiveScene().name=="GameScreen")
+        if (RoundManager.instance != null&&RoundManager.instance.roundIsOngoing)
         {
             CooldownInitiator();     
         }
