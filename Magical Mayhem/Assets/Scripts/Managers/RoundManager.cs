@@ -214,9 +214,9 @@ public class RoundManager : NetworkBehaviour
             foreach (UnitController unit in aliveUnits){
                 placement.Add(unit);
             }
-            EndGameScreenClientRPC();
-            NetworkManager.Singleton.Shutdown();
-            SceneManager.LoadScene("EndGameScreen", LoadSceneMode.Single);
+            //EndGameScreenClientRPC();
+            //NetworkManager.Singleton.Shutdown();
+            NetworkManager.Singleton.SceneManager.LoadScene("EndGameScreen", LoadSceneMode.Single);
         }
 
     }
