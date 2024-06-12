@@ -5,6 +5,7 @@ using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HUDScript : NetworkBehaviour
@@ -19,7 +20,8 @@ public class HUDScript : NetworkBehaviour
     private float maxHealthBarLenght;
 
     private float maxHealth;
-    float[] totalCooldowns;
+    private float currentHealth;
+    float[] totalCooldowns = new float[6];
     
     
     void Awake()
@@ -41,7 +43,11 @@ public class HUDScript : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-       // CooldownInitiator();
+        if (SceneManager.GetActiveScene().name=="GameScreen")
+        {
+            CooldownInitiator();     
+        }
+       
     }
 
     public void ConnectPlayer(UnitController local)
@@ -49,25 +55,34 @@ public class HUDScript : NetworkBehaviour
         unitController = local;
         LoadImages();
         maxHealth = unitController.GetHealth();
-        ModyfyHealthbar(1,2);
-        Debug.Log(unitController);
+        healthText.SetText(unitController.GetHealth()+"/"+maxHealth);
+        healthbar.GetComponent<Image>().fillAmount = 1;
+        currentHealth=maxHealth;
+        GetTotalCooldowns();
     }
 
     
-    public void ModyfyHealthbar(int before,int after){
+    public void ModyfyHealthbar(int modifiyingHealth){
        
             
-        
+        currentHealth+=modifiyingHealth;
        Debug.Log(unitController);
-        healthText.SetText(unitController.GetHealth()+"/"+maxHealth);
-        float percentageHealthMissing = unitController.GetHealth()/maxHealth;
+        healthText.SetText(currentHealth+"/"+maxHealth);
+        float percentageHealthMissing = currentHealth/maxHealth;
         
         healthbar.GetComponent<Image>().fillAmount = percentageHealthMissing;
         
     }
 
     public void GetTotalCooldowns(){
-        totalCooldowns = unitController.unitCaster.getCooldowns();
+        int i = 0; 
+        Spell[] spells = unitController.inventory.spells;
+        foreach (Spell item in spells )
+        {
+           totalCooldowns[i] = spells[i] is not null ? spells[i].cooldown : 0; 
+            i++;    
+        }
+        
         Debug.Log(totalCooldowns[0]);
     }
 
@@ -76,7 +91,11 @@ public class HUDScript : NetworkBehaviour
 
         for (int i = 0; i < cooldowns.Length; i++)
         {
-            cooldowntemplates[i].fillAmount=cooldowns[i]/totalCooldowns[i];
+            if (true)
+            {
+                
+            }
+            cooldowntemplates[i].fillAmount=(cooldowns[i]<=0 ? 0 : cooldowns[i])/totalCooldowns[i];
             
         }
     }
