@@ -82,7 +82,6 @@ public class RoundManager : NetworkBehaviour
         units.Remove(unit);
         player.Despawn(true);
         Destroy(player.gameObject);
-        
     }
 
     /// <summary>
@@ -109,7 +108,7 @@ public class RoundManager : NetworkBehaviour
         
         return closest;
     }
-    
+
     /// <summary>
     /// Opens the shop for all players for a given time and waits for some time before closing the shop and starting the next round.  - Silas Thule
     /// </summary>
