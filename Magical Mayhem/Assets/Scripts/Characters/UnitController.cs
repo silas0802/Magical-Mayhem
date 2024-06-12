@@ -198,6 +198,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         {
             Debug.Log("i call connectplayer");
             HUDScript.instance.ConnectPlayer(this);
+            
         }
     }
 
@@ -391,9 +392,9 @@ public class UnitController : NetworkBehaviour, IDamagable
     public void ModifyHealth(UnitController dealer,int amount)
     {
         
-        if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
+        if (RoundManager.instance && !RoundManager.instance.roundIsOngoing.Value) return;
         health.Value = Mathf.Clamp(health.Value+amount,0,unitClass.maxHealth);
-        ModifyHealthBarClientRPC(amount);
+        ModifyHealthBarClientRPC(health.Value);
         if (health.Value == 0)
         {
             Death(dealer);    
@@ -434,7 +435,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     /// <param name="index"></param>
     void CastSpell(int index)
     {
-        if (!IsLocalPlayer || brain || !RoundManager.instance.roundIsOngoing) return;
+        if (!IsLocalPlayer || brain || !RoundManager.instance.roundIsOngoing.Value) return;
         bool validTarget;
         Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
         if (validTarget)
