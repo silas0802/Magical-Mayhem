@@ -86,8 +86,12 @@ public class UnitController : NetworkBehaviour, IDamagable
         unitCaster = GetComponent<UnitCaster>();
         unitMover = GetComponent<UnitMover>();
         animator = GetComponentInChildren<Animator>();
-        health.Value = unitClass.maxHealth;
         inventory = new Inventory();
+    }
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        health.Value = unitClass.maxHealth;
     }
 
     void Update()

@@ -32,9 +32,9 @@ public class LaserBeamInstance : NetworkBehaviour
     {
         if (IsServer)
         {
-            timeLeft-=Time.deltaTime;
-            
-            ticktimer-=Time.deltaTime;
+            timeLeft -= Time.deltaTime;
+            ticktimer -= Time.deltaTime;
+
             if (ticktimer<0)
             {
                 AttackRay();
@@ -44,14 +44,15 @@ public class LaserBeamInstance : NetworkBehaviour
             
             if (timeLeft<0)
             {
-                
                 Destroy(gameObject);
                 GetComponent<NetworkObject>().Despawn();
-                owner.unitMover.canMove=true;
-                
+                owner.unitMover.canMove = true;       
+            } else {
+                owner.unitMover.canMove = false;
             }
         }
     }
+
     void OnDrawGizmos(){
         bool validTarget;
         Vector3 newTarget = HelperClass.GetMousePosInWorld(out validTarget);

@@ -83,8 +83,9 @@ public class ConnectionHUD : MonoBehaviour
     }
     private void HostGame()
     {
-        print(GetLocalIPv4());
         SetConnectionData("");
+        LobbySystem.playerList = new List<LobbyPlayerInfo>();
+        LobbySystem.names = new Dictionary<ulong, string>();
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
         NetworkManager.Singleton.StartHost();
         LobbySystem.names.Add(99,userNameField.text);

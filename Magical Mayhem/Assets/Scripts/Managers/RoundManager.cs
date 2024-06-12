@@ -65,7 +65,7 @@ public class RoundManager : NetworkBehaviour
         if (!IsServer) return;
         
         NetworkObject player = Instantiate(playerPrefab);
-        player.SpawnAsPlayerObject(clientId, false);
+        player.SpawnAsPlayerObject(clientId, true);
         UnitController unit = player.GetComponent<UnitController>();
         units.Add(unit);
     }
@@ -105,9 +105,7 @@ public class RoundManager : NetworkBehaviour
                 }
             }
         }
-        if (closest == null){
-            throw new NullReferenceException("No units found");
-        }
+        
         return closest;
     }
 
@@ -169,7 +167,6 @@ public class RoundManager : NetworkBehaviour
             unit.GetComponent<Rigidbody>().velocity = Vector3.zero;
             unit.unitMover.SetTargetPosition(radius);
             unit.GetComponent<UnitController>().unitMover.canMove = true;
-
         }
         //throw new NotImplementedException();
     }

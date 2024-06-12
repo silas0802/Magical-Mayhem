@@ -35,6 +35,7 @@ public class DashInstance : NetworkBehaviour
          if ((origin-owner.transform.position).magnitude>dashSpell.range||(target - owner.transform.position).magnitude<acceptingDistance  )
         {
             owner.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            owner.unitMover.canMove=true; 
             owner.unitMover.ReachTarget();
             Destroy(gameObject);
             GetComponent<NetworkObject>().Despawn();
