@@ -55,15 +55,10 @@ public class HUDScript : NetworkBehaviour
 
     
     public void ModyfyHealthbar(int before,int after){
-       
-            
-        
-       Debug.Log(unitController);
+        Debug.Log(unitController);
         healthText.SetText(unitController.GetHealth()+"/"+maxHealth);
         float percentageHealthMissing = unitController.GetHealth()/maxHealth;
-        
         healthbar.GetComponent<Image>().fillAmount = percentageHealthMissing;
-        
     }
 
     public void GetTotalCooldowns(){
