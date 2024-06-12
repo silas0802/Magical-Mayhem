@@ -120,7 +120,7 @@ public class RoundManager : NetworkBehaviour
         foreach (UnitController unit in units)
         {
             unit.ConnectUnitToShopClientRPC();
-            unit.ConnectUnitToHUDClientRPC();
+            
         }
         OpenPlayerShopsClientRPC();
         StartCoroutine(ShoppingPhaseCoroutine());
@@ -137,7 +137,7 @@ public class RoundManager : NetworkBehaviour
         foreach (UnitController unit in units)
         {
             unit.ConnectUnitToCameraClientRPC();
-            
+            unit.ConnectUnitToHUDClientRPC();
         }
 
         aliveUnits.Clear();
