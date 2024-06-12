@@ -12,3 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7982d8bb0dc497846843b119fe26eb9d, type: 3}
   m_Name: Basic Buying
   m_EditorClassIdentifier: 
+  spells:
+  - {fileID: 11400000, guid: c5d2430883271c840a808ec7e5516c76, type: 2}
+  - {fileID: 11400000, guid: 7987c192795981f40941d41e0469f3a1, type: 2}
+  - {fileID: 11400000, guid: 9b0ac8bf59c212947900380bf8358e81, type: 2}
+  - {fileID: 11400000, guid: 92d38e28f7fb3c44ba2bf6dd2f617ec8, type: 2}
+  - {fileID: 11400000, guid: 402dd65d07d049c45a77355826135c09, type: 2}
+  - {fileID: 11400000, guid: 157a8e8c6cff9244c88c903efcf0fb9c, type: 2}

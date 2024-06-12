@@ -21,7 +21,8 @@ public class UnitController : NetworkBehaviour, IDamagable
     [SerializeField] private int fireDamageMultiplier=0;
     [SerializeField] private int frostDamageMultiplier=0;
     [SerializeField] private bool inLava = false;
-   
+    [SerializeField] private Transform bodyMesh;
+
     private int lavaDMG = 5;
     private float lavaTick = 1f;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
@@ -72,7 +73,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         return inLava;
     }
-    
+
     [Header("Debugging")]
     public int threatLevel = 0;
     public bool isNearUnit = false;
@@ -89,28 +90,11 @@ public class UnitController : NetworkBehaviour, IDamagable
         inventory = new Inventory();
     }
 
-    public override void OnNetworkSpawn(){
-        Debug.Log("i get in");
-        if (IsLocalPlayer)
-        {
-            Debug.Log("I am owner");
-            health.OnValueChanged += HUDScript.instance.ModyfyHealthbar;
-        }
-                
-        
-        
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-        health.OnValueChanged -= HUDScript.instance.ModyfyHealthbar;
-    }
-
     void Update()
     {
         if (!IsServer) return;
         brain?.HandleFightingLogic(this);
+        brain?.HandleShoppingLogic(this);
 
         if(inLava){
 
@@ -439,7 +423,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     /// <param name="index"></param>
     void CastSpell(int index)
     {
-        if (!IsLocalPlayer || brain) return;
+        if (!IsLocalPlayer || brain || !RoundManager.instance.roundIsOngoing) return;
         bool validTarget;
         Vector3 pos = HelperClass.GetMousePosInWorld(out validTarget);
         if (validTarget)
@@ -456,7 +440,8 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         this.isDead = isDead;
         GetComponent<Collider>().enabled = !isDead; //Disables Collider on server
-        SetDeadClientRPC(isDead); //Disables Collider on clients
+        bodyMesh.GetComponent<SkinnedMeshRenderer>().enabled = !isDead; //Disable rendering on server
+        SetDeadClientRPC(isDead); //Disables Collider and rendering on clients
         if (isDead)
         {
             animator.SetTrigger("Death");
@@ -474,6 +459,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     private void SetDeadClientRPC(bool isDead)
     {
         GetComponent<Collider>().enabled = !isDead;
+        bodyMesh.GetComponent<SkinnedMeshRenderer>().enabled = !isDead;
     }
     public void InitializeBot(Brain brain)
     {

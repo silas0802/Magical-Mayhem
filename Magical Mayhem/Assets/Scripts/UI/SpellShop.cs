@@ -84,7 +84,6 @@ public class SpellShop : NetworkBehaviour
         sellButton.gameObject.SetActive(false);
         
         testingForBuyAnimation.Initialize(null,false);
-
     }
 
     private void InitializeBuyableBuyables(BuyableIcon icon){

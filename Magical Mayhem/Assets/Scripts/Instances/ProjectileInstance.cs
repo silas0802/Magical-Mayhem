@@ -87,7 +87,7 @@ public class ProjectileInstance : NetworkBehaviour
     {
         unitTimer-=Time.deltaTime;
         range -= Time.deltaTime;
-        if (unitTimer < 0)  //scan for nearest enemy
+        if (unitTimer < 0 && RoundManager.instance != null)  //scan for nearest enemy
         {
             unitTarget = RoundManager.instance.FindNearestUnit(transform.position,owner);
             unitTimer = 0.25f;

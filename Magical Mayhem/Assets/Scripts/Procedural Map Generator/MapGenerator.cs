@@ -48,6 +48,7 @@ public class MapGenerator : NetworkBehaviour
         mapSize = LobbySystem.GetMapSize();
         mapType = LobbySystem.GetMapType();
         buffs = LobbySystem.GetBuffs();
+        nextLavaSpawn = 20;
         mapSize = mapSize switch
         {
             1 => 20,

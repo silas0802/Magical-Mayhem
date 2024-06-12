@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// A Singleton class that controls the game flow. - Silas Thule
@@ -12,7 +14,7 @@ public class RoundManager : NetworkBehaviour
     public static RoundManager instance;
     //[SerializeField] public HUDScript HUD;
     [SerializeField] private Brain botBrain;
-    [SerializeField] private int roundNumber = 0;
+    [SerializeField] public int roundNumber = 0;
     [SerializeField] private int numOfRounds = 0;
     [SerializeField] private int shoppingTime = 60;
 
@@ -20,6 +22,7 @@ public class RoundManager : NetworkBehaviour
     [SerializeField] private List<UnitController> units = new List<UnitController>();
     [SerializeField] private List<UnitController> aliveUnits = new List<UnitController>();
     [SerializeField] private List<KillData> kills = new List<KillData>();
+    private static List<UnitController> placement = new();
     [Header("References")]
     [SerializeField] private NetworkObject playerPrefab;
     
@@ -92,7 +95,7 @@ public class RoundManager : NetworkBehaviour
     {
         UnitController closest = null;
         float distance = 1000;
-        foreach (UnitController unit in units)
+        foreach (UnitController unit in aliveUnits)
         {
             if (unit != self)
             {
@@ -119,7 +122,6 @@ public class RoundManager : NetworkBehaviour
             unit.ConnectUnitToShopClientRPC();
             unit.ConnectUnitToHUDClientRPC();
         }
-        roundIsOngoing = false;
         OpenPlayerShopsClientRPC();
         StartCoroutine(ShoppingPhaseCoroutine());
     }
@@ -149,7 +151,6 @@ public class RoundManager : NetworkBehaviour
         }
         MapGenerator.instance.GenerateMap();
         PlaceUnits();
-        roundIsOngoing = true;
 
     }
     /// <summary>
@@ -198,15 +199,11 @@ public class RoundManager : NetworkBehaviour
     private IEnumerator ShoppingPhaseCoroutine()
     {
 
+        StartNewRound();
+
         yield return new WaitForSeconds(shoppingTime);
-        ClosePlayerShopsClientRPC();
-        if(roundNumber != numOfRounds){
-            StartNewRound();
-        }
-        else{
-            //end game logic
-        }
-        
+        ClosePlayerShopsClientRPC();        
+        roundIsOngoing = true;
     }
     /// <summary>
     /// Waits for some time then starts the shopping phase
@@ -214,9 +211,32 @@ public class RoundManager : NetworkBehaviour
     /// <returns></returns>
     private IEnumerator BeforeShopPhase()
     {
-        yield return new WaitForSeconds(2);
-        StartShoppingPhase();
+        if(roundNumber < numOfRounds){
+            roundIsOngoing = false;
+            yield return new WaitForSeconds(2);
+            StartShoppingPhase();
+        }
+        else{
+            foreach (KillData kill in kills){
+                placement.Add(kill.deadUnit);
+            }
+            foreach (UnitController unit in aliveUnits){
+                placement.Add(unit);
+            }
+            //EndGameScreenClientRPC();
+            //NetworkManager.Singleton.Shutdown();
+            NetworkManager.Singleton.SceneManager.LoadScene("EndGameScreen", LoadSceneMode.Single);
+        }
+
     }
+
+    [ClientRpc]
+    public void EndGameScreenClientRPC(/*List<UnitController> p*/){
+        //placement = p;
+        NetworkManager.Singleton.Shutdown();
+        SceneManager.LoadScene("EndGameScreen", LoadSceneMode.Single);
+    }
+
     /// <summary>
     /// Event that is called on every kill. Handles ending the round.
     /// </summary>
@@ -234,6 +254,12 @@ public class RoundManager : NetworkBehaviour
         }
 
     }
+
+
+    public static List<UnitController> getPlacement(){
+        return placement;
+    }
+
     /// <summary>
     /// Adds a bot with a given brain to the game
     /// </summary>

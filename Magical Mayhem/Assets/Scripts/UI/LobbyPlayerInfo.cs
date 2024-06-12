@@ -1,23 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
-public class LobbyPlayerInfo : MonoBehaviour
+public class LobbyPlayerInfo : NetworkBehaviour
 {
     [SerializeField] private TMP_Text userName;
     [SerializeField] private TMP_Text className;
+    public string sName;
 
-    private UnitClass unitClass;
-    private ulong clientId;
+    
 
-    public void Initialize(UnitClass unitClass, string userName){
-        this.unitClass = unitClass;
+    
+    public void Initialize(string userName){
         this.userName.text = userName;
-        this.className.text = unitClass.name;
 
     }
-    public void SetName(string userName){
-        this.userName.text = userName;
+
+    [ClientRpc]
+    public void SetNameClientRPC(string name){
+        userName.text = name;
     }
 }
