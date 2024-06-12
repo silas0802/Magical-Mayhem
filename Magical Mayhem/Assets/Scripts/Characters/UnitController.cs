@@ -194,7 +194,6 @@ public class UnitController : NetworkBehaviour, IDamagable
         {
             Debug.Log("i call connectplayer");
             HUDScript.instance.ConnectPlayer(this);
-            
         }
     }
 
