@@ -54,10 +54,10 @@ public class HUDScript : NetworkBehaviour
     {
         unitController = local;
         LoadImages();
-        maxHealth = unitController.GetHealth();
-        healthText.SetText(unitController.GetHealth()+"/"+maxHealth);
+        maxHealth = unitController.unitClass.maxHealth;
+        healthText.SetText(maxHealth+"/"+maxHealth);
         healthbar.GetComponent<Image>().fillAmount = 1;
-        currentHealth=maxHealth;
+        
         GetTotalCooldowns();
     }
 
