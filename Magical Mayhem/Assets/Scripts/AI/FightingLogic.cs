@@ -23,7 +23,7 @@ public class FightingLogic : ScriptableObject
 
     public void HandleFightingLogic(UnitController controller)
     {
-        if (isOn)
+        if (isOn && RoundManager.instance.roundIsOngoing.Value)
         {
             controller.frameCounter++;
 
