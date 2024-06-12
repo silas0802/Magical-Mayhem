@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -191,7 +192,16 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         if (IsLocalPlayer)
         {
+            Debug.Log("i call connectplayer");
             HUDScript.instance.ConnectPlayer(this);
+        }
+    }
+
+    [ClientRpc]
+    public void ConnectUnitToCameraClientRPC(){
+        if (IsLocalPlayer)
+        {
+            CameraBehaviour.instance.ConnectPlayer(this);
         }
     }
     public void TryPlaceBuyable(int itemId, int index)
@@ -379,6 +389,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
         health.Value = Mathf.Clamp(health.Value+amount,0,unitClass.maxHealth);
+        
         if (health.Value == 0)
         {
             Death(dealer);
@@ -454,6 +465,8 @@ public class UnitController : NetworkBehaviour, IDamagable
         this.brain = brain;
     }
 
+
+    
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()

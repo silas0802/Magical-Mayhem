@@ -134,6 +134,13 @@ public class RoundManager : NetworkBehaviour
 
         if (!IsServer) return;
         if (roundNumber != 0) MapGenerator.instance.ResetMap();
+        
+        foreach (UnitController unit in units)
+        {
+            unit.ConnectUnitToCameraClientRPC();
+            
+        }
+
         aliveUnits.Clear();
         ResetKills();
         roundNumber++;
@@ -141,6 +148,7 @@ public class RoundManager : NetworkBehaviour
         {
             aliveUnits.Add(unit);
             unit.ResetHealth();
+            
         }
         MapGenerator.instance.GenerateMap();
         PlaceUnits();
@@ -181,6 +189,7 @@ public class RoundManager : NetworkBehaviour
     private void ClosePlayerShopsClientRPC(){
         SpellShop.instance.gameObject.SetActive(false);
         HUDScript.instance.LoadImages();
+        HUDScript.instance.GetTotalCooldowns();
         HUDScript.instance.gameObject.SetActive(true);
 
     }
