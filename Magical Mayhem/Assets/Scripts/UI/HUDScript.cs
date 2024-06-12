@@ -33,20 +33,20 @@ public class HUDScript : NetworkBehaviour
     void Start()
     {
         
-         foreach (Image item in cooldowntemplates)
-         {
-             item.gameObject.SetActive(false);           
-         }
+        //  foreach (Image item in cooldowntemplates)
+        //  {
+        //      item.gameObject.SetActive(false);           
+        //  }
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        // if (SceneManager.GetActiveScene().name=="GameScreen")
-        // {
-        //     CooldownInitiator();     
-        // }
+        if (RoundManager.instance.roundIsOngoing.Value is true)
+        {
+            CooldownInitiator();     
+        }
        
     }
 
@@ -102,7 +102,7 @@ public class HUDScript : NetworkBehaviour
 
     public void LoadImages() 
     {
-        Debug.Log(unitController);
+        
         int i = 0;
         foreach (Image spellIcon in spellIcons)
         {

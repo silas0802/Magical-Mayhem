@@ -1902,7 +1902,7 @@ PrefabInstance:
     - target: {fileID: 7540452803720585187, guid: 0c46a99496aeb3149af1ee5f295dd46b,
         type: 3}
       propertyPath: shoppingTime
-      value: 15
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7616468731676276880, guid: 0c46a99496aeb3149af1ee5f295dd46b,
         type: 3}

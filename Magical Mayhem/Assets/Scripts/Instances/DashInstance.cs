@@ -16,7 +16,7 @@ public class DashInstance : NetworkBehaviour
         this.dashSpell = dashSpell;
         this.owner = owner;
         this.target = target;  
-        owner.unitMover.canMove = false;
+        
         origin = owner.transform.position;
         direction = (target-origin).normalized*dashSpell.maxMoveSpeed;
         owner.GetComponent<Rigidbody>().velocity = direction;
@@ -35,8 +35,6 @@ public class DashInstance : NetworkBehaviour
          if ((origin-owner.transform.position).magnitude>dashSpell.range||(target - owner.transform.position).magnitude<acceptingDistance  )
         {
             owner.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            owner.unitMover.canMove=true; 
-            Debug.Log(owner.unitMover.canMove); 
             owner.unitMover.ReachTarget();
             Destroy(gameObject);
             GetComponent<NetworkObject>().Despawn();

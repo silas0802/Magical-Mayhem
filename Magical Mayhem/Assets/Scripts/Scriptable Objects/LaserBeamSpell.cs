@@ -40,5 +40,6 @@ public class LaserBeamSpell : Spell
         LaserBeamInstance lb = Instantiate(laserBeamInstance, owner.transform.position,quaternion.identity);
         lb.Initialize(this, owner,target);
         owner.unitMover.canMove=false;
+        Debug.Log(owner.unitMover.canMove);
     }
 }
