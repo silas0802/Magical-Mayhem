@@ -106,9 +106,7 @@ public class RoundManager : NetworkBehaviour
                 }
             }
         }
-        if (closest == null){
-            throw new NullReferenceException("No units found");
-        }
+        
         return closest;
     }
     
