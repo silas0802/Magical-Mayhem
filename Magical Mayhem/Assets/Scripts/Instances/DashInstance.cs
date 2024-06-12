@@ -36,7 +36,6 @@ public class DashInstance : NetworkBehaviour
         {
             owner.GetComponent<Rigidbody>().velocity = Vector3.zero;
             owner.unitMover.canMove=true; 
-            Debug.Log(owner.unitMover.canMove); 
             owner.unitMover.ReachTarget();
             Destroy(gameObject);
             GetComponent<NetworkObject>().Despawn();

@@ -169,7 +169,6 @@ public class RoundManager : NetworkBehaviour
             unit.GetComponent<Rigidbody>().velocity = Vector3.zero;
             unit.unitMover.SetTargetPosition(radius);
             unit.GetComponent<UnitController>().unitMover.canMove = true;
-
         }
         //throw new NotImplementedException();
     }
