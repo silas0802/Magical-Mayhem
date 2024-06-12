@@ -24,6 +24,7 @@ public class SpeedBuff : NetworkBehaviour
     private IEnumerator Cooldown(int cd){
         yield return new WaitForSeconds(cd);
         NowYouSeeMeClientRPC();
+        GetComponent<BoxCollider>().enabled = true;
     }
 
     private IEnumerator SetMaxSpeedback(float speed, int activetime, Collider player){
@@ -35,6 +36,7 @@ public class SpeedBuff : NetworkBehaviour
        if(IsServer){
             if(other.GetComponent<UnitMover>() != null && other != null){
                 NowYouDontClientRPC();
+                GetComponent<BoxCollider>().enabled = false;
                 other.GetComponent<UnitMover>().BuffSpeed(speed, acceleration);
                 StartCoroutine(Cooldown(cd));
                 StartCoroutine(SetMaxSpeedback(speed, activetime, other));
@@ -45,11 +47,10 @@ public class SpeedBuff : NetworkBehaviour
     [ClientRpc]
     private void NowYouDontClientRPC(){
         GetComponent<MeshRenderer>().enabled = false;
-        GetComponent<BoxCollider>().enabled = false;
     }
+
     [ClientRpc]
     private void NowYouSeeMeClientRPC(){
         GetComponent<MeshRenderer>().enabled = true;
-        GetComponent<BoxCollider>().enabled = true;
     }
 }
