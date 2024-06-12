@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -19,7 +21,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     [SerializeField] private int fireDamageMultiplier=0;
     [SerializeField] private int frostDamageMultiplier=0;
     [SerializeField] private bool inLava = false;
-
+   
     private int lavaDMG = 5;
     private float lavaTick = 1f;
     [SerializeField, Tooltip("The AI brain that will control the units behaviour")]
@@ -87,7 +89,23 @@ public class UnitController : NetworkBehaviour, IDamagable
         inventory = new Inventory();
     }
 
-    
+    public override void OnNetworkSpawn(){
+        Debug.Log("i get in");
+        if (IsLocalPlayer)
+        {
+            Debug.Log("I am owner");
+            health.OnValueChanged += HUDScript.instance.ModyfyHealthbar;
+        }
+                
+        
+        
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        health.OnValueChanged -= HUDScript.instance.ModyfyHealthbar;
+    }
 
     void Update()
     {
@@ -190,8 +208,17 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         if (IsLocalPlayer)
         {
+            Debug.Log("i call connectplayer");
             HUDScript.instance.ConnectPlayer(this);
             
+        }
+    }
+
+    [ClientRpc]
+    public void ConnectUnitToCameraClientRPC(){
+        if (IsLocalPlayer)
+        {
+            CameraBehaviour.instance.ConnectPlayer(this);
         }
     }
     public void TryPlaceBuyable(int itemId, int index)
@@ -379,7 +406,7 @@ public class UnitController : NetworkBehaviour, IDamagable
         
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing) return;
         health.Value = Mathf.Clamp(health.Value+amount,0,unitClass.maxHealth);
-        HUDScript.instance.ModyfyHealthbarClientRPC();
+        
         if (health.Value == 0)
         {
             Death(dealer);

@@ -131,6 +131,13 @@ public class RoundManager : NetworkBehaviour
 
         if (!IsServer) return;
         if (roundNumber != 0) MapGenerator.instance.ResetMap();
+        
+        foreach (UnitController unit in units)
+        {
+            unit.ConnectUnitToCameraClientRPC();
+            
+        }
+
         aliveUnits.Clear();
         ResetKills();
         roundNumber++;
@@ -138,6 +145,7 @@ public class RoundManager : NetworkBehaviour
         {
             aliveUnits.Add(unit);
             unit.ResetHealth();
+            
         }
         MapGenerator.instance.GenerateMap();
         PlaceUnits();

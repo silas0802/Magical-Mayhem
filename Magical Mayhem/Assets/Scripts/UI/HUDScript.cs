@@ -31,10 +31,10 @@ public class HUDScript : NetworkBehaviour
     void Start()
     {
         
-        foreach (Image item in cooldowntemplates)
-        {
-            item.gameObject.SetActive(false);           
-        }
+        // foreach (Image item in cooldowntemplates)
+        // {
+        //     item.gameObject.SetActive(false);           
+        // }
         
     }
 
@@ -49,17 +49,21 @@ public class HUDScript : NetworkBehaviour
         unitController = local;
         LoadImages();
         maxHealth = unitController.GetHealth();
-        ModyfyHealthbarClientRPC();
+        ModyfyHealthbar(1,2);
+        Debug.Log(unitController);
     }
 
-    [ClientRpc]
-    public void ModyfyHealthbarClientRPC(){
+    
+    public void ModyfyHealthbar(int before,int after){
        
+            
+        
+       Debug.Log(unitController);
         healthText.SetText(unitController.GetHealth()+"/"+maxHealth);
         float percentageHealthMissing = unitController.GetHealth()/maxHealth;
         
         healthbar.GetComponent<Image>().fillAmount = percentageHealthMissing;
-
+        
     }
 
     public void GetTotalCooldowns(){
