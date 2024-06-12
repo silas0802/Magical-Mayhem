@@ -43,31 +43,30 @@ public class BlackHoleInstance : NetworkBehaviour
   
 
     public void SuckingCommenced(){
-
         Collider[] hits = Physics.OverlapSphere(transform.position, blackHoleSpell.areaSize);
+
         foreach (Collider victim in hits)
         {   
+
             UnitController hit = victim.GetComponent<UnitController>();
             if (hit!=null&&hit!=owner)
             {
-                
-            
-            if ((transform.position-victim.transform.position).magnitude>accteptingDistance)
-            {
-               Vector3 suckSpeed =(transform.position-victim.transform.position).normalized*Time.deltaTime*(blackHoleSpell.suction*10)/((transform.position-victim.transform.position).magnitude*(transform.position-victim.transform.position).magnitude);
-               Vector3 Cap = (transform.position-victim.transform.position).normalized*Time.deltaTime*(blackHoleSpell.suction*10)/accteptingDistance;
-               if (suckSpeed.magnitude>Cap.magnitude)
-               {
-                victim.GetComponent<Rigidbody>().velocity+=Cap;
-               }else
-               {
-                victim.GetComponent<Rigidbody>().velocity+=suckSpeed;
-               }
-               
-               //victim.GetComponent<Rigidbody>().velocity+=(transform.position-victim.transform.position).normalized*Time.deltaTime*(blackHoleSpell.suction*10)/((transform.position-victim.transform.position).magnitude*(transform.position-victim.transform.position).magnitude);
+                if ((transform.position-victim.transform.position).magnitude>accteptingDistance)
+                {
+                    Vector3 suckSpeed =(transform.position-victim.transform.position).normalized*Time.deltaTime*(blackHoleSpell.suction*10)/((transform.position-victim.transform.position).magnitude*(transform.position-victim.transform.position).magnitude);
+                    Vector3 Cap = (transform.position-victim.transform.position).normalized*Time.deltaTime*(blackHoleSpell.suction*10)/accteptingDistance;
+                    
+                    if (suckSpeed.magnitude>Cap.magnitude)
+                    {
+                        victim.GetComponent<Rigidbody>().velocity+=Cap;
+                    }else
+                    {
+                        victim.GetComponent<Rigidbody>().velocity+=suckSpeed;
+                    }
+                    //victim.GetComponent<Rigidbody>().velocity+=(transform.position-victim.transform.position).normalized*Time.deltaTime*(blackHoleSpell.suction*10)/((transform.position-victim.transform.position).magnitude*(transform.position-victim.transform.position).magnitude);
+                    
+                }
             }
-            }
-            
         }
     }
 }

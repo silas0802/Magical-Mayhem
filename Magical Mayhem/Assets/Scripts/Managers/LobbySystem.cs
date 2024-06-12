@@ -27,6 +27,7 @@ public class LobbySystem : NetworkBehaviour
     private static bool buffs = true;
     private static int numOfRounds = 4;
     private float updateNameTimer;
+    
     private void Awake()
     {
         if (instance == null){
@@ -37,8 +38,8 @@ public class LobbySystem : NetworkBehaviour
         }
         leaveLobbyButton.onClick.AddListener(LeaveButton);
         startLobbyButton.onClick.AddListener(StartLobbyButton);
-
     }
+
     void Start()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;

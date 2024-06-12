@@ -34,7 +34,7 @@ public class SpeedBuff : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other){
        if(IsServer){
-            if(other != null){
+            if(other.GetComponent<UnitMover>() != null && other != null){
                 NowYouDontClientRPC();
                 GetComponent<BoxCollider>().enabled = false;
                 other.GetComponent<UnitMover>().BuffSpeed(speed, acceleration);
