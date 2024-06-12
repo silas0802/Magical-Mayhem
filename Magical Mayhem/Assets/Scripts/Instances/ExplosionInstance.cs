@@ -36,16 +36,23 @@ public class ExplosionInstance : NetworkBehaviour
             }
         }
     }
+
     void Detonate()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, spell.radius);
+        
         foreach (Collider hit in hits)
         {
+            if (hit.GetComponent<UnitController>() == owner)
+            {
+                continue;
+            }
+            
             hit.GetComponent<IDamagable>()?.ModifyHealth(owner,-spell.damage);
             Vector3 dir = hit.transform.position-transform.position;
             dir = new Vector3(dir.x,0,dir.z);
             hit.GetComponent<UnitController>()?.unitMover.ApplyKnockBack(dir.normalized * spell.knockback);
-        }
 
+        }
     }
 }
