@@ -192,7 +192,6 @@ public class UnitController : NetworkBehaviour, IDamagable
         if (IsLocalPlayer)
         {
             HUDScript.instance.ConnectPlayer(this);
-            
         }
     }
     public void TryPlaceBuyable(int itemId, int index)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Fighting Logic", menuName = "Game/AI/Fighting Logic")]
@@ -168,7 +169,8 @@ public class FightingLogic : ScriptableObject
     // This needs to be smart: Which spell to use, when, how?
     private void CastSpell(UnitController controller)
     {
-        controller.unitCaster.TryCastSpell(0,  new Vector3(0,0,0));
+        UnitController nearestOpponent = RoundManager.instance.FindNearestUnit(controller.transform.position, controller);
+        controller.unitCaster.TryCastSpell(0,  nearestOpponent.transform.position);
     }
     
     private bool ShouldCastSpell(UnitController controller)
