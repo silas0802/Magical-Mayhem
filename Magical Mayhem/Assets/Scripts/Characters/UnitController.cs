@@ -47,6 +47,7 @@ public class UnitController : NetworkBehaviour, IDamagable
 
     public static KillEvent OnUnitDeath;
     public bool isDead { get; private set; }
+    public bool hasBarrier = false;
 
     public int GetHealth()
     {
@@ -391,8 +392,8 @@ public class UnitController : NetworkBehaviour, IDamagable
     /// <param name="amount"></param>
     public void ModifyHealth(UnitController dealer,int amount)
     {
-        
         if (RoundManager.instance && !RoundManager.instance.roundIsOngoing.Value) return;
+        if (hasBarrier && amount < 0) return;
         health.Value = Mathf.Clamp(health.Value+amount,0,unitClass.maxHealth);
         ModifyHealthBarClientRPC(health.Value);
         if (health.Value == 0)

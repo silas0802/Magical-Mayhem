@@ -19,10 +19,10 @@ MonoBehaviour:
   UseType: 3
   ElementType: 1
   DontShowInShop: 0
-  Cooldown: 3
+  Cooldown: 12
   CastTime: 0.5
   CanMoveWhileCasting: 0
-  Range: 3.5
+  Range: 10
   VFXLifetime: 1
   TeleportVFX: {fileID: 5166545902571734560, guid: 79c41887ccf2efa419c09be158ce12e8,
     type: 3}
