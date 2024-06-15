@@ -144,6 +144,7 @@ public class MapGenerator : NetworkBehaviour
         Destroy(obj.GetComponent<GameObject>());
     }
 
+    //These functions instaciates an object 
     private NetworkObject InstObj(string type, float x, float y, float z){
         Vector3 vec = new(x,y,z);
         NetworkObject obj = type switch
