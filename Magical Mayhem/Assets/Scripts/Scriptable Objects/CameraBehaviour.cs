@@ -29,7 +29,7 @@ public class CameraBehaviour : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (controller is not null)
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("GameScreen") && controller != null)
         {
             transform.position = controller.transform.position+offset;    
         }

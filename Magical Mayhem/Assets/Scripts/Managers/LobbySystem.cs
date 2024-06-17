@@ -25,7 +25,7 @@ public class LobbySystem : NetworkBehaviour
     private static int mapSize = 0;
     private static int mapType = 0;
     private static bool buffs = true;
-    private static int numOfRounds = 4;
+    private static int numOfRounds = 1;
     private float updateNameTimer;
     
     private void Awake()

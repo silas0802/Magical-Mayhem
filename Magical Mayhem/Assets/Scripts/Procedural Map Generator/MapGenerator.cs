@@ -230,7 +230,6 @@ public class MapGenerator : NetworkBehaviour
                     coords = tileArray[i,j].transform.position;
                     coords.y += 1.5f;
                     wallArray[i,j] = InstObj("mapWall", coords);
-                    //wallArray[i,j].GetComponent<NetworkObject>().Spawn(true);
                 } 
             }
         }
@@ -250,7 +249,6 @@ public class MapGenerator : NetworkBehaviour
                     else if(Simplex > upperBufs && Simplex < wallCutOff){
                         buffArray[i,j] = InstObj("speedBuff", coords);
                     }
-                    //wallArray[i,j].GetComponent<NetworkObject>().Spawn(true);
                 } 
             }
         }

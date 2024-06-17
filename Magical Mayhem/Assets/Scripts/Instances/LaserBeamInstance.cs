@@ -35,7 +35,7 @@ public class LaserBeamInstance : NetworkBehaviour
             timeLeft -= Time.deltaTime;
             ticktimer -= Time.deltaTime;
 
-            if (ticktimer<0)
+            if (ticktimer<0 && RoundManager.instance.roundIsOngoing.Value)
             {
                 AttackRay();
                 ticktimer+=1/laser.tickrate;     
