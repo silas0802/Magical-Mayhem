@@ -17,7 +17,7 @@ public class EndScreen : MonoBehaviour
         else{
             Destroy(gameObject);
         }
-        leaveLobbyButton.onClick.AddListener(LeaveButton);
+        //leaveLobbyButton.onClick.AddListener(LeaveButton);
     }
  
     // Start is called before the first frame update
@@ -31,7 +31,7 @@ public class EndScreen : MonoBehaviour
     {
         
     }
-    private void LeaveButton(){
+    public void LeaveButton(){
         NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("Connection Screen");
     }

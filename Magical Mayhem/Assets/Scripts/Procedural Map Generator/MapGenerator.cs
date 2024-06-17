@@ -135,7 +135,9 @@ public class MapGenerator : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        Lava();
+        if(RoundManager.instance.IsHost){
+            Lava();
+        }
      
     }
 
