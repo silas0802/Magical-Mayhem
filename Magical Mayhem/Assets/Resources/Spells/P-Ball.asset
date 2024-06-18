@@ -27,7 +27,7 @@ MonoBehaviour:
   Price: 15
   UseType: 1
   ElementType: 4
-  DontShowInShop: 0
+  DontShowInShop: 1
   Cooldown: 3
   CastTime: 0.27
   CanMoveWhileCasting: 0

@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 1
   Description: Teleports player
   Icon: {fileID: 21300000, guid: ed7a41c45ab12dc42805e3d0dec70f4e, type: 3}
-  Price: 0
+  Price: 15
   UseType: 3
   ElementType: 1
   DontShowInShop: 0

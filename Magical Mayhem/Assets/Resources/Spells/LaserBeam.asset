@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 683
   Description: 
   Icon: {fileID: 21300000, guid: 0e1aa00f28d54784d88aec8236cdd4e4, type: 3}
-  Price: 0
+  Price: 25
   UseType: 1
   ElementType: 1
   DontShowInShop: 0
@@ -25,6 +25,7 @@ MonoBehaviour:
   Lenght: 14
   Width: 1.5
   Duration: 3
-  DamagePerSecond: 1
+  DamagePerSecond: 2
+  Tickrate: 5
   LaserBeamInstance: {fileID: 4033222315178459903, guid: 8349accdc272ba944a780f6983865643,
     type: 3}

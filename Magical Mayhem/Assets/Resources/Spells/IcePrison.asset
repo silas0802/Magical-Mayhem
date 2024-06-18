@@ -15,11 +15,11 @@ MonoBehaviour:
   ID: 897
   Description: 
   Icon: {fileID: 21300000, guid: 70afac062af677d4980cf352e7305511, type: 3}
-  Price: 0
+  Price: 26
   UseType: 0
   ElementType: 3
   DontShowInShop: 0
-  Cooldown: 3
+  Cooldown: 7.9
   CastTime: 0.5
   CanMoveWhileCasting: 0
   Radius: 4
