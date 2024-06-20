@@ -181,25 +181,6 @@ public class HardFightingLogic : FightingLogic
         return strategicPoint;
     }
 
-private Vector3 GetNearestEnemyPosition(UnitController controller)
-{
-    // Implement logic to find the nearest enemy position
-    return new Vector3(0, 0, 0); // Placeholder
-}
-
-private Vector3 GetNearestResourcePosition(UnitController controller)
-{
-    // Implement logic to find the nearest resource position
-    return new Vector3(0, 0, 0); // Placeholder
-}
-
-private Vector3 GetSafeZonePosition(UnitController controller)
-{
-    // Implement logic to find a safe zone position
-    return new Vector3(0, 0, 0); // Placeholder
-}
-
-
     // Helper method to clamp the position within the specified range
     private Vector3 ClampPositionWithinRange(Vector3 position, int min, int max)
     {
