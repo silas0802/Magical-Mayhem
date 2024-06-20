@@ -127,5 +127,10 @@ public class UnitCaster : NetworkBehaviour
     {
         cooldowns[index] = value;
     }
+
+    public float[] GetCooldowns()
+    {
+        return cooldowns;
+    }
     
 }

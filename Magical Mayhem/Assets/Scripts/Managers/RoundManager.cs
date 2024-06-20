@@ -261,14 +261,15 @@ public class RoundManager : NetworkBehaviour
     /// Adds a bot with a given brain to the game
     /// </summary>
     /// <param name="brain"></param>
-    public void AddBot(Brain brain)
+    public void AddBot(Brain brain, string difficulty)
     {
         if (!IsServer) return;
         NetworkObject bot = Instantiate(playerPrefab,new Vector3 (0,0,0),Quaternion.identity);
         bot.Spawn();
-        bot.GetComponent<UnitController>().InitializeBot(brain);
+        bot.GetComponent<UnitController>().InitializeBot(brain, difficulty);
         units.Add(bot.GetComponent<UnitController>());
     }
+    
     /// <summary>
     /// Initializes all player Units
     /// </summary>
@@ -284,7 +285,7 @@ public class RoundManager : NetworkBehaviour
             unit.unitMover.canMove = false;
         }
 
-        AddBot(botBrain);
+        AddBot(botBrain, "Hard");
     }
 
     private void GiveOutGold(){

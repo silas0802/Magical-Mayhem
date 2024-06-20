@@ -18,7 +18,10 @@ public class LobbySystem : NetworkBehaviour
     [SerializeField] private Button leaveLobbyButton;
     [SerializeField] private TMP_Dropdown mapSizeDrop;
     [SerializeField] private TMP_Dropdown mapTypeDrop;
-     [SerializeField] private TMP_Dropdown NumOfRoundsDrop;
+    [SerializeField] private TMP_Dropdown NumOfRoundsDrop;
+
+    [SerializeField] private Button addBotButton;
+    [SerializeField] private Button removeBotButton;
 
     [SerializeField] private Toggle buffsToggle;
     //public static List<LobbyPlayerInfo> playerList = new List<LobbyPlayerInfo>();
@@ -38,6 +41,7 @@ public class LobbySystem : NetworkBehaviour
         }
         leaveLobbyButton.onClick.AddListener(LeaveButton);
         startLobbyButton.onClick.AddListener(StartLobbyButton);
+        //addBotButton.onClick.AddListener(AddBotButton);
     }
 
     void Start()
@@ -153,8 +157,35 @@ public class LobbySystem : NetworkBehaviour
         }
         NetworkManager.Singleton.SceneManager.LoadScene("GameScreen", UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
-    //geters and seters
 
+
+    private void AddBotButton()
+    {
+        if (!IsServer) return;
+        LobbyPlayerInfo newBotInfo = new()
+        {
+            sName = "Bot Easy",
+        };
+        botList.Add(newBotInfo);
+        SetPlayersNames();
+        CheckPlayerCount();
+    }
+
+    public void RemoveBotButton(LobbyPlayerInfo botInfo)
+    {
+        if (!IsServer || botInfo == null) return;
+
+        botList.Remove(botInfo);
+        SetPlayersNames();
+        CheckPlayerCount();
+    }
+
+    private void CheckPlayerCount()
+    {
+        addBotButton.gameObject.SetActive(playerList.Count + botList.Count <= 7);
+    }
+
+    //getters and setters
     public static void SetBuffs(){
         buffs = !buffs;
     }

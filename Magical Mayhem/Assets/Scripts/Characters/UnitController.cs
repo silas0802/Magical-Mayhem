@@ -99,7 +99,6 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         if (!IsServer) return;
         brain?.HandleFightingLogic(this);
-        brain?.HandleShoppingLogic(this);
 
         if(inLava){
 
@@ -474,9 +473,10 @@ public class UnitController : NetworkBehaviour, IDamagable
         GetComponent<Collider>().enabled = !isDead;
         bodyMesh.GetComponent<SkinnedMeshRenderer>().enabled = !isDead;
     }
-    public void InitializeBot(Brain brain)
+    public void InitializeBot(Brain brain, string difficulty)
     {
         this.brain = brain;
+        this.brain.SetBotDifficulty(difficulty);
     }
 
 

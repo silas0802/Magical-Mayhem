@@ -63,9 +63,6 @@ public class HUDScript : NetworkBehaviour
     
     public void ModyfyHealthbar(int currentHealth){
        
-            
-        
-       Debug.Log(unitController);
         healthText.SetText(currentHealth+"/"+maxHealth);
         float percentageHealthMissing = currentHealth/maxHealth;
         
@@ -85,7 +82,6 @@ public class HUDScript : NetworkBehaviour
     }
 
     public void CooldownInitiator(){
-        Debug.Log(unitController);
         float[] cooldowns = unitController.unitCaster.getCooldowns();
 
         for (int i = 0; i < cooldowns.Length; i++)
