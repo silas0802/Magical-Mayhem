@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 public class MapGenerator : NetworkBehaviour
 {
@@ -13,10 +14,10 @@ public class MapGenerator : NetworkBehaviour
     [SerializeField] private NetworkObject speedCube;
     public static MapGenerator instance;
     
-    private static int mapSize;
+    public static int mapSize;
     private static int mapType;
     private static bool buffs;
-    private int lavaTileCounter = 0;
+    public int lavaTileCounter = 0;
     private readonly float wallHieght = 5f;
     [SerializeField] private float lavaSpawnTime = 10f;
     [SerializeField] private float nextLavaSpawn = 20f;
@@ -27,11 +28,12 @@ public class MapGenerator : NetworkBehaviour
     [SerializeField] private float upperBufs = 0.69f;
     [SerializeField] private float lowerBufs = 0.68f;
     private NetworkObject[,] wallArray;
-    
+    private List<Vector3> wallPositions = new List<Vector3>();
+
     // Start is called before the first frame update
     void Start()
     {   
-        
+
     }
 
     void Awake(){
@@ -61,7 +63,7 @@ public class MapGenerator : NetworkBehaviour
         tileArray = new NetworkObject[mapSize,mapSize];
         SeedGen generator = new();
         float seed = generator.Seed();
-
+        
         //dropdown menu
         // 1: barren
         // 2: volcano
@@ -136,7 +138,6 @@ public class MapGenerator : NetworkBehaviour
     void Update()
     {
         Lava();
-     
     }
 
     private void DestObj(NetworkObject obj){
@@ -229,6 +230,8 @@ public class MapGenerator : NetworkBehaviour
                     coords = tileArray[i,j].transform.position;
                     coords.y += 1.5f;
                     wallArray[i,j] = InstObj("mapWall", coords);
+                    wallArray[i, j].tag = "Wall";
+                    wallPositions.Add(coords);
                     //wallArray[i,j].GetComponent<NetworkObject>().Spawn(true);
                 } 
             }
@@ -263,6 +266,7 @@ public class MapGenerator : NetworkBehaviour
                 if((mapType == 3 || mapType == 4) && wallArray[i,j]) DestObj(wallArray[i,j]);
                 if(tileArray[i,j]) DestObj(tileArray[i,j]);
                 if(buffs && buffArray[i,j]) DestObj(buffArray[i,j]);
+                
             }
         }
         lavaSpawnTime = 20;
@@ -305,5 +309,64 @@ public class MapGenerator : NetworkBehaviour
             nextLavaSpawn = lavaSpawnTime;
             lavaTileCounter++;
         }
+    }
+
+    //public GetWallArray
+    public Vector3 GetClosestHealthBuff(Vector3 controllerPosition)
+    {
+        Vector3 closestPosition = Vector3.zero;
+        float minDistance = float.MaxValue;
+        bool returnControllerPosition = true;
+
+        if (buffArray == null)
+        {
+            return controllerPosition;
+        }
+
+        foreach (NetworkObject buff in buffArray)
+        {
+            if (buff == null)
+            {
+                continue;
+            }
+
+            // Check for HealthCube and find the HealthBuff component in its children
+            if (buff.name == "HealthCube(Clone)")
+            {
+                HealthBuff healthBuff = buff.GetComponentInChildren<HealthBuff>();
+                if (healthBuff == null)
+                {
+                    continue;
+                }
+
+                if (healthBuff.isActive)
+                {
+                    Vector3 buffPosition = healthBuff.transform.position;
+                    float distance = Vector3.Distance(controllerPosition, buffPosition);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closestPosition = buffPosition;
+                        returnControllerPosition = false;
+                    }
+                }
+            }
+        }
+        if (returnControllerPosition)
+        {
+            return controllerPosition;
+        }
+
+        return new Vector3(closestPosition.x, 0, closestPosition.z);
+    }
+
+    public List<Vector3> GetWallPositions()
+    {
+        return wallPositions;
+    }
+
+    public int GetMapSize()
+    {
+        return mapSize;
     }
 }

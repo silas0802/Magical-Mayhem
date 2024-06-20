@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04d9549b6bd6848429997919cc4b0b62, type: 3}
   m_Name: Medium Fighting Logic
   m_EditorClassIdentifier: 
+  predictionFactorFireball: 1
+  mean: 2
+  standardDeviation: 0.5

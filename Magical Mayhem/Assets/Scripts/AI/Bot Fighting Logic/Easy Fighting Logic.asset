@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db30a025fc5b6a45af5f37ca43545fd, type: 3}
   m_Name: Easy Fighting Logic
   m_EditorClassIdentifier: 
+  moveDistance: 10
+  centerWeight: 10
+  roamingInterval: 15

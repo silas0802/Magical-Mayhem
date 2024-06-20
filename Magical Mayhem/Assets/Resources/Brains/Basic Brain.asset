@@ -13,8 +13,15 @@ MonoBehaviour:
   m_Name: Basic Brain
   m_EditorClassIdentifier: 
   isOn: 1
-  botDifficulty: {fileID: 11400000, guid: 1a895827304c6d146b767ef645dc050b, type: 2}
+  botDifficulty: {fileID: 11400000, guid: 76258555db3f16e4da745e26b225fadb, type: 2}
   easyFightingLogic: {fileID: 11400000, guid: 1a895827304c6d146b767ef645dc050b, type: 2}
   mediumFightingLogic: {fileID: 11400000, guid: 97bdbd351bcb1eb4dafa68837fcaee26,
     type: 2}
   hardFightingLogic: {fileID: 11400000, guid: 76258555db3f16e4da745e26b225fadb, type: 2}
+  spells:
+  - {fileID: 11400000, guid: c5d2430883271c840a808ec7e5516c76, type: 2}
+  - {fileID: 11400000, guid: c917a04a1867f914697079cd31b1c87a, type: 2}
+  - {fileID: 11400000, guid: 064738089bda5c2458d3b92b9e22bc59, type: 2}
+  - {fileID: 11400000, guid: 5ec66082207e1a14a8fae0f7edcaa601, type: 2}
+  - {fileID: 11400000, guid: 9b0ac8bf59c212947900380bf8358e81, type: 2}
+  - {fileID: 11400000, guid: 8f702cf70e0aea4449fda12bc6e9170d, type: 2}

@@ -12,15 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165d51f39b5a2514a9995e05bfde1f1d, type: 3}
   m_Name: Barrier
   m_EditorClassIdentifier: 
-  ID: 0
-  Description: 
-  Icon: {fileID: 0}
+  ID: 107
+  Description: Puts a protective barrier around the user blocking incoming damage
+    for 3 seconds.
+  Icon: {fileID: 21300000, guid: 7681ef46477877348b848439f84e3181, type: 3}
   Price: 0
-  UseType: 0
-  ElementType: 0
+  UseType: 2
+  ElementType: 1
   DontShowInShop: 0
-  Cooldown: 3
-  CastTime: 0.5
-  CanMoveWhileCasting: 0
-  Duration: 0
-  a: 0
+  Cooldown: 20
+  CastTime: 0.2
+  CanMoveWhileCasting: 1
+  Duration: 3
+  Instance: {fileID: 4315920693209774180, guid: f98840034dec50e42842624f910e0eaa,
+    type: 3}

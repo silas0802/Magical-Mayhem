@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33235a27070f01840ac96a6141996663, type: 3}
   m_Name: Hard Fighting Logic
   m_EditorClassIdentifier: 
+  moverInterval: 0.3
+  predictionFactorFireball: 1
+  mean: 2
+  standardDeviation: 0.5
+  healthThresholdForDefensiveMode: 80

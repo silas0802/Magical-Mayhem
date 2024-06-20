@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class HealthBuff : NetworkBehaviour
 {   
     private readonly int health = 10;
     private readonly int cd = 7;
+    public bool isActive = true;
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +23,10 @@ public class HealthBuff : NetworkBehaviour
     }
 
     private IEnumerator Cooldown(int cd){
+        isActive = false;
         yield return new WaitForSeconds(cd);
         NowYouSeeMeClientRPC();
+        isActive = true;
     }
 
     private void OnTriggerEnter(Collider other){

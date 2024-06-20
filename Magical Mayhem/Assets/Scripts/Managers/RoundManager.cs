@@ -285,7 +285,7 @@ public class RoundManager : NetworkBehaviour
             unit.unitMover.canMove = false;
         }
 
-        AddBot(botBrain, "Easy");
+        AddBot(botBrain, "Hard");
     }
 
     private void GiveOutGold(){

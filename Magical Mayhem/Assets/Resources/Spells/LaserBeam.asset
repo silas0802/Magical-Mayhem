@@ -26,5 +26,6 @@ MonoBehaviour:
   Width: 1.5
   Duration: 3
   DamagePerSecond: 1
+  Tickrate: 5
   LaserBeamInstance: {fileID: 4033222315178459903, guid: 8349accdc272ba944a780f6983865643,
     type: 3}
