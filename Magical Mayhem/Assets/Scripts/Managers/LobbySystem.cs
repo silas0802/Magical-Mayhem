@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class LobbySystem : NetworkBehaviour
 {
     public static LobbySystem instance;
-    public static Dictionary<ulong,string> names = new Dictionary<ulong, string>();
+    //public static Dictionary<ulong,string> names = new Dictionary<ulong, string>();
     [SerializeField] private NetworkObject playerTemplate;
     [SerializeField] private TMP_Text ipText;
     [SerializeField] private RectTransform playerInfoSpawnPoint;
@@ -21,7 +21,7 @@ public class LobbySystem : NetworkBehaviour
      [SerializeField] private TMP_Dropdown NumOfRoundsDrop;
 
     [SerializeField] private Toggle buffsToggle;
-    public static List<LobbyPlayerInfo> playerList = new List<LobbyPlayerInfo>();
+    //public static List<LobbyPlayerInfo> playerList = new List<LobbyPlayerInfo>();
     private static int mapSize = 0;
     private static int mapType = 0;
     private static bool buffs = true;
@@ -51,11 +51,11 @@ public class LobbySystem : NetworkBehaviour
             t.SpawnAsPlayerObject(0, true);
             t.TrySetParent(playerInfoSpawnPoint, false);
             string name;
-            names.TryGetValue(99,out name);
-            t.GetComponent<LobbyPlayerInfo>().sName = name;
+            //names.TryGetValue(99,out name);
+            //t.GetComponent<LobbyPlayerInfo>().sName = name;
             ipText.text = ConnectionHUD.GetLocalIPv4();
-            playerList = new List<LobbyPlayerInfo>();
-            playerList.Add(t.GetComponent<LobbyPlayerInfo>());
+            //playerList = new List<LobbyPlayerInfo>();
+            //playerList.Add(t.GetComponent<LobbyPlayerInfo>());
             SetPlayersNames();
         }
         else
@@ -85,23 +85,23 @@ public class LobbySystem : NetworkBehaviour
         if (!IsServer) return;
         Debug.Log("PlayerId: " + clientId + " has joined");
         NetworkObject player = Instantiate(playerTemplate,playerInfoSpawnPoint);
-        string name;
-        names.TryGetValue(clientId,out name);
+        //string name;
+        //names.TryGetValue(clientId,out name);
         player.SpawnAsPlayerObject(clientId, true);
         player.TrySetParent(playerInfoSpawnPoint, false);
 
-        player.GetComponent<LobbyPlayerInfo>().sName = name;
-        playerList.Add(player.GetComponent<LobbyPlayerInfo>());
+        //player.GetComponent<LobbyPlayerInfo>().sName = name;
+        //playerList.Add(player.GetComponent<LobbyPlayerInfo>());
 
         SetPlayersNames();
     }
 
     void SetPlayersNames()
     {
-        foreach (LobbyPlayerInfo p in playerList)
-        {
-            p?.SetNameClientRPC(p.sName);
-        }
+        // foreach (LobbyPlayerInfo p in playerList)
+        // {
+        //     p?.SetNameClientRPC(p.sName);
+        // }
     }
     /// <summary>
     /// Is called when a client disconnects. It despawns the playerprefab for them and removes the reference to their UnitController. Server Only. - Silas Thule
@@ -112,7 +112,7 @@ public class LobbySystem : NetworkBehaviour
         
         if (!IsServer) return;
         NetworkObject player = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
-        playerList.Remove(player.GetComponent<LobbyPlayerInfo>());
+        //playerList.Remove(player.GetComponent<LobbyPlayerInfo>());
         player.Despawn(true);
         Destroy(player.gameObject);
         // units.Remove(unit);

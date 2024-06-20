@@ -25,30 +25,30 @@ public class ConnectionHUD : MonoBehaviour
         host.onClick.AddListener(HostGame);
         join.onClick.AddListener(JoinGame);
 
-        string[] args = System.Environment.GetCommandLineArgs();
-        for (int i = 0; i < args.Length; i++)
-        {
-            switch (args[i])
-            {
-                case "launch-server":
-                    SetConnectionData("");
-                    break;
-                case "launch-client":
-                    if (args.Length > i + 1)
-                    {
-                        string ip = args[i + 1];
-                        SetConnectionData(ip);
-                        JoinGame();
-                    }
+        // string[] args = System.Environment.GetCommandLineArgs();
+        // for (int i = 0; i < args.Length; i++)
+        // {
+        //     switch (args[i])
+        //     {
+        //         case "launch-server":
+        //             SetConnectionData("");
+        //             break;
+        //         case "launch-client":
+        //             if (args.Length > i + 1)
+        //             {
+        //                 string ip = args[i + 1];
+        //                 SetConnectionData(ip);
+        //                 JoinGame();
+        //             }
                     
-                    break;
-            }
-        }
+        //             break;
+        //     }
+        // }
     }
 
     public void SetConnectionData(string IP)
     {
-        string input = ipField.text;
+        string input = IP;
         if (input == null || input == "")
         {
             input = GetLocalIPv4();
@@ -76,7 +76,7 @@ public class ConnectionHUD : MonoBehaviour
     private void JoinGame()
     {
         SetConnectionData(ipField.text);
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = System.Text.ASCIIEncoding.ASCII.GetBytes(userNameField.text);
+        //NetworkManager.Singleton.NetworkConfig.ConnectionData = System.Text.ASCIIEncoding.ASCII.GetBytes(userNameField.text);
         NetworkManager.Singleton.StartClient();
         SceneManager.LoadScene("Lobby Screen");
         
@@ -84,11 +84,11 @@ public class ConnectionHUD : MonoBehaviour
     private void HostGame()
     {
         SetConnectionData("");
-        LobbySystem.playerList = new List<LobbyPlayerInfo>();
-        LobbySystem.names = new Dictionary<ulong, string>();
-        NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
+        //LobbySystem.playerList = new List<LobbyPlayerInfo>();
+        //LobbySystem.names = new Dictionary<ulong, string>();
+        //NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
         NetworkManager.Singleton.StartHost();
-        LobbySystem.names.Add(99,userNameField.text);
+        //LobbySystem.names.Add(99,userNameField.text);
         NetworkManager.Singleton.SceneManager.LoadScene("Lobby Screen",UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
@@ -98,7 +98,7 @@ public class ConnectionHUD : MonoBehaviour
 
         // Additional connection data defined by user code
         string connectionData = System.Text.Encoding.UTF8.GetString(request.Payload);
-        LobbySystem.names.Add(clientId,connectionData);
+        //LobbySystem.names.Add(clientId,connectionData);
 
         // Your approval logic determines the following values
         response.Approved = true;
