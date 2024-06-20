@@ -16,19 +16,6 @@ public class LobbyPlayerInfo : NetworkBehaviour
     public void Initialize(string userName)
     {
         this.userName.text = userName;
-
-        if (sName.StartsWith("Bot"))
-        {
-            removeBotButton.gameObject.SetActive(true);
-            removeBotButton.onClick.AddListener(() =>
-            {
-                LobbySystem.instance.RemoveBotButton(this);
-            });
-        }
-        else
-        {
-            removeBotButton.gameObject.SetActive(false);
-        }
     }
 
     [ClientRpc]
