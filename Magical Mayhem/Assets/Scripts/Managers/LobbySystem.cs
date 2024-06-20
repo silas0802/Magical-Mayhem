@@ -158,33 +158,6 @@ public class LobbySystem : NetworkBehaviour
         NetworkManager.Singleton.SceneManager.LoadScene("GameScreen", UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
 
-
-    private void AddBotButton()
-    {
-        if (!IsServer) return;
-        LobbyPlayerInfo newBotInfo = new()
-        {
-            sName = "Bot Easy",
-        };
-        botList.Add(newBotInfo);
-        SetPlayersNames();
-        CheckPlayerCount();
-    }
-
-    public void RemoveBotButton(LobbyPlayerInfo botInfo)
-    {
-        if (!IsServer || botInfo == null) return;
-
-        botList.Remove(botInfo);
-        SetPlayersNames();
-        CheckPlayerCount();
-    }
-
-    private void CheckPlayerCount()
-    {
-        addBotButton.gameObject.SetActive(playerList.Count + botList.Count <= 7);
-    }
-
     //getters and setters
     public static void SetBuffs(){
         buffs = !buffs;

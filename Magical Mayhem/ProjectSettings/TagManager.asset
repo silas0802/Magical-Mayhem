@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Floor
   - Lava
+  - Wall
   layers:
   - Default
   - TransparentFX
