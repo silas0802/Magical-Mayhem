@@ -111,15 +111,23 @@ public class LobbySystem : NetworkBehaviour
     {
         
         if (!IsServer) return;
-        NetworkObject player = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
-        //playerList.Remove(player.GetComponent<LobbyPlayerInfo>());
-        player.Despawn(true);
-        Destroy(player.gameObject);
-        // units.Remove(unit);
-        // if (units.Count < 2)
-        // {
-        //     startButton.gameObject.SetActive(false);
-        // }
+        try
+        {
+            NetworkObject player = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
+            //playerList.Remove(player.GetComponent<LobbyPlayerInfo>());
+            player.Despawn(true);
+            Destroy(player.gameObject);
+            // units.Remove(unit);
+            // if (units.Count < 2)
+            // {
+            //     startButton.gameObject.SetActive(false);
+            // }
+        }
+        catch (System.Exception)
+        {
+          
+        }
+        
     }
     private void LeaveButton()
     {
