@@ -145,16 +145,60 @@ public class HardFightingLogic : FightingLogic
 
     private Vector3 DetermineStrategicPoint(UnitController controller)
     {
-        _ = Vector3.zero;
+        Vector3 center = Vector3.zero;
+        Vector3 nearestEnemy = Vector3.zero;
+        Vector3 nearestResource = Vector3.zero;
 
-        // We will just use moving towards the center of the map for now.
-        Vector3 center = new Vector3(0, 0, 0);
-        float randomOffsetX = UnityEngine.Random.Range(-10, 10);
-        float randomOffsetZ = UnityEngine.Random.Range(-10, 10);
-        Vector3 closestStrategicPoint = center + new Vector3(randomOffsetX, 0, randomOffsetZ);
+        if (RoundManager.instance != null)
+        {
+            UnitController nearestEnemyController = RoundManager.instance.FindNearestUnit(controller.transform.position, controller);
+            if (nearestEnemyController != null)
+            {
+                nearestEnemy = nearestEnemyController.transform.position;
+            }
+        }
 
-        return closestStrategicPoint;
+        if (MapGenerator.instance != null)
+        {
+            nearestResource = MapGenerator.instance.GetClosestHealthBuff(controller.transform.position);
+        }
+
+        float centerWeight = 0.15f;
+        float enemyWeight = 0.45f;
+        float resourceWeight = 0.45f;
+
+        // Combined:
+        Vector3 strategicPoint = center * centerWeight + nearestEnemy * enemyWeight;
+        if (nearestResource != Vector3.zero)
+        {
+            strategicPoint += nearestResource * resourceWeight;
+        }
+        
+        float randomOffsetX = UnityEngine.Random.Range(-(mapSize/2) + lavaTileCounter, (mapSize / 2) - lavaTileCounter);
+        float randomOffsetZ = UnityEngine.Random.Range(-(mapSize/2) + lavaTileCounter, (mapSize / 2) - lavaTileCounter);
+        strategicPoint += new Vector3(randomOffsetX, 0, randomOffsetZ);
+
+        return strategicPoint;
     }
+
+private Vector3 GetNearestEnemyPosition(UnitController controller)
+{
+    // Implement logic to find the nearest enemy position
+    return new Vector3(0, 0, 0); // Placeholder
+}
+
+private Vector3 GetNearestResourcePosition(UnitController controller)
+{
+    // Implement logic to find the nearest resource position
+    return new Vector3(0, 0, 0); // Placeholder
+}
+
+private Vector3 GetSafeZonePosition(UnitController controller)
+{
+    // Implement logic to find a safe zone position
+    return new Vector3(0, 0, 0); // Placeholder
+}
+
 
     // Helper method to clamp the position within the specified range
     private Vector3 ClampPositionWithinRange(Vector3 position, int min, int max)
