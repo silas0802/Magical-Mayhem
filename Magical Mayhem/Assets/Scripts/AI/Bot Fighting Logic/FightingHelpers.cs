@@ -109,4 +109,23 @@ public static class FightingHelpers
 
         return Mathf.Sqrt((deltaX * deltaX) + (deltaZ * deltaZ));
     }
+
+    public static bool ClearPath(UnitController controller, UnitController nearestUnit)
+    {
+        Vector3 origin = controller.transform.position;
+        origin.y = 1.45f;
+
+        Vector3 direction = (nearestUnit.transform.position - origin).normalized;
+        float rayLength = Vector3.Distance(origin, nearestUnit.transform.position);
+
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, rayLength))
+        {
+            if (hit.collider.CompareTag("Wall"))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

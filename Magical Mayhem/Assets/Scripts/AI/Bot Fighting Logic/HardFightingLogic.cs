@@ -67,15 +67,18 @@ public class HardFightingLogic : FightingLogic
     {
         if (nearestUnit != null && offensiveTimer < 0 && Vector3.Distance(nearestUnit.transform.position, controller.transform.position) < 20)
         {
-            int roundNumber = RoundManager.instance.roundNumber;
-            int fireIndex = DetermineFireIndex(roundNumber);
+            if (FightingHelpers.ClearPath(controller, nearestUnit))
+            {
+                int roundNumber = RoundManager.instance.roundNumber;
+                int fireIndex = DetermineFireIndex(roundNumber);
 
-            Vector3 targetPosition = nearestUnit.transform.position;
-            Vector3 targetVelocity = nearestUnit.GetComponent<Rigidbody>().velocity;
-            Vector3 predictedPosition = PredictTargetPosition(fireIndex, targetPosition, targetVelocity);
+                Vector3 targetPosition = nearestUnit.transform.position;
+                Vector3 targetVelocity = nearestUnit.GetComponent<Rigidbody>().velocity;
+                Vector3 predictedPosition = PredictTargetPosition(fireIndex, targetPosition, targetVelocity);
 
-            FightingHelpers.FireIndexAtPosition(controller, fireIndex, predictedPosition);
-            offensiveTimer = GetNormalCooldown(mean, standardDeviation);
+                FightingHelpers.FireIndexAtPosition(controller, fireIndex, predictedPosition);
+                offensiveTimer = GetNormalCooldown(mean, standardDeviation);
+            }
         }
     }
 
@@ -170,9 +173,6 @@ public class HardFightingLogic : FightingLogic
 
         if (Physics.Raycast(origin, forwardDirection, out RaycastHit hit, rayLength))
         {
-            Debug.Log("Raycast hit at distance: " + hit.distance);
-            Debug.Log("Hit object: " + hit.collider.name);
-
             if (!hit.collider.CompareTag("Wall"))
             {
                 return targetPosition;
@@ -183,15 +183,16 @@ public class HardFightingLogic : FightingLogic
             
             if (!Physics.Raycast(origin, leftDirection, rayLength))
             {
+                origin.y = 0;
                 return origin + leftDirection * rayLength;
             }
             else if (!Physics.Raycast(origin, rightDirection, rayLength))
             {
+                origin.y = 0;
                 return origin + rightDirection * rayLength;
             }
             else
             {
-                Debug.Log("Both left and right directions are blocked.");
                 return targetPosition;
             }
         }
@@ -251,7 +252,6 @@ public class HardFightingLogic : FightingLogic
 
             Vector3 projVelocity = projectile.GetComponent<Rigidbody>().velocity;
             Vector3 directionToController = controller.transform.position - projectile.transform.position;
-            Debug.Log(Vector3.Distance(controller.transform.position, projectile.transform.position));
 
             if (Vector3.Distance(controller.transform.position, projectile.transform.position) < 2.5)
             {
