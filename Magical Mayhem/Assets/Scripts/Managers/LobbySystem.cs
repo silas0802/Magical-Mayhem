@@ -19,9 +19,10 @@ public class LobbySystem : NetworkBehaviour
     [SerializeField] private TMP_Dropdown mapSizeDrop;
     [SerializeField] private TMP_Dropdown mapTypeDrop;
     [SerializeField] private TMP_Dropdown NumOfRoundsDrop;
-
+    [SerializeField] private TMP_Dropdown botDifficultyDrop;
+    [SerializeField] private Sprite[] mapSprites;
+    [SerializeField] private Image mapImage;
     [SerializeField] private Button addBotButton;
-    [SerializeField] private Button removeBotButton;
 
     [SerializeField] private Toggle buffsToggle;
     //public static List<LobbyPlayerInfo> playerList = new List<LobbyPlayerInfo>();
@@ -29,19 +30,23 @@ public class LobbySystem : NetworkBehaviour
     private static int mapType = 0;
     private static bool buffs = true;
     private static int numOfRounds = 3;
+    private static int botNumbers = 0;
+    private static int botDifficulty = 0;
+
     private float updateNameTimer;
     
     private void Awake()
     {
         if (instance == null){
             instance = this;
+            mapImage.sprite = instance.mapSprites[0];
         }
         else{
             Destroy(gameObject);
         }
         leaveLobbyButton.onClick.AddListener(LeaveButton);
         startLobbyButton.onClick.AddListener(StartLobbyButton);
-        //addBotButton.onClick.AddListener(AddBotButton);
+        addBotButton.onClick.AddListener(BotIncrementer);
     }
 
     void Start()
@@ -70,6 +75,8 @@ public class LobbySystem : NetworkBehaviour
             mapTypeDrop.gameObject.SetActive(false);
             buffsToggle.gameObject.SetActive(false);
             NumOfRoundsDrop.gameObject.SetActive(false);
+            botDifficultyDrop.gameObject.SetActive(false);
+            addBotButton.gameObject.SetActive(false);
         }
     }
 
@@ -138,6 +145,7 @@ public class LobbySystem : NetworkBehaviour
         NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("Connection Screen");
     }
+
     private void StartLobbyButton()
     {
         if (NetworkManager.Singleton.ConnectedClientsList.Count>0)
@@ -149,6 +157,12 @@ public class LobbySystem : NetworkBehaviour
             Debug.Log("Not enough players");
         }
     }
+
+    private void BotIncrementer()
+    {
+        botNumbers += 1;
+    }
+
     private void StartGame()
     {
         foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClientsList)
@@ -169,6 +183,26 @@ public class LobbySystem : NetworkBehaviour
 
     public static void SetMapType(int x){
         mapType = x;
+        if (instance != null)
+        {
+            instance.mapImage.sprite = instance.mapSprites[x];
+        }
+    }
+
+    public static void SetBotDifficulty(int x){
+        botDifficulty = x;
+    }
+
+    public static int GetBotDifficulty(){
+        return botDifficulty;
+    }
+
+    public static void SetBotNumber(int x){
+        botNumbers = x;
+    }
+
+    public static int GetBotNumber(){
+        return botNumbers;
     }
 
     public static int GetMapType(){

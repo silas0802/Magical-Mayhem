@@ -14,6 +14,9 @@ public class GetDropdownValue : MonoBehaviour
         else if(drpdwn.options[0].text == "Map type"){
             LobbySystem.SetMapType(Pickedindex);
         }
+        else if(drpdwn.options[0].text == "Bot Difficulty") {
+            LobbySystem.SetBotDifficulty(Pickedindex);
+        }
         else{
             LobbySystem.SetNumOfRounds(Pickedindex + 4);
         }

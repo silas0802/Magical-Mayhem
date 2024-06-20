@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 0
+  GlobalObjectIdHash: 4035993973
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -76,6 +76,7 @@ MonoBehaviour:
     type: 3}
   speedCube: {fileID: -8821014625860884349, guid: b1040f3d13fd04442bc994ab91e804f8,
     type: 3}
+  lavaTileCounter: 0
   lavaSpawnTime: 10
   nextLavaSpawn: 20
   wallCutOff: 0.7

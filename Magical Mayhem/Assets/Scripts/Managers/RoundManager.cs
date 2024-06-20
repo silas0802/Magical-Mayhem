@@ -285,7 +285,18 @@ public class RoundManager : NetworkBehaviour
             unit.unitMover.canMove = false;
         }
 
-        AddBot(botBrain, "Hard");
+        for (int i = 0; i < LobbySystem.GetBotNumber(); i++) {
+            switch (LobbySystem.GetBotDifficulty()) {
+                case 1: AddBot(botBrain, "Easy");
+                    break;
+                case 2: AddBot(botBrain, "Medium");
+                    break;
+                case 3: AddBot(botBrain, "Hard");
+                    break;
+                default: AddBot(botBrain, "Medium");
+                    break;
+            }
+        }
     }
 
     private void GiveOutGold(){
