@@ -41,7 +41,6 @@ public class UnitCaster : NetworkBehaviour
             {
                 SetCooldown(index, controller.inventory.spells[index].cooldown);
                 CastSpellServerRPC(index, target);
-
             }
         }
     }

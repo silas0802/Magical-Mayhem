@@ -42,7 +42,12 @@ public class HardFightingLogic : FightingLogic
 
         if (projectileIsIncoming)
         {
-            PerformDodge(controller);
+            if (healthPercent <= 100) { // We use blink spell to the position performDodge gives us.
+                Debug.Log("Doing1");
+                FightingHelpers.FireIndexAtPosition(controller, 3, PerformDodge(controller));
+            } else {
+                controller.unitMover.SetTargetPosition(PerformDodge(controller));
+            }
         }
         else if (moveTimer < 0)
         {
@@ -264,7 +269,7 @@ public class HardFightingLogic : FightingLogic
         return (float)randNormal;
     }
 
-    private void PerformDodge(UnitController controller)
+    private Vector3 PerformDodge(UnitController controller)
     {
         Vector3 dodgeDirection = Vector3.zero;
 
@@ -300,8 +305,7 @@ public class HardFightingLogic : FightingLogic
             Vector3 bestDodgeDirection = distanceToProjectile1 > distanceToProjectile2 ? perpendicularDirection1 : perpendicularDirection2;
             dodgeDirection += bestDodgeDirection / (controller.transform.position - projectile.transform.position).magnitude;
         }
-
-        controller.unitMover.SetTargetPosition(controller.transform.position + dodgeDirection * 5);
         moveTimer = 2 * moverInterval;
+        return controller.transform.position + dodgeDirection * 5;
     }
 }
