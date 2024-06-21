@@ -32,7 +32,7 @@ public class LobbySystem : NetworkBehaviour
     private static int mapSize = 0;
     private static int mapType = 0;
     private static bool buffs = true;
-    private static int numOfRounds = 3;
+    private static int numOfRounds = 4;
     private static int botNumbers = 0;
     private static int botDifficulty = 0;
 
