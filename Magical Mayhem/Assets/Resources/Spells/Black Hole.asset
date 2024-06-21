@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32bc9b83314621f41a21c6be28f98c92, type: 3}
-  m_Name: BlackHoleSphere
+  m_Name: Black Hole
   m_EditorClassIdentifier: 
   ID: 254
-  Description: 
+  Description: Summons a black hole that drags players into it
   Icon: {fileID: 21300000, guid: be27c4905c06a374dbfd6f0e166c58ad, type: 3}
-  Price: 17
+  Price: 20
   UseType: 0
   ElementType: 0
   DontShowInShop: 0
   Cooldown: 9
-  CastTime: 0.5
+  CastTime: 0.18
   CanMoveWhileCasting: 0
   Projectile: {fileID: 3257114547246139475, guid: c17ac8c95bd0e614487f3dec9114aef0,
     type: 3}
