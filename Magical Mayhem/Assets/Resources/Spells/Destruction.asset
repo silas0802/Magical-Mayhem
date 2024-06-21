@@ -10,21 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd56fffb0ab098a4fb88ac2a88fbf079, type: 3}
-  m_Name: Flame barrage
+  m_Name: Destruction
   m_EditorClassIdentifier: 
-  ID: 38
-  Description: 'her
-
-'
+  ID: 1032
+  Description: Destroys
   Icon: {fileID: 21300000, guid: dc87a9085412b3c4ea850ae99f7d966d, type: 3}
-  Price: 27
+  Price: 0
   UseType: 0
   ElementType: 2
-  DontShowInShop: 0
-  Cooldown: 3
-  CastTime: 0.51
+  DontShowInShop: 1
+  Cooldown: 1
+  CastTime: 0.32
   CanMoveWhileCasting: 1
-  SpellToCast: {fileID: 11400000, guid: 7987c192795981f40941d41e0469f3a1, type: 2}
+  SpellToCast: {fileID: 11400000, guid: 12050346a3a333f40bef40d7005e068d, type: 2}
   Amount: 20
-  Spray: 0
-  TimeInterval: 0.216
+  Spray: 180
+  TimeInterval: 0.125

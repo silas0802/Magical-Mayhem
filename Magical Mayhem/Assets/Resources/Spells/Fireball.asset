@@ -24,7 +24,7 @@ MonoBehaviour:
 
     Type: Fire'
   Icon: {fileID: 21300000, guid: 65334ac3fa9bbcf4dbeeb0498c20a852, type: 3}
-  Price: 14
+  Price: 10
   UseType: 0
   ElementType: 2
   DontShowInShop: 0
@@ -36,6 +36,6 @@ MonoBehaviour:
   EndEffect: {fileID: 11400000, guid: 7861af9072e7cc048b109828d9681462, type: 2}
   Speed: 10
   Range: 16
-  MustFlyMaxDistance: 0
+  MustFlyMaxDistance: 1
   TriggerRadius: 0.5
   HomingForce: 0
