@@ -451,9 +451,7 @@ public class UnitController : NetworkBehaviour, IDamagable
     private void SetDead(bool isDead)
     {
         this.isDead = isDead;
-        GetComponent<Collider>().enabled = !isDead; //Disables Collider on server
-        bodyMesh.GetComponent<SkinnedMeshRenderer>().enabled = !isDead; //Disable rendering on server
-        SetDeadClientRPC(isDead); //Disables Collider and rendering on clients
+        StartCoroutine(disposeOfCorpse(isDead)); //Disables Collider and rendering on clients
         if (isDead)
         {
             animator.SetTrigger("Death");
@@ -472,6 +470,11 @@ public class UnitController : NetworkBehaviour, IDamagable
     {
         GetComponent<Collider>().enabled = !isDead;
         bodyMesh.GetComponent<SkinnedMeshRenderer>().enabled = !isDead;
+    }
+
+    private IEnumerator disposeOfCorpse(bool isDead){
+        yield return new WaitForSeconds(1.5f);
+        SetDeadClientRPC(isDead);
     }
     public void InitializeBot(Brain brain, string difficulty)
     {
