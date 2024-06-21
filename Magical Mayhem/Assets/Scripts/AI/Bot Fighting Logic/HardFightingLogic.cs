@@ -233,7 +233,7 @@ public class HardFightingLogic : FightingLogic
         {
             return 0;
         }
-        else if (roundNumber <= 2)
+        else if (roundNumber == 2)
         {
             return UnityEngine.Random.Range(1, 3) == 1 ? 1 : 0;
         }
@@ -242,15 +242,18 @@ public class HardFightingLogic : FightingLogic
             int roll = UnityEngine.Random.Range(1, 10);
             if (roll >= 8)
             {
-                return 2;
+                return 3;
             }
             else if (roll >= 4 && roll <= 7)
             {
                 return 1;
             }
-            else
+            else if (roll == 2 || roll == 3)
             {
                 return 0;
+            }
+            else {
+                return 2;
             }
         }
     }
