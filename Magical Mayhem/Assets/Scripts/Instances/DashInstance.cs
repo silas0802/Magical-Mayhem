@@ -12,6 +12,7 @@ public class DashInstance : NetworkBehaviour
      Vector3 direction;
 
      float acceptingDistance = 0.3f;
+     float timeRemainingAfterCast=5f;
     public void Initialize(DashSpell dashSpell,UnitController owner,Vector3 target){
         this.dashSpell = dashSpell;
         this.owner = owner;
@@ -31,8 +32,16 @@ public class DashInstance : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {   owner.GetComponent<Rigidbody>().velocity = direction;
+        timeRemainingAfterCast-=Time.deltaTime;
         
          if ((origin-owner.transform.position).magnitude>dashSpell.range||(target - owner.transform.position).magnitude<acceptingDistance  )
+        {
+            owner.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            owner.unitMover.canMove=true; 
+            owner.unitMover.ReachTarget();
+            Destroy(gameObject);
+            GetComponent<NetworkObject>().Despawn();
+        }else if (timeRemainingAfterCast<0)
         {
             owner.GetComponent<Rigidbody>().velocity = Vector3.zero;
             owner.unitMover.canMove=true; 
