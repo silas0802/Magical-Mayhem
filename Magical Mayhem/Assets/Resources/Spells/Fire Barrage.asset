@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 1000
   Description: 
   Icon: {fileID: 21300000, guid: dc87a9085412b3c4ea850ae99f7d966d, type: 3}
-  Price: 0
+  Price: 28
   UseType: 1
   ElementType: 2
   DontShowInShop: 0
