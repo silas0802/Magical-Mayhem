@@ -203,8 +203,8 @@ public class HardFightingLogic : FightingLogic
                 return targetPosition;
             }
 
-            Vector3 leftDirection = Quaternion.Euler(0, -90, 0) * forwardDirection;
-            Vector3 rightDirection = Quaternion.Euler(0, 90, 0) * forwardDirection;
+            Vector3 leftDirection = Quaternion.Euler(0, -45, 0) * forwardDirection;
+            Vector3 rightDirection = Quaternion.Euler(0, 45, 0) * forwardDirection;
             
             if (!Physics.Raycast(origin, leftDirection, rayLength))
             {
