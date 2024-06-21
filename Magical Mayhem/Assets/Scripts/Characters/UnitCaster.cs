@@ -62,6 +62,9 @@ public class UnitCaster : NetworkBehaviour
     /// <param name="target"></param>
     private void CastSpell(int index, Vector3 target)
     {
+        if (controller.isDead) {
+            return;
+        }
         
         Spell spell = controller.inventory.spells[index];
         if (!spell || cooldowns[index]>0) return;
