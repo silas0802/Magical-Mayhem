@@ -42,12 +42,7 @@ public class HardFightingLogic : FightingLogic
 
         if (projectileIsIncoming)
         {
-            if (healthPercent <= 100) { // We use blink spell to the position performDodge gives us.
-                Debug.Log("Doing1");
-                FightingHelpers.FireIndexAtPosition(controller, 3, PerformDodge(controller));
-            } else {
-                controller.unitMover.SetTargetPosition(PerformDodge(controller));
-            }
+            controller.unitMover.SetTargetPosition(PerformDodge(controller));
         }
         else if (moveTimer < 0)
         {
