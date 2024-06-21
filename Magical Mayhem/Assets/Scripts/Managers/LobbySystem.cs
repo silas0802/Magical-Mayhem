@@ -23,6 +23,9 @@ public class LobbySystem : NetworkBehaviour
     [SerializeField] private Sprite[] mapSprites;
     [SerializeField] private Image mapImage;
     [SerializeField] private Button addBotButton;
+    [SerializeField] private Button removeBotButton;
+    [SerializeField] private TMP_Text numberofBots;
+    
 
     [SerializeField] private Toggle buffsToggle;
     //public static List<LobbyPlayerInfo> playerList = new List<LobbyPlayerInfo>();
@@ -47,6 +50,7 @@ public class LobbySystem : NetworkBehaviour
         leaveLobbyButton.onClick.AddListener(LeaveButton);
         startLobbyButton.onClick.AddListener(StartLobbyButton);
         addBotButton.onClick.AddListener(BotIncrementer);
+        removeBotButton.onClick.AddListener(BotDecrementer);
     }
 
     void Start()
@@ -77,6 +81,7 @@ public class LobbySystem : NetworkBehaviour
             NumOfRoundsDrop.gameObject.SetActive(false);
             botDifficultyDrop.gameObject.SetActive(false);
             addBotButton.gameObject.SetActive(false);
+            removeBotButton.gameObject.SetActive(false);
         }
     }
 
@@ -161,6 +166,13 @@ public class LobbySystem : NetworkBehaviour
     private void BotIncrementer()
     {
         botNumbers += 1;
+        numberofBots.text = botNumbers.ToString();
+    }
+
+    private void BotDecrementer()
+    {
+        botNumbers -= 1;
+        numberofBots.text = botNumbers.ToString();
     }
 
     private void StartGame()
